@@ -1,3 +1,0 @@
-/home/pawel/Projects/FirstNetCoreAPp/EntityFrameworkDao/obj/Debug/netcoreapp2.0/EntityFrameworkDao.csproj.CoreCompileInputs.cache
-/home/pawel/Projects/FirstNetCoreAPp/EntityFrameworkDao/obj/Debug/netcoreapp2.0/EntityFrameworkDao.AssemblyInfoInputs.cache
-/home/pawel/Projects/FirstNetCoreAPp/EntityFrameworkDao/obj/Debug/netcoreapp2.0/EntityFrameworkDao.AssemblyInfo.cs
