@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "/home/pawel/Projects/FirstNetCoreAPp/WebApi/WebApi.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-2",
+            "command": "echo use mono instead",
+            "type":"process",
+        }
+    ]
+}

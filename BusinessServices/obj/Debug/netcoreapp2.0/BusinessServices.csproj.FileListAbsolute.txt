@@ -1,0 +1,8 @@
+/home/pawel/Projects/FirstNetCoreAPp/BusinessServices/bin/Debug/netcoreapp2.0/BusinessServices.deps.json
+/home/pawel/Projects/FirstNetCoreAPp/BusinessServices/bin/Debug/netcoreapp2.0/BusinessServices.dll
+/home/pawel/Projects/FirstNetCoreAPp/BusinessServices/bin/Debug/netcoreapp2.0/BusinessServices.pdb
+/home/pawel/Projects/FirstNetCoreAPp/BusinessServices/obj/Debug/netcoreapp2.0/BusinessServices.csproj.CoreCompileInputs.cache
+/home/pawel/Projects/FirstNetCoreAPp/BusinessServices/obj/Debug/netcoreapp2.0/BusinessServices.AssemblyInfoInputs.cache
+/home/pawel/Projects/FirstNetCoreAPp/BusinessServices/obj/Debug/netcoreapp2.0/BusinessServices.AssemblyInfo.cs
+/home/pawel/Projects/FirstNetCoreAPp/BusinessServices/obj/Debug/netcoreapp2.0/BusinessServices.dll
+/home/pawel/Projects/FirstNetCoreAPp/BusinessServices/obj/Debug/netcoreapp2.0/BusinessServices.pdb

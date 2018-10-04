@@ -1,0 +1,13 @@
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/bin/Debug/netcoreapp2.0/ConsoleApp.deps.json
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/bin/Debug/netcoreapp2.0/ConsoleApp.runtimeconfig.json
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/bin/Debug/netcoreapp2.0/ConsoleApp.runtimeconfig.dev.json
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/bin/Debug/netcoreapp2.0/ConsoleApp.dll
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/bin/Debug/netcoreapp2.0/ConsoleApp.pdb
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/bin/Debug/netcoreapp2.0/FirstNetCoreAPp.dll
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/bin/Debug/netcoreapp2.0/FirstNetCoreAPp.pdb
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/obj/Debug/netcoreapp2.0/ConsoleApp.csprojResolveAssemblyReference.cache
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/obj/Debug/netcoreapp2.0/ConsoleApp.csproj.CoreCompileInputs.cache
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/obj/Debug/netcoreapp2.0/ConsoleApp.AssemblyInfoInputs.cache
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/obj/Debug/netcoreapp2.0/ConsoleApp.AssemblyInfo.cs
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/obj/Debug/netcoreapp2.0/ConsoleApp.dll
+/home/pawel/Projects/FirstNetCoreAPp/ConsoleApp/obj/Debug/netcoreapp2.0/ConsoleApp.pdb

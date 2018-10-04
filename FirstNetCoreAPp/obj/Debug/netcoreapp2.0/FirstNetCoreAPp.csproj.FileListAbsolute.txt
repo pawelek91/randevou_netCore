@@ -1,0 +1,8 @@
+/home/pawel/Projects/FirstNetCoreAPp/FirstNetCoreAPp/bin/Debug/netcoreapp2.0/FirstNetCoreAPp.deps.json
+/home/pawel/Projects/FirstNetCoreAPp/FirstNetCoreAPp/bin/Debug/netcoreapp2.0/FirstNetCoreAPp.dll
+/home/pawel/Projects/FirstNetCoreAPp/FirstNetCoreAPp/bin/Debug/netcoreapp2.0/FirstNetCoreAPp.pdb
+/home/pawel/Projects/FirstNetCoreAPp/FirstNetCoreAPp/obj/Debug/netcoreapp2.0/FirstNetCoreAPp.csproj.CoreCompileInputs.cache
+/home/pawel/Projects/FirstNetCoreAPp/FirstNetCoreAPp/obj/Debug/netcoreapp2.0/FirstNetCoreAPp.AssemblyInfoInputs.cache
+/home/pawel/Projects/FirstNetCoreAPp/FirstNetCoreAPp/obj/Debug/netcoreapp2.0/FirstNetCoreAPp.AssemblyInfo.cs
+/home/pawel/Projects/FirstNetCoreAPp/FirstNetCoreAPp/obj/Debug/netcoreapp2.0/FirstNetCoreAPp.dll
+/home/pawel/Projects/FirstNetCoreAPp/FirstNetCoreAPp/obj/Debug/netcoreapp2.0/FirstNetCoreAPp.pdb

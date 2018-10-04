@@ -1,0 +1,41 @@
+﻿<Properties StartupConfiguration="{905774C0-893E-4E2A-9B87-E5485CCABD25}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BusinessServices/UsersService/User.cs">
+    <Files>
+      <File FileName="WebApi/Controllers/UsersController.cs" Line="21" Column="17" />
+      <File FileName="WebApi/Controllers/BasicController.cs" Line="23" Column="9" />
+      <File FileName="BusinessServices/UsersService/UsersService.cs" Line="23" Column="3" />
+      <File FileName="BusinessServices/UsersService/IUsersService.cs" Line="13" Column="6" />
+      <File FileName="BusinessServices/UsersService/User.cs" Line="15" Column="4" />
+      <File FileName="WebApi/Controllers/ValuesController.cs" Line="19" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="FirstNetCoreAPp" expanded="True">
+            <Node name="BusinessServices" expanded="True">
+              <Node name="UsersService" expanded="True">
+                <Node name="User.cs" selected="True" />
+              </Node>
+            </Node>
+            <Node name="WebApi" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="ProjectDependencies" expanded="True" />
+              </Node>
+              <Node name="Controllers" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/pawel/Projects/FirstNetCoreAPp/WebApi/Controllers/ValuesController.cs" relfile="WebApi/Controllers/ValuesController.cs" line="19" column="13" />
+      <Breakpoint file="/home/pawel/Projects/FirstNetCoreAPp/WebApi/Controllers/UsersController.cs" relfile="WebApi/Controllers/UsersController.cs" line="19" column="5" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.WebApi PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
