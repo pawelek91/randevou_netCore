@@ -1,62 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EFRandevouDAL;
+using EFRandevouDAL.Users;
+using RandevouData.Users;
 
 namespace BusinessServices.UsersService
 {
 	public class UsersService : IUsersService
     {
-		private static List<User> _usersContainer;  
+        UsersDao dao;
         public UsersService()
         {
-			if(_usersContainer == null)
-			{
-				_usersContainer = new List<User>();
-				_usersContainer.Add(new User("ela", 'f', new DateTime(1990, 12, 14)));
-				_usersContainer.Add(new User("ala", 'f', new DateTime(1980, 11, 13)));
-				_usersContainer.Add(new User("ola", 'f', new DateTime(1970, 10, 12)));
-				_usersContainer.Add(new User("olek", 'm', new DateTime(1960, 9, 11)));
-			}
+            dao = new UsersDao();
         }
-
 		public User GetUser(int id)
 		{
-			var user = _usersContainer.Where(x => x.Id == id).FirstOrDefault();
-			return user;
+            return dao.Get(id);
 		}
 
 		public IQueryable<User> QueryUsers()
 		{
-			return _usersContainer.AsQueryable();
+            return dao.QueryUsers();
 		}
 
 		int IUsersService.Add(string userName, char gender, DateTime birthDate)
 		{
-			var user = new User(userName, gender, birthDate);
-			_usersContainer.Add(user);
-			return user.Id;
+			var user = new User(userName,string.Empty,birthDate, gender);
+            var id = dao.Insert(user);
+            return id;
 		}
 
 		void IUsersService.Delete(int id)
 		{
-			var user = _usersContainer.Where(x => x.Id == id).FirstOrDefault();
+            var user = dao.Get(id);
 			if (user == null)
 				throw new ArgumentOutOfRangeException("brak usera o takim id");
 
-			_usersContainer.Remove(user);
-		}
+            dao.Delete(user);
+        }
 
-		void IUsersService.Update(int id, string userName, char? gender, DateTime? birthdate)
+        void IUsersService.Update(int id, string userName, char? gender, DateTime? birthdate)
 		{
-			var user = _usersContainer.Where(x => x.Id == id).FirstOrDefault();
+            var user = dao.Get(id);
             if (user == null)
                 throw new ArgumentOutOfRangeException("brak usera o takim id");
 
 			if (!string.IsNullOrWhiteSpace(userName))
-				user.Name = userName;
+				user.UserName = userName;
 
-			if (gender.HasValue)
-				user.Gender = gender.Value;
+			//if (gender.HasValue)
+			//	user.UserGender = gender.Value;
 
 			if (birthdate.HasValue && birthdate.Value != default(DateTime))
 				user.BirthDate = birthdate.Value;

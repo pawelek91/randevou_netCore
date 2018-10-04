@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using RandevouData.Users;
 
 namespace BusinessServices.UsersService
 {

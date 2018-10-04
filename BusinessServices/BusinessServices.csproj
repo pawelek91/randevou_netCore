@@ -10,4 +10,7 @@
   <ItemGroup>
     <Folder Include="UsersService\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EFRandevouDAL\EFRandevouDAL.csproj" />
+  </ItemGroup>
 </Project>
