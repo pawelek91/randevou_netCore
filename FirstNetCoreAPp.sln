@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessServices", "BusinessServices\BusinessServices.csproj", "{35322C3D-CCDB-40AD-B55C-5E38551ED2C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandevouData", "C:\Users\pawel\source\repos\RandevouData\RandevouData\RandevouData.csproj", "{543A1BDC-0228-4BD5-B654-7DB71882803A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandevouData", "RandevouData\RandevouData.csproj", "{543A1BDC-0228-4BD5-B654-7DB71882803A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFRandevouDAL", "EFRandevouDAL\EFRandevouDAL.csproj", "{5714C209-7E06-4459-922F-31D91206AA02}"
 EndProject

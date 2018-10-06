@@ -26,7 +26,7 @@ namespace BusinessServices.UsersService
 
 		int IUsersService.Add(string userName, char gender, DateTime birthDate)
 		{
-			var user = new User(userName,string.Empty,birthDate, gender);
+			var user = new User(userName,string.Empty,gender,birthDate);
             var id = dao.Insert(user);
             return id;
 		}
@@ -47,7 +47,7 @@ namespace BusinessServices.UsersService
                 throw new ArgumentOutOfRangeException("brak usera o takim id");
 
 			if (!string.IsNullOrWhiteSpace(userName))
-				user.UserName = userName;
+				user.Name = userName;
 
 			//if (gender.HasValue)
 			//	user.UserGender = gender.Value;

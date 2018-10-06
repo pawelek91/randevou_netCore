@@ -6,7 +6,7 @@ using RandevouData;
 
 namespace EFRandevouDAL
 {
-    public abstract class BasicDao<TEntity> where TEntity : BasicObject
+    public abstract class BasicDao<TEntity> where TEntity : BasicRandevouObject
     {
         public BasicDao() { }
         

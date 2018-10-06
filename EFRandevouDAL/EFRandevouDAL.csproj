@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="C:\Users\pawel\source\repos\RandevouData\RandevouData\RandevouData.csproj" />
+    <ProjectReference Include="..\RandevouData\RandevouData.csproj" />
   </ItemGroup>
 
 </Project>
