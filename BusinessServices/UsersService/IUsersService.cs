@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using BusinessServices.MessageService;
 using RandevouData.Users;
 
 namespace BusinessServices.UsersService
@@ -9,7 +10,7 @@ namespace BusinessServices.UsersService
 	    int Add(string userName, char gender, DateTime birthDate);
 		void Delete(int id);
 		void Update(int id, string userName, char? gender, DateTime? birthdate);
-		User GetUser(int id);
+		UserDto GetUser(int id);
 		IQueryable<User> QueryUsers();
     }
 }

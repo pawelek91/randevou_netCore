@@ -28,9 +28,7 @@ namespace WebApi.Controllers
         {
 			IUsersService usersService = GetService<IUsersService>();
 			var user = usersService.GetUser(id);
-            
-
-			return user != null ? user.ToString() : "Brak usera";
+			return user != null ? user.Name : "Brak usera";
         }
 
         // POST api/values

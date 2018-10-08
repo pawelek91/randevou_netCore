@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using BusinessServices.MessageService;
 using EFRandevouDAL;
 using EFRandevouDAL.Users;
 using RandevouData.Users;
 
 namespace BusinessServices.UsersService
 {
-	public class UsersService : IUsersService
+	public class UserService : IUsersService
     {
         UsersDao dao;
-        public UsersService()
+		IMapper mapper;
+        public UserService(IMapper mapper)
         {
             dao = new UsersDao();
+			this.mapper = mapper;
         }
-		public User GetUser(int id)
+		public UserDto GetUser(int id)
 		{
-            return dao.Get(id);
+			var entity =dao.Get(id);
+			var userDto =mapper.Map<User,UserDto>(entity);
+            return userDto;
 		}
 
 		public IQueryable<User> QueryUsers()

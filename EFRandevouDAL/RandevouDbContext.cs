@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using RandevouData.Messages;
@@ -9,10 +10,12 @@ namespace EFRandevouDAL
 {
     public class RandevouDbContext : DbContext
     {
-        private static readonly string _connectionString = "Data Source=Randevou.db";
+        
+        private const string _dbName = "Randevou.db";
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(_connectionString);
+            var dbPath =Path.Combine(Directory.GetCurrentDirectory(),_dbName);
+            optionsBuilder.UseSqlite("Data Source=" + dbPath);            
         }
 
         public DbSet<User> Users { get; set; }

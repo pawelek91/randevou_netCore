@@ -10,13 +10,9 @@ namespace EFRandevouDAL.Users
     {
         public override User Get(int id)
         {
-            using (var dbc = new RandevouDbContext())
-            { 
                 var user = dbc.Find<User>(id);
                 return user;
-            }
         }
-
 
         /// <summary>
         /// WRONG! use search patterns...
@@ -24,11 +20,9 @@ namespace EFRandevouDAL.Users
         /// <returns></returns>
         public IQueryable<User> QueryUsers()
         {
-            using (var dbc = new RandevouDbContext())
-            {
-                var users = dbc.Query<User>().ToArray();
-                return users.AsQueryable();
-            }
+                return dbc.Users.AsQueryable();
+                // var users = dbc.Query<User>().ToArray();
+                // return users.AsQueryable();
         }
     }
 }

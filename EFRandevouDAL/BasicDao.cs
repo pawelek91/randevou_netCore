@@ -8,40 +8,32 @@ namespace EFRandevouDAL
 {
     public abstract class BasicDao<TEntity> where TEntity : BasicRandevouObject
     {
-        public BasicDao() { }
+        protected RandevouDbContext dbc;
+        public BasicDao() { dbc = new RandevouDbContext(); }
         
         public virtual int Insert(TEntity entity)
         {
-            using (var dbc = new RandevouDbContext())
-            {
-                dbc.Add(entity);
+                dbc.Add<TEntity>(entity);
+                dbc.SaveChanges();
                 return entity.Id;
-            }
         }
 
         public virtual void Update(TEntity entity)
         {
-            using (var dbc = new RandevouDbContext())
-            {
                 dbc.Update(entity);
-            }
+                dbc.SaveChanges();
         }
 
         public virtual void Delete(TEntity entity)
         {
-            using (var dbc = new RandevouDbContext())
-            {
                 dbc.Remove(entity);
-            }
+                dbc.SaveChanges();            
         }
 
         public virtual TEntity Get(int id)
         {
-            using (var dbc = new RandevouDbContext())
-            {
                 var entity = dbc.Find<TEntity>(id);
                 return entity;
-            }
         }
 
 
