@@ -21,15 +21,18 @@ namespace EFRandevouDAL.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("FromUserId");
+                    b.Property<int>("FromUserId");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<DateTime>("ReadDate");
+                    b.Property<string>("MessageContent")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("ReadDate");
 
                     b.Property<DateTime>("SendDate");
 
-                    b.Property<int?>("ToUserId");
+                    b.Property<int>("ToUserId");
 
                     b.HasKey("Id");
 
@@ -53,7 +56,8 @@ namespace EFRandevouDAL.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -64,11 +68,13 @@ namespace EFRandevouDAL.Migrations
                 {
                     b.HasOne("RandevouData.Users.User", "FromUser")
                         .WithMany()
-                        .HasForeignKey("FromUserId");
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("RandevouData.Users.User", "ToUser")
                         .WithMany()
-                        .HasForeignKey("ToUserId");
+                        .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

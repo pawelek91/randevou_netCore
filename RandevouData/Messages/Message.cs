@@ -16,10 +16,10 @@ namespace RandevouData.Messages
         public DateTime SendDate{get;set;}
         public DateTime? ReadDate{get;set;}
 
-         [Required]
-         public string MessageContent{get;set;}
+        [Required]
+        public string MessageContent{get;set;}
 
-        protected Message(){}
+        public Message(){}
 
         public Message(User from, User to, string content)
         {
@@ -27,7 +27,7 @@ namespace RandevouData.Messages
             this.ToUser = to;
             this.MessageContent = content;
             this.SendDate = DateTime.Now;
-            this.ReadDate = null;
+            this.ReadDate = DateTime.Now;
         }
 
     }

@@ -1,4 +1,7 @@
+using RandevouData.Messages;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RandevouData.Users
@@ -7,10 +10,13 @@ namespace RandevouData.Users
     {
         [Required]
         public string Name{get;set;}
+
         public string DisplayName{get;set;}
 
+        [Required]
         public char Gender{get;set;}
 
+        [Required]
         public DateTime BirthDate{get;set;}
 
         public User(string n, string dn, char g, DateTime bd)
@@ -18,7 +24,7 @@ namespace RandevouData.Users
             Name=n; DisplayName = dn; Gender = g; BirthDate = bd;
         }
 
-        protected User(){}
+        public User(){}
 
         public override string ToString()
         {

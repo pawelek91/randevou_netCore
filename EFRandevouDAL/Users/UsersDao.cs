@@ -8,11 +8,7 @@ namespace EFRandevouDAL.Users
 {
     public class UsersDao : BasicDao<User>
     {
-        public override User Get(int id)
-        {
-                var user = dbc.Find<User>(id);
-                return user;
-        }
+        public UsersDao(RandevouDbContext context) : base(context) { }
 
         /// <summary>
         /// WRONG! use search patterns...
@@ -21,8 +17,6 @@ namespace EFRandevouDAL.Users
         public IQueryable<User> QueryUsers()
         {
                 return dbc.Users.AsQueryable();
-                // var users = dbc.Query<User>().ToArray();
-                // return users.AsQueryable();
         }
     }
 }

@@ -8,6 +8,10 @@ namespace EFRandevouDAL.Messages
 {
     public class MessagesDao : BasicDao<Message>
     {
+        public MessagesDao(RandevouDbContext dbc) : base(dbc)
+        {
+
+        }
         public IQueryable<Message> QueryMessages()
         {
             return dbc.Messages.AsQueryable();

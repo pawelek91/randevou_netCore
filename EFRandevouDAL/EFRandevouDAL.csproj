@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20181006085510_InitialCreate.cs" />
+    <Compile Remove="Migrations\20181009083836_Messages.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="2.1.4" />

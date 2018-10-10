@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessServices.UsersService;
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Controllers.Dto;
+using BusinessServices.MessageService;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,39 +15,50 @@ namespace WebApi.Controllers
     {
         // GET: api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
 			IUsersService usersService = GetService<IUsersService>();
 			var users = usersService.QueryUsers().ToArray();
-			return users.Any() ? users.Select(x=>x.ToString()) : new string[1]{"lista userow jest pusta"} ;
+            return Ok(users);		
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
 			IUsersService usersService = GetService<IUsersService>();
 			var user = usersService.GetUser(id);
-			return user != null ? user.Name : "Brak usera";
+            return Ok(user);
         }
 
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody]UserDto userDto)
+        public IActionResult Post([FromBody]UserDto userDto)
         {
-            DateTime birthDate;
-            var name = userDto.UserName;
-            DateTime.TryParse(userDto.BirthDate, out birthDate);
-            var gender = userDto.Gender;
+            if (userDto == null)
+                return BadRequest(nameof(userDto));
+
             IUsersService usersService = GetService<IUsersService>();
-            usersService.Add(name,gender,birthDate);
+            var id = usersService.Add(userDto);
+            return Created("api/users/",id.ToString());
+        }
+
+        [HttpPatch]
+        public IActionResult Patch([FromBody]UserDto userDto)
+        {
+            if (userDto == null || !userDto.Id.HasValue)
+                return BadRequest(nameof(userDto));
+
+            IUsersService usersService = GetService<IUsersService>();
+            usersService.Update(userDto);
+            return Ok();
 
         }
 
-        // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            IUsersService usersService = GetService<IUsersService>();
+            usersService.Delete(id);
+            return NoContent();
         }
     }
 }

@@ -2,15 +2,16 @@
 using System.Linq;
 using BusinessServices.MessageService;
 using RandevouData.Users;
+using System.Collections.Generic;
 
 namespace BusinessServices.UsersService
 {
     public interface IUsersService
     {
-	    int Add(string userName, char gender, DateTime birthDate);
+	    int Add(UserDto userDto);
 		void Delete(int id);
-		void Update(int id, string userName, char? gender, DateTime? birthdate);
+		void Update(UserDto userDto);
 		UserDto GetUser(int id);
-		IQueryable<User> QueryUsers();
+		IEnumerable<UserDto> QueryUsers();
     }
 }
