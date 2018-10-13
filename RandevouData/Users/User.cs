@@ -1,4 +1,5 @@
 using RandevouData.Messages;
+using RandevouData.Users.Details;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,9 +23,12 @@ namespace RandevouData.Users
         public User(string n, string dn, char g, DateTime bd)
         {
             Name=n; DisplayName = dn; Gender = g; BirthDate = bd;
+            UserDetails = new UserDetails(this);
         }
 
-        public User(){}
+        public virtual UserDetails UserDetails { get; set; }
+
+        protected User(){}
 
         public override string ToString()
         {

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFRandevouDAL.Migrations
 {
     [DbContext(typeof(RandevouDbContext))]
-    [Migration("20181009131445_migration")]
-    partial class migration
+    [Migration("20181012052056_lazy")]
+    partial class lazy
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,6 +45,31 @@ namespace EFRandevouDAL.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("RandevouData.Users.Details.UserDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("City");
+
+                    b.Property<int>("Heigth");
+
+                    b.Property<string>("Region");
+
+                    b.Property<int>("Tattos");
+
+                    b.Property<int>("UserId");
+
+                    b.Property<int>("Width");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UsersDetails");
+                });
+
             modelBuilder.Entity("RandevouData.Users.User", b =>
                 {
                     b.Property<int>("Id")
@@ -76,6 +101,14 @@ namespace EFRandevouDAL.Migrations
                     b.HasOne("RandevouData.Users.User", "ToUser")
                         .WithMany()
                         .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("RandevouData.Users.Details.UserDetails", b =>
+                {
+                    b.HasOne("RandevouData.Users.User", "User")
+                        .WithOne("UserDetails")
+                        .HasForeignKey("RandevouData.Users.Details.UserDetails", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

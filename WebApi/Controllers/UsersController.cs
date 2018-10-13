@@ -11,22 +11,22 @@ using BusinessServices.MessageService;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-	public class UsersController : BasicController
+    public class UsersController : BasicController
     {
         // GET: api/values
         [HttpGet]
         public IActionResult Get()
         {
-			IUsersService usersService = GetService<IUsersService>();
-			var users = usersService.QueryUsers().ToArray();
-            return Ok(users);		
+            IUsersService usersService = GetService<IUsersService>();
+            var users = usersService.QueryUsers().ToArray();
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-			IUsersService usersService = GetService<IUsersService>();
-			var user = usersService.GetUser(id);
+            IUsersService usersService = GetService<IUsersService>();
+            var user = usersService.GetUser(id);
             return Ok(user);
         }
 
@@ -38,7 +38,19 @@ namespace WebApi.Controllers
 
             IUsersService usersService = GetService<IUsersService>();
             var id = usersService.Add(userDto);
-            return Created("api/users/",id.ToString());
+            return Created("api/users/", id.ToString());
+        }
+
+        [Route("{id:int}/Details")]
+        [HttpPost("{id:int}")]
+        public IActionResult Post([FromQuery] int id, [FromBody]UserDetailsDto detailsDto)
+        {
+            IUsersService usersService = GetService<IUsersService>();
+            if (id == 0)
+                id = detailsDto.UserId;
+
+            usersService.UpdateUserDetails(id, detailsDto);
+            return Ok();
         }
 
         [HttpPatch]

@@ -10,7 +10,7 @@ using AutoMapper.QueryableExtensions;
 
 namespace BusinessServices.UsersService
 {
-	public class UserService : IUsersService
+	public partial class UserService : IUsersService
     {
      
 		IMapper mapper;

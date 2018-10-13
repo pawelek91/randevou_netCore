@@ -8,9 +8,6 @@
     <Compile Remove="Class1.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="UsersService\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\EFRandevouDAL\EFRandevouDAL.csproj" />
   </ItemGroup>
   <ItemGroup>

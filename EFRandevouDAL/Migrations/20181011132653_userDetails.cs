@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EFRandevouDAL.Migrations
 {
-    public partial class migration : Migration
+    public partial class userDetails : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,6 +54,30 @@ namespace EFRandevouDAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UsersDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Width = table.Column<int>(nullable: false),
+                    Heigth = table.Column<int>(nullable: false),
+                    Region = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    Tattos = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UsersDetails_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_FromUserId",
                 table: "Messages",
@@ -63,12 +87,21 @@ namespace EFRandevouDAL.Migrations
                 name: "IX_Messages_ToUserId",
                 table: "Messages",
                 column: "ToUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersDetails_UserId",
+                table: "UsersDetails",
+                column: "UserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "UsersDetails");
 
             migrationBuilder.DropTable(
                 name: "Users");
