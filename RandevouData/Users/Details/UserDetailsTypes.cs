@@ -11,4 +11,5 @@ namespace RandevouData.Users.Details
         public const string HairColor = nameof(HairColor);
         public const string Interests = nameof(Interests);
     }
+
 }

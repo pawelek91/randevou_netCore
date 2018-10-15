@@ -35,5 +35,6 @@ namespace EFRandevouDAL
         public DbSet<User> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<UserDetails> UsersDetails { get; set; }
+        public DbSet<UserDetailsDictionaryItem> UserDetailsDictionary { get; set; }
     }
 }

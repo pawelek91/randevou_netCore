@@ -2,6 +2,7 @@ using BusinessServices.UsersService;
 using BusinessServices.MessageService;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
+using BusinessServices.UsersService.DetailsDictionary;
 
 public static class BusinessServicesProvider
 {
@@ -28,11 +29,12 @@ public static class BusinessServicesProvider
 
     private static void RegisterServices(IMapper mapper)
     {
-			_serviceProvider = _serviceCollection
-			.AddSingleton<IUsersService, UserService>()
-			.AddSingleton<IMessagesService, MessagesService>()
-            .AddScoped<IMapper>(c=>mapper)
-			.BuildServiceProvider();
+		_serviceProvider = _serviceCollection
+		.AddSingleton<IUsersService, UserService>()
+		.AddSingleton<IMessagesService, MessagesService>()
+        .AddSingleton<IUserDetailsDictionaryService, UserDetailsDictionaryService>()
+        .AddScoped<IMapper>(c=>mapper)
+		.BuildServiceProvider();
     }
         
 
