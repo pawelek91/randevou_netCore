@@ -9,7 +9,7 @@ using RandevouData.Users.Details;
 
 namespace BusinessServices.UsersService.DetailsDictionary
 {
-    public class UserDetailsDictionaryService: IUserDetailsDictionaryService
+    public class UserDetailsDictionaryService : IUserDetailsDictionaryService
     {
         IMapper mapper;
         private string[] _itemTypes = new string[]
@@ -25,8 +25,8 @@ namespace BusinessServices.UsersService.DetailsDictionary
         }
 
         private void ValidateItemType(string type)
-        { 
-            if(!_itemTypes.Contains(type))
+        {
+            if (!_itemTypes.Select(x => x.ToLower()).Contains(type.ToLower()))
                 throw new ArgumentException("wrong item type");
         }
 
@@ -53,33 +53,23 @@ namespace BusinessServices.UsersService.DetailsDictionary
             }
         }
 
-        public void DisableItem(DictionaryItemDto dto)
+        public void DisableItem(int itemId)
         {
-            if (!dto.Id.HasValue)
-                throw new ArgumentNullException(nameof(dto.Id));
-
-            ValidateItemType(dto.ItemType);
-
             using (var dbc = new RandevouDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
-                var entity = dao.Get(dto.Id.Value);
+                var entity = dao.Get(itemId);
                 entity.IsDeleted = true;
                 dao.Update(entity);
             }
         }
 
-        public void EnableItem(DictionaryItemDto dto)
+        public void EnableItem(int itemId)
         {
-            if (!dto.Id.HasValue)
-                throw new ArgumentNullException(nameof(dto.Id));
-
-            ValidateItemType(dto.ItemType);
-
             using (var dbc = new RandevouDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
-                var entity = dao.Get(dto.Id.Value);
+                var entity = dao.Get(itemId);
                 entity.IsDeleted = false;
                 dao.Update(entity);
             }
@@ -92,7 +82,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
             using (var dbc = new RandevouDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
-                var details = dao.QueryDictionary().Where(x => x.DetailsType == typeName && !x.IsDeleted).ToArray();
+                var details = dao.QueryDictionary().Where(x => x.DetailsType.Equals(typeName, StringComparison.CurrentCultureIgnoreCase) && !x.IsDeleted).ToArray();
                 var dto = mapper.Map<UserDetailsDictionaryItem[], DictionaryItemDto[]>(details);
                 return dto;
             }
@@ -103,7 +93,9 @@ namespace BusinessServices.UsersService.DetailsDictionary
             if (!dto.Id.HasValue)
                 throw new ArgumentNullException(nameof(dto.Id));
 
-            ValidateItemType(dto.ItemType);
+            if (!string.IsNullOrWhiteSpace(dto.ItemType) || !string.IsNullOrWhiteSpace(dto.ObjectType))
+                throw new ArgumentException("Nie można zmienić typu elementu");
+
             using (var dbc = new RandevouDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);

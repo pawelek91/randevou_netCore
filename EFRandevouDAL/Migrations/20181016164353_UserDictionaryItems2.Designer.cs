@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFRandevouDAL.Migrations
 {
     [DbContext(typeof(RandevouDbContext))]
-    [Migration("20181012052056_lazy")]
-    partial class lazy
+    [Migration("20181016164353_UserDictionaryItems2")]
+    partial class UserDictionaryItems2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,6 +68,29 @@ namespace EFRandevouDAL.Migrations
                         .IsUnique();
 
                     b.ToTable("UsersDetails");
+                });
+
+            modelBuilder.Entity("RandevouData.Users.Details.UserDetailsDictionaryItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DetailsType")
+                        .IsRequired();
+
+                    b.Property<string>("DisplayName");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("ObjectType")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserDetailsDictionary");
                 });
 
             modelBuilder.Entity("RandevouData.Users.User", b =>

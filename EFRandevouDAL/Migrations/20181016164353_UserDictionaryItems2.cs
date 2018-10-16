@@ -2,7 +2,7 @@
 
 namespace EFRandevouDAL.Migrations
 {
-    public partial class lazy : Migration
+    public partial class UserDictionaryItems2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

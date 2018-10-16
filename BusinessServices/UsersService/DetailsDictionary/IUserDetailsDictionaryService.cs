@@ -8,8 +8,8 @@ namespace BusinessServices.UsersService.DetailsDictionary
     {
         int AddItem(DictionaryItemDto dto);
         void UpdateItem(DictionaryItemDto dto);
-        void DisableItem(DictionaryItemDto dto);
-        void EnableItem(DictionaryItemDto dto);
+        void DisableItem(int itemId);
+        void EnableItem(int itemId);
         DictionaryItemDto[] GetItems(string typeName);
         string[] GetTypesNames();
     }

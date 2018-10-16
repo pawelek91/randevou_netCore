@@ -68,6 +68,29 @@ namespace EFRandevouDAL.Migrations
                     b.ToTable("UsersDetails");
                 });
 
+            modelBuilder.Entity("RandevouData.Users.Details.UserDetailsDictionaryItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DetailsType")
+                        .IsRequired();
+
+                    b.Property<string>("DisplayName");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("ObjectType")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserDetailsDictionary");
+                });
+
             modelBuilder.Entity("RandevouData.Users.User", b =>
                 {
                     b.Property<int>("Id")
