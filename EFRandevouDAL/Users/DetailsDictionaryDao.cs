@@ -17,6 +17,17 @@ namespace EFRandevouDAL.Users
             return dbc.UserDetailsDictionary.AsQueryable<UserDetailsDictionaryItem>();
         }
 
+        public IQueryable<UsersDetailsItemsValues> QueryDictionaryValues()
+        {
+            return dbc.UsersDetailsItemsValues.AsQueryable();
+        }
+
+
+        public void DeleteItemValue(UsersDetailsItemsValues entity)
+        {
+            dbc.UsersDetailsItemsValues.Remove(entity);
+        }
+
         public void AddItemValue(UsersDetailsItemsValues entity)
         {
             dbc.Add(entity);

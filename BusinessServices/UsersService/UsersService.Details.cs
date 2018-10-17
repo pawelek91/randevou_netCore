@@ -21,14 +21,13 @@ namespace BusinessServices.UsersService
                 if (user == null)
                     throw new ArgumentOutOfRangeException(string.Format("Brak usera {0}", userId));
 
-                UpdateDetails(user.UserDetails, dto, dao,detailsDao);
-
-                //user.UserDetails.Region = dto.Region;
+                UpdateDetails(user.UserDetails, dto, dao);
+                UpdateDetailsDictionaryItems(user.UserDetails, dto, detailsDao);
                 dbc.SaveChanges();
             }
         }
 
-        private void UpdateDetails(UserDetails details, UserDetailsDto dto, UsersDao dao, DetailsDictionaryDao detailsDao)
+        private void UpdateDetails(UserDetails details, UserDetailsDto dto, UsersDao dao)
         {
             if (!String.IsNullOrEmpty(dto.City))
                 details.City = dto.City;
@@ -45,67 +44,89 @@ namespace BusinessServices.UsersService
             if (dto.Width.HasValue)
                 details.Width = dto.Width.Value;
 
-                UpdateDetailsDictionaryItems(details,dto, detailsDao);
-
         }
 
         private void UpdateDetailsDictionaryItems(UserDetails details, UserDetailsDto dto, DetailsDictionaryDao detailsDao)
         {
             if(dto.Interests.Any())
             {
-                foreach(var interest in dto.Interests)
+                var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId).ToArray();
+
+                var detailsToDelete = existingDetails.Where(x => !dto.Interests.Contains(x));
+                var detailsToAdd = dto.Interests.Where(x => !existingDetails.Any(y => y == x));
+
+                foreach (var interestId in detailsToAdd)
                 {
-                    var existingDetails = details.DetailsItemsValues.Select(x=>x.UserDetailsDictionaryItemId).ToArray();
-
-                    //var detailsToDelete = 
-                    //var detailsToAdd=
-
-                    if(details.DetailsItemsValues.Where(x=>x.UserDetailsDictionaryItemId == interest).Any())
-                        continue;
-
                     var entity = new UsersDetailsItemsValues()
-                    { 
+                    {
                         UserDetailsId = details.Id,
-                        UserDetailsDictionaryItemId = interest,
-                        Value=true,
+                        UserDetailsDictionaryItemId = interestId,
+                        Value = true,
                     };
                     detailsDao.AddItemValue(entity);
                 }
+
+                foreach(var interestId in detailsToDelete)
+                {
+                    var interestEntity = detailsDao.QueryDictionaryValues()
+                        .Where(x => x.UserDetailsDictionaryItemId == interestId)
+                        .SingleOrDefault();
+
+                    if (interestEntity != null)
+                        detailsDao.DeleteItemValue(interestEntity);
+                }
             }
             
-
-            //if (dto.EyesColor.HasValue)
-            //{
-
-            //    var userEyeColorItem = details.DetailsDictionaryItems
-            //                        .Where(x => x.DictionaryItem.DetailsType == UserDetailsTypes.EyesColor)
-            //                        .Select(x => x.DictionaryItem).FirstOrDefault();
-
-            //    if (userEyeColorItem == null)
-            //    {
-            //        throw new ArgumentOutOfRangeException(string.Format("Brak zdefiniowanego koloru oczu w bazie"));
-            //    }
-
-            //    var newEyesColor = dao.QueryUsersDetails()
-            //        .Where(x => x.DetailsType == UserDetailsTypes.EyesColor && x.Id == dto.EyesColor.Value)
-            //        .FirstOrDefault();
-
-            //    if(newEyesColor == null)
-            //        throw new ArgumentOutOfRangeException(string.Format("Brak zdefiniowanego koloru oczu ({0})", dto.EyesColor.Value));
-
-            //    userEyeColorItem = newEyesColor;
-            //}
-
-            //if(dto.Gender.HasValue)
-            //{
-            //    var userGenderItem = details.DetailsDictionaryItems
-            //                      .Where(x => x.DictionaryItem.DetailsType == UserDetailsTypes.Gender)
-            //                      .Select(x=>x.DictionaryItem).FirstOrDefault();
+            if(dto.EyesColor.HasValue)
+            {
+                var eyesColorsIds = detailsDao.QueryDictionary().Where(x =>
+                x.DetailsType.Equals(UserDetailsTypes.EyesColor, StringComparison.CurrentCultureIgnoreCase)
+                ).Select(x=>x.Id).ToArray();
 
 
-            //if (genderItem == null)
-            //    throw new ArgumentOutOfRangeException(string.Format("Brak zdefiniowanego koloru oczu ({0})", dto.Gender.Value));
-            //}
+                var userEyesColor = detailsDao.QueryDictionaryValues()
+                    .Where(x => eyesColorsIds.Contains(x.UserDetailsDictionaryItemId)
+                    && x.UserDetailsId == dto.UserId)
+                    .FirstOrDefault();
+
+                if (userEyesColor?.UserDetailsDictionaryItemId != dto.EyesColor.Value)
+                    detailsDao.DeleteItemValue(userEyesColor);
+
+                var eyesColorEntity = new UsersDetailsItemsValues()
+                {
+                    UserDetailsDictionaryItemId = dto.EyesColor.Value,
+                    UserDetailsId = dto.UserId,
+                    Value = true,
+                };
+
+                detailsDao.AddItemValue(eyesColorEntity);
+            }
+
+            // wspolne dla hair-color i eyes-color
+            if (dto.HairColor.HasValue)
+            {
+                var hairColorsIds = detailsDao.QueryDictionary().Where(x =>
+                x.DetailsType.Equals(UserDetailsTypes.HairColor, StringComparison.CurrentCultureIgnoreCase)
+                ).Select(x => x.Id).ToArray();
+
+
+                var userEyesColor = detailsDao.QueryDictionaryValues()
+                    .Where(x => hairColorsIds.Contains(x.UserDetailsDictionaryItemId)
+                    && x.UserDetailsId == dto.UserId)
+                    .FirstOrDefault();
+
+                if (userEyesColor?.UserDetailsDictionaryItemId != dto.HairColor.Value)
+                    detailsDao.DeleteItemValue(userEyesColor);
+
+                var eyesColorEntity = new UsersDetailsItemsValues()
+                {
+                    UserDetailsDictionaryItemId = dto.HairColor.Value,
+                    UserDetailsId = dto.UserId,
+                    Value = true,
+                };
+
+                detailsDao.AddItemValue(eyesColorEntity);
+            }
         }
         }
     }

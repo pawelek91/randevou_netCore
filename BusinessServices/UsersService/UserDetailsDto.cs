@@ -12,9 +12,8 @@ namespace BusinessServices.UsersService
         public string Region { get; set; }
         public string City { get; set; }
         public int? Tattos { get; set; }
-        //public Guid? Gender { get; set; }
-        //public Guid? EyesColor { get; set; }
-        //public Guid? HairColor { get; set; }
+        public int? EyesColor { get; set; }
+        public int? HairColor { get; set; }
         public int[] Interests { get; set; }
     }
 }
