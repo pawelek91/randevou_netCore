@@ -17,6 +17,7 @@ namespace RandevouData.Users.Details
 
         [Required]
         public string ObjectType { get; set; }
-        //IList<UsersDetailsDictionaryItems> DetailsDictionaryItems { get; set; }
+
+        public ICollection<UsersDetailsItemsValues> DetailsItemsValues{get;set;}
     }
 }

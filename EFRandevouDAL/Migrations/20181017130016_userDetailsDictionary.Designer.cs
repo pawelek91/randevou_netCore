@@ -3,14 +3,16 @@ using System;
 using EFRandevouDAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFRandevouDAL.Migrations
 {
     [DbContext(typeof(RandevouDbContext))]
-    partial class RandevouDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181017130016_userDetailsDictionary")]
+    partial class userDetailsDictionary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
