@@ -12,8 +12,11 @@ namespace BusinessServices.UsersService
         public string Region { get; set; }
         public string City { get; set; }
         public int? Tattos { get; set; }
+
+        #region dictionary
         public int? EyesColor { get; set; }
         public int? HairColor { get; set; }
         public int[] Interests { get; set; }
+        #endregion
     }
 }

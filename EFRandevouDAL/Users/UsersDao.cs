@@ -26,6 +26,11 @@ namespace EFRandevouDAL.Users
             dbc.UsersDetails.Add(entity);
         }
 
+        public IQueryable<UserDetails> QueryUserDetails()
+        {
+            return dbc.UsersDetails.AsQueryable();
+        }
+
         public User GetUserWithDetails(int id)
         {
            //return dbc.Users.Include(x => x.UserDetails).FirstOrDefault(x => x.Id == id);

@@ -10,37 +10,42 @@ using AutoMapper.QueryableExtensions;
 
 namespace BusinessServices.UsersService
 {
-	public partial class UserService : IUsersService
+    public partial class UserService : IUsersService
     {
-     
-		IMapper mapper;
+
+        IMapper mapper;
 
         public UserService(IMapper mapper)
         {
 
-			this.mapper = mapper;
+            this.mapper = mapper;
         }
-		public UserDto GetUser(int id)
-		{
+        public UserDto GetUser(int id)
+        {
             using (var dbc = new RandevouDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var entity = dao.Get(id);
-			var userDto =mapper.Map<User,UserDto>(entity);
-            return userDto;
+                var userDto = mapper.Map<User, UserDto>(entity);
+                return userDto;
             }
         }
 
-		public IEnumerable<UserDto> QueryUsers()
+        public IEnumerable<UserDto> QueryUsers()
         {
             using (var dbc = new RandevouDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var users = dao.QueryUsers().ToArray();
                 var dto = mapper.Map<User[], UserDto[]>(users);
+
+                if (dto.Count() < 2)
+                    AddInitialUsers(dbc);
                 return dto;
             }
-		}
+        }
+
+       
 
 		public int Add(UserDto userDto)
 		{
@@ -104,5 +109,22 @@ namespace BusinessServices.UsersService
                 dao.Update(user);
             }
         }
-	}
+
+        private void AddInitialUsers(RandevouDbContext dbc)
+        {
+           
+
+                var dao = new UsersDao(dbc);
+                if (dao.QueryUsers().Count() > 2)
+                    return;
+
+                var user = new User("user1", string.Empty, 'M', new DateTime(1990, 12, 12));
+                var user2 = new User("user2", string.Empty, 'F', new DateTime(1998, 12, 12));
+                var user3 = new User("user3", string.Empty, 'M', new DateTime(1980, 12, 12));
+                dao.Insert(user);
+                dao.Insert(user2);
+                dao.Insert(user3);
+            
+        }
+    }
 }

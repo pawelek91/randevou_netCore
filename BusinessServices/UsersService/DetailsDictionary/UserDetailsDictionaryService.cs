@@ -15,7 +15,6 @@ namespace BusinessServices.UsersService.DetailsDictionary
         private string[] _itemTypes = new string[]
         {
             UserDetailsTypes.EyesColor,
-            UserDetailsTypes.Gender,
             UserDetailsTypes.Interests,
         };
 

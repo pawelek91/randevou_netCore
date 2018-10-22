@@ -13,25 +13,36 @@ namespace BusinessServices.UsersFinderService
     {
         public int[] FindUsers(SearchQueryDto dto)
         {
-            
             using (var dbc = new RandevouDbContext())
             {
                 var usersDao = new UsersDao(dbc);
                 var userDetialsDao = new DetailsDictionaryDao(dbc);
+                int[] detailsIds = null;
+                var query = QueryBasicData(dto, usersDao, out var basicQueryChanged);
 
-                var query = QueryBasicData(dto, usersDao, out var queryChanged);
-
-                if (queryChanged)
+                if (basicQueryChanged)
                 {
                     int[] typedUsersIds = query.Select(x => x.Id).ToArray();
 
                     if (!typedUsersIds.Any())
                         return typedUsersIds;
 
-                    else return QueryAdditionalValues(typedUsersIds, dto, userDetialsDao);
+                    else
+                    {
+                        detailsIds = QueryAdditionalValues(typedUsersIds, dto, usersDao, userDetialsDao);
+                    }
                 }
 
-                return QueryAdditionalValues(new int[0],dto, userDetialsDao);
+                else
+                {
+                    detailsIds = QueryAdditionalValues(null, dto, usersDao, userDetialsDao);
+                }
+
+                var usersIds = usersDao.QueryUserDetails()
+                    .Where(x => detailsIds.Contains(x.Id))
+                    .Select(x => x.UserId).ToArray();
+
+                return usersIds;
             }
         }
 
@@ -41,15 +52,16 @@ namespace BusinessServices.UsersFinderService
             queryChanged = false;
 
             if (!String.IsNullOrEmpty(dto.Name))
-            { 
                 query = query.Where(x => x.Name.Contains(dto.Name));
-            }
+
 
             if (dto.AgeFrom.HasValue)
-                query = query.Where(x => x.BirthDate.Year >= DateTime.Now.Year -  dto.AgeFrom.Value);
+                query = query.Where(x => x.BirthDate.Year <= DateTime.Now.Year - dto.AgeFrom.Value);
+
 
             if (dto.AgeTo.HasValue)
-                query = query.Where(x => x.BirthDate.Year <= DateTime.Now.Year - dto.AgeFrom.Value);
+                query = query.Where(x => x.BirthDate.Year >= DateTime.Now.Year - dto.AgeTo.Value);
+
 
             if (dto.Gender.HasValue)
                 query = query.Where(x => x.Gender == dto.Gender.Value);
@@ -57,20 +69,55 @@ namespace BusinessServices.UsersFinderService
 
             if (!String.IsNullOrEmpty(dto.Name) || dto.AgeFrom.HasValue || dto.AgeTo.HasValue || dto.Gender.HasValue)
                 queryChanged = true;
-                
+
             return query;
         }
 
-        private int[] QueryAdditionalValues(int[] usersIds, SearchQueryDto dto, DetailsDictionaryDao dao)
+        private int[] QueryAdditionalValues(int[] usersIds, SearchQueryDto dto, UsersDao usersDao, DetailsDictionaryDao dao)
         {
-            throw new NotImplementedException();
+            IQueryable<UserDetails> usersDetailsQuery = usersDao.QueryUserDetails();
+            if (usersIds != null)
+                usersDetailsQuery = usersDetailsQuery.Where(x => usersIds.Contains(x.UserId));
 
-            //IQueryable<UsersDetailsItemsValues> query = dao.QueryDictionaryValues();
-            //if(dto.Tatoos.HasValue)
-            //    if(dto.Tatoos.Value == true)
-            //        query=query.Where(x=>x.t)
+            if (dto.Tatoos.HasValue)
+                if (dto.Tatoos.Value == true)
+                    usersDetailsQuery = usersDetailsQuery.Where(x => x.Tattos > 0);
 
-            //dao.QueryDictionaryValues()
+            if (!String.IsNullOrEmpty(dto.Region))
+                usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.Contains(dto.Region));
+
+            if (!String.IsNullOrEmpty(dto.City))
+                usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.Contains(dto.City));
+
+            int[] filteredIds = null;
+
+            if (dto.Tatoos.HasValue || !string.IsNullOrEmpty(dto.Region) || !string.IsNullOrEmpty(dto.City))
+                filteredIds = usersDetailsQuery.Select(x => x.Id).ToArray();
+
+            return QueryDictionaryValues(filteredIds,dto, dao);
+        }
+
+        private int[] QueryDictionaryValues(int[] filteredIds, SearchQueryDto dto, DetailsDictionaryDao dao)
+        {
+            var query = dao.QueryDictionaryValues();
+
+            if (filteredIds != null)
+                query = query.Where(x => filteredIds.Contains(x.UserDetailsId));
+
+            if(dto.EyesColor.HasValue)
+            {
+                query = query.Where(x => x.UserDetailsDictionaryItemId == dto.EyesColor && x.Value);
+            }
+
+            if(dto.HairColor.HasValue)
+            {
+                query = query.Where(x => x.UserDetailsDictionaryItemId == dto.HairColor && x.Value);
+            }
+
+            //interests...
+
+            var userDetailsIds = query.Select(x => x.UserDetailsId).ToArray();
+            return userDetailsIds;
         }
     }
 }

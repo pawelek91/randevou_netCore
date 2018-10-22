@@ -3,6 +3,7 @@ using BusinessServices.MessageService;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using BusinessServices.UsersService.DetailsDictionary;
+using BusinessServices.UsersFinderService;
 
 public static class BusinessServicesProvider
 {
@@ -33,6 +34,7 @@ public static class BusinessServicesProvider
 		.AddSingleton<IUsersService, UserService>()
 		.AddSingleton<IMessagesService, MessagesService>()
         .AddSingleton<IUserDetailsDictionaryService, UserDetailsDictionaryService>()
+        .AddSingleton<IUserFinderService, UserFinderService>()
         .AddScoped<IMapper>(c=>mapper)
 		.BuildServiceProvider();
     }

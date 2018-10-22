@@ -27,7 +27,7 @@ namespace BusinessServices.UsersService
             }
         }
 
-        private void UpdateDetails(UserDetails details, UserDetailsDto dto, UsersDao dao)
+        private void UpdateDetails(UserDetails details, UserDetailsDto dto)
         {
             if (!String.IsNullOrEmpty(dto.City))
                 details.City = dto.City;
