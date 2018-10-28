@@ -16,8 +16,8 @@ namespace EFRandevouDAL
         private const string _dbName = "Randevou.db";
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var dbPath = Path.Combine(Directory.GetCurrentDirectory(),"..","..","..",_dbName);
-            optionsBuilder.UseSqlite("Data Source=" + dbPath);            
+            var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "..","..","..","..",_dbName);
+            optionsBuilder.UseSqlite("Data Source=" + dbPath); 
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

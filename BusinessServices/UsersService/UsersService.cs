@@ -17,7 +17,6 @@ namespace BusinessServices.UsersService
 
         public UserService(IMapper mapper)
         {
-
             this.mapper = mapper;
         }
         public UserDto GetUser(int id)
