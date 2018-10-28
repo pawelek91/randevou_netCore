@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using EFRandevouDAL.DaoConfigurations;
 using Microsoft.EntityFrameworkCore;
 using RandevouData.Messages;
 using RandevouData.Users;
@@ -15,7 +16,7 @@ namespace EFRandevouDAL
         private const string _dbName = "Randevou.db";
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var dbPath = Path.Combine(Directory.GetCurrentDirectory(),_dbName);
+            var dbPath = Path.Combine(Directory.GetCurrentDirectory(),"..","..","..",_dbName);
             optionsBuilder.UseSqlite("Data Source=" + dbPath);            
         }
 
@@ -33,13 +34,15 @@ namespace EFRandevouDAL
 
             modelBuilder.Entity<UsersDetailsItemsValues>()
             .HasKey(table=> new {table.UserDetailsId, table.UserDetailsDictionaryItemId});
+
+            modelBuilder
+                .ApplyConfiguration(new DictionaryDetailsDaoConfiguration());
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<UserDetails> UsersDetails { get; set; }
         public DbSet<UserDetailsDictionaryItem> UserDetailsDictionary { get; set; }
-
         public DbSet<UsersDetailsItemsValues> UsersDetailsItemsValues{get;set;}
     }
 }

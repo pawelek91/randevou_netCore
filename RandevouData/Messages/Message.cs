@@ -1,16 +1,20 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using RandevouData.Users;
 
 namespace RandevouData.Messages
 {
+   
     public class Message : BasicRandevouObject
     {
+        [NotMapped]
         [Required]
-        public Users.User FromUser{get;set;}
-        
+        public virtual User FromUser{get;set;}
+
+        [NotMapped]
         [Required]
-        public Users.User ToUser{get;set;}
+        public virtual User ToUser{get;set;}
 
         [Required]
         public DateTime SendDate{get;set;}

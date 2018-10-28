@@ -114,7 +114,11 @@ namespace BusinessServices.UsersFinderService
                 query = query.Where(x => x.UserDetailsDictionaryItemId == dto.HairColor && x.Value);
             }
 
-            //interests...
+            if(dto.InterestIds?.Length > 0 )
+            {
+                query = query.Where(x => dto.InterestIds.Contains(x.UserDetailsDictionaryItemId));
+               //query=query.Where(x=> dto.InterestIds.Select(y=> y).Any(y=> y == x.UserDetailsDictionaryItemId)
+            }
 
             var userDetailsIds = query.Select(x => x.UserDetailsId).ToArray();
             return userDetailsIds;

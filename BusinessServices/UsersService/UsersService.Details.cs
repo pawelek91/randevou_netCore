@@ -21,7 +21,7 @@ namespace BusinessServices.UsersService
                 if (user == null)
                     throw new ArgumentOutOfRangeException(string.Format("Brak usera {0}", userId));
 
-                UpdateDetails(user.UserDetails, dto, dao);
+                UpdateDetails(user.UserDetails, dto);
                 UpdateDetailsDictionaryItems(user.UserDetails, dto, detailsDao);
                 dbc.SaveChanges();
             }
@@ -49,7 +49,8 @@ namespace BusinessServices.UsersService
         private void UpdateDetailsDictionaryItems(UserDetails details, UserDetailsDto dto, DetailsDictionaryDao detailsDao)
         {
             if(dto.Interests.Any())
-            {
+            { 
+
                 var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId).ToArray();
 
                 var detailsToDelete = existingDetails.Where(x => !dto.Interests.Contains(x));

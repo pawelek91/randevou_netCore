@@ -6,7 +6,7 @@ namespace RandevouData.Users.Details
 {
     public class UserDetails
     {
-        protected UserDetails()
+        public UserDetails()
         {
 
         }
@@ -21,11 +21,10 @@ namespace RandevouData.Users.Details
         public string Region { get; set; }
         public string City { get; set; }
         public int Tattos { get; set; }
-        //public IList<UsersDetailsDictionaryItems> DetailsDictionaryItems { get; set; }
 
         public virtual User User { get; set; }
         public int UserId { get; set; }
 
-        public ICollection<UsersDetailsItemsValues> DetailsItemsValues{get;set;}
+        public virtual ICollection<UsersDetailsItemsValues> DetailsItemsValues{get;set;}
     }
 }

@@ -33,19 +33,8 @@ namespace EFRandevouDAL.Users
 
         public User GetUserWithDetails(int id)
         {
-           //return dbc.Users.Include(x => x.UserDetails).FirstOrDefault(x => x.Id == id);
            return dbc.Users.Include(x => x.UserDetails.DetailsItemsValues).FirstOrDefault(x => x.Id == id);
         }
 
-        //public IQueryable<UserDetailsDictionaryItem> QueryUsersDetails()
-        //{
-        //    return dbc.UsersDetails.AsQueryable();
-        //}
-
-        //public Guid InsertDictionaryItem(UserDetailsDictionaryItem item)
-        //{
-        //     dbc.UsersDetails.Add(item);
-        //    return item.Id;
-        //}
     }
 }
