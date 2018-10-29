@@ -58,7 +58,7 @@ namespace BusinessServices.Tests
             }
         }
 
-        private void FillUsersInDb(UsersDao dao)
+        public static void FillUsersInDb(UsersDao dao)
         {
             var users = GenerateUsers();
             var userNamesInDb = dao.QueryUsers().Select(x => x.Name).ToArray();
@@ -71,7 +71,7 @@ namespace BusinessServices.Tests
         }
         
 
-        private User[] GenerateUsers()
+        private static User[] GenerateUsers()
         {
             var user1 = new User("user1", string.Empty, 'M', new DateTime(1991, 12, 12));
             var user2 = new User("user2", string.Empty, 'F', new DateTime(1998, 12, 12));

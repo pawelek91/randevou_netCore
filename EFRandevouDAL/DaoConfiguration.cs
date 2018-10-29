@@ -27,9 +27,9 @@ namespace EFRandevouDAL.DaoConfigurations
 
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasData(generateUsers());
-            builder.OwnsOne(e => e.UserDetails).HasData(
-                new UserDetails() { UserId = 1 });
+            // builder.HasData(generateUsers());
+            // builder.OwnsOne(e => e.UserDetails).HasData(
+            //     new UserDetails() { UserId = 1 });
         }
     }
 
