@@ -18,12 +18,18 @@ namespace EFRandevouDAL.Users
         /// <returns></returns>
         public IQueryable<User> QueryUsers()
         {
-            return dbc.Users.AsQueryable();
+            return dbc.Users.Include(x=>x.UserDetails).AsQueryable();
         }
 
         public void InsertUserDetails(UserDetails entity)
         {
             dbc.UsersDetails.Add(entity);
+        }
+
+        public override int Insert(User entity)
+        {
+            var id =  base.Insert(entity);
+            return id;
         }
 
         public IQueryable<UserDetails> QueryUserDetails()

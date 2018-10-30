@@ -76,35 +76,89 @@ namespace BusinessServices.UsersFinderService
         private int[] QueryAdditionalValues(int[] usersIds, SearchQueryDto dto, UsersDao usersDao, DetailsDictionaryDao dao)
         {
             IQueryable<UserDetails> usersDetailsQuery = usersDao.QueryUserDetails();
+            bool queryChanged = false;
+
             if (usersIds != null)
+            { 
                 usersDetailsQuery = usersDetailsQuery.Where(x => usersIds.Contains(x.UserId));
+                queryChanged = true;
+            }
 
             if (dto.Tatoos.HasValue)
+            { 
                 if (dto.Tatoos.Value == true)
                     usersDetailsQuery = usersDetailsQuery.Where(x => x.Tattos > 0);
+                else
+                    usersDetailsQuery = usersDetailsQuery.Where(x => x.Tattos == 0);
+
+                queryChanged = true;
+            }
 
             if (!String.IsNullOrEmpty(dto.Region))
-                usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.Contains(dto.Region));
+            {
+                usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.ToLower() == dto.Region.ToLower());
+               // usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.IndexOf(dto.Region, StringComparison.OrdinalIgnoreCase) >=0);
+                //usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.Contains(dto.Region));
+                queryChanged = true;
+            }
 
             if (!String.IsNullOrEmpty(dto.City))
-                usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.Contains(dto.City));
+            {
+                usersDetailsQuery = usersDetailsQuery.Where(x => x.City.ToLower() == dto.City.ToLower());
+                //usersDetailsQuery = usersDetailsQuery.Where(x => x.City.IndexOf(dto.City, StringComparison.OrdinalIgnoreCase) >= 0);
+                //usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.Contains(dto.City));
+                queryChanged = true;
+            }
+
+            if (dto.HeightFrom.HasValue)
+            { 
+                usersDetailsQuery = usersDetailsQuery.Where(x => x.Heigth >= dto.HeightFrom.Value);
+                queryChanged = true;
+            }
+
+            if (dto.HeightTo.HasValue)
+            { 
+                usersDetailsQuery = usersDetailsQuery.Where(x => x.Heigth <= dto.HeightTo.Value);
+                queryChanged = true;
+            }
+
+            if (dto.WidthFrom.HasValue)
+            { 
+                usersDetailsQuery = usersDetailsQuery.Where(x => x.Width >= dto.WidthFrom.Value);
+                queryChanged = true;
+            }
+
+            if (dto.WidthTo.HasValue)
+            { 
+                usersDetailsQuery = usersDetailsQuery.Where(x => x.Width <= dto.WidthTo.Value);
+                queryChanged = true;
+            }
+
 
             int[] filteredIds = null;
 
-            if (dto.Tatoos.HasValue || !string.IsNullOrEmpty(dto.Region) || !string.IsNullOrEmpty(dto.City))
+            if (queryChanged)
+            {
                 filteredIds = usersDetailsQuery.Select(x => x.Id).ToArray();
+            }
+                
 
             return QueryDictionaryValues(filteredIds,dto, dao);
         }
 
         private int[] QueryDictionaryValues(int[] filteredIds, SearchQueryDto dto, DetailsDictionaryDao dao)
         {
+            if (!(dto.EyesColor.HasValue || dto.HairColor.HasValue || dto.InterestIds?.Count() > 0))
+                return filteredIds;
+
             var query = dao.QueryDictionaryValues();
-
+        
             if (filteredIds != null)
+            {
                 query = query.Where(x => filteredIds.Contains(x.UserDetailsId));
+            }
 
-            if(dto.EyesColor.HasValue)
+            if (dto.EyesColor.HasValue)
             {
                 query = query.Where(x => x.UserDetailsDictionaryItemId == dto.EyesColor && x.Value);
             }

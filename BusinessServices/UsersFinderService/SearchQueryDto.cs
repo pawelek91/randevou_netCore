@@ -13,8 +13,8 @@ namespace BusinessServices.UsersFinderService
         public int? AgeTo { get; set; }
         public int? HeightFrom { get; set; }
         public int? HeightTo { get; set; }
-        public int? WeightFrom { get; set; }
-        public int? WeightTo { get; set; }
+        public int? WidthFrom { get; set; }
+        public int? WidthTo { get; set; }
         public char? Gender { get; set; }
         public bool? Tatoos { get; set; }
         public int[] InterestIds { get; set; }

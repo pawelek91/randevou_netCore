@@ -19,9 +19,7 @@ namespace BusinessServices.Tests
 
         [Fact]
         public void QueryBasicUsersDataTest()
-        {
-            var users = GenerateUsers();
-
+        { 
             IUsersService service = new UsersService.UserService(mapper);
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
