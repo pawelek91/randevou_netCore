@@ -16,7 +16,6 @@ namespace EFRandevouDAL
                 dbc.Add<TEntity>(entity);
                 dbc.SaveChanges();
                 return entity.Id;
-            
         }
 
         public virtual void Update(TEntity entity)

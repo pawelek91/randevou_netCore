@@ -168,13 +168,26 @@ namespace BusinessServices.UsersFinderService
                 query = query.Where(x => x.UserDetailsDictionaryItemId == dto.HairColor && x.Value);
             }
 
-            if(dto.InterestIds?.Length > 0 )
-            {
-                query = query.Where(x => dto.InterestIds.Contains(x.UserDetailsDictionaryItemId));
-               //query=query.Where(x=> dto.InterestIds.Select(y=> y).Any(y=> y == x.UserDetailsDictionaryItemId)
-            }
+           
 
             var userDetailsIds = query.Select(x => x.UserDetailsId).ToArray();
+
+            if (dto.InterestIds?.Length > 0)
+            {
+                int[] typedUsersIds;
+
+                var interestQuery = dao.QueryDictionaryValues()
+                    .Where(x => userDetailsIds.Contains(x.UserDetailsId))
+                    .GroupBy(x => x.UserDetailsId)
+                    .Select(x => new { userId = x.Key, interest = x.Select(y => y.UserDetailsDictionaryItemId) });
+
+                typedUsersIds = interestQuery.Where(x =>
+                                !dto.InterestIds.Except(x.interest).Any())
+                                .Select(x => x.userId).ToArray();
+
+
+                return typedUsersIds;
+            }
             return userDetailsIds;
         }
     }

@@ -26,11 +26,13 @@ namespace EFRandevouDAL.Users
         public void DeleteItemValue(UsersDetailsItemsValues entity)
         {
             dbc.UsersDetailsItemsValues.Remove(entity);
+            dbc.SaveChanges();
         }
 
         public void AddItemValue(UsersDetailsItemsValues entity)
         {
             dbc.Add(entity);
+            dbc.SaveChanges();
         }
 
     }

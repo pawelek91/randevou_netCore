@@ -9,6 +9,12 @@ namespace RandevouData.Users.Details
     public class UsersDetailsItemsValues
     {
 
+        public UsersDetailsItemsValues() { }
+        public UsersDetailsItemsValues(UserDetails ud)
+        {
+            this.UserDetailsId = ud.Id;
+        }
+
         [Key]
         public int UserDetailsId {get;set;}
         [Key]

@@ -51,7 +51,7 @@ namespace EFRandevouDAL.DaoConfigurations
                     Id = 1,
                     DetailsType = UserDetailsTypes.EyesColor,
                     DisplayName = "Brązowe",
-                    Name = "Brązowe",
+                    Name = UserDetailsTypes.EyesBrown,
                     ObjectType = "boolean",
                 },
 
@@ -60,7 +60,7 @@ namespace EFRandevouDAL.DaoConfigurations
                     Id = 2,
                     DetailsType = UserDetailsTypes.EyesColor,
                     DisplayName = "Niebieskie",
-                    Name = "Niebieskie",
+                    Name = UserDetailsTypes.EyesBlue,
                     ObjectType = "boolean",
                 },
 
@@ -69,7 +69,7 @@ namespace EFRandevouDAL.DaoConfigurations
                     Id = 3,
                     DetailsType = UserDetailsTypes.EyesColor,
                     DisplayName = "zielone",
-                    Name = "zielone",
+                    Name = UserDetailsTypes.EyesGreen,
                     ObjectType = "boolean",
                 },
 
@@ -78,7 +78,7 @@ namespace EFRandevouDAL.DaoConfigurations
                     Id = 4,
                     DetailsType = UserDetailsTypes.HairColor,
                     DisplayName = "ciemne",
-                    Name = "ciemne",
+                    Name = UserDetailsTypes.HairColorDark,
                     ObjectType = "boolean",
                 },
 
@@ -87,7 +87,7 @@ namespace EFRandevouDAL.DaoConfigurations
                    Id = 5,
                    DetailsType = UserDetailsTypes.HairColor,
                    DisplayName = "jasne",
-                   Name = "jasne",
+                   Name = UserDetailsTypes.HairColorLight,
                    ObjectType = "boolean",
                },
 
@@ -96,7 +96,7 @@ namespace EFRandevouDAL.DaoConfigurations
                     Id = 6,
                     DetailsType = UserDetailsTypes.Interests,
                     DisplayName = "piłka nożna",
-                    Name = "football",
+                    Name = UserDetailsTypes.InterestFootball,
                     ObjectType = "boolean",
                 },
 
@@ -105,7 +105,7 @@ namespace EFRandevouDAL.DaoConfigurations
                      Id = 7,
                      DetailsType = UserDetailsTypes.Interests,
                      DisplayName = "koszykówka",
-                     Name = "koszykówka",
+                     Name = UserDetailsTypes.InterestBasketball,
                      ObjectType = "boolean",
                  },
 
@@ -114,7 +114,7 @@ namespace EFRandevouDAL.DaoConfigurations
                     Id = 8,
                     DetailsType = UserDetailsTypes.Interests,
                     DisplayName = "szachy",
-                    Name = "szachy",
+                    Name =UserDetailsTypes.InterestChess,
                     ObjectType = "boolean",
                 }
         };
