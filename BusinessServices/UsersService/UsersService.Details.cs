@@ -70,7 +70,7 @@ namespace BusinessServices.UsersService
                 foreach(var interestId in detailsToDelete)
                 {
                     var interestEntity = detailsDao.QueryDictionaryValues()
-                        .Where(x => x.UserDetailsDictionaryItemId == interestId)
+                        .Where(x => x.UserDetailsDictionaryItemId == interestId && x.UserDetailsId == details.Id)
                         .SingleOrDefault();
 
                     if (interestEntity != null)

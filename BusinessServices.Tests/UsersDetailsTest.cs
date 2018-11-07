@@ -1,6 +1,7 @@
 using System.Linq;
 using AutoMapper;
 using BusinessServices.UsersFinderService;
+using BusinessServices.UsersService;
 using EFRandevouDAL.Users;
 using Microsoft.EntityFrameworkCore;
 using RandevouData.Users;
@@ -21,6 +22,79 @@ namespace BusinessServices.Tests
         }
 
         [Fact]
+        public void TestUsersDetailsUpdate()
+        {
+            using(var dbc = new EFRandevouDAL.RandevouDbContext())
+            {
+                var usersDao = new UsersDao(dbc);
+                var detailsDao = new DetailsDictionaryDao(dbc);
+                
+                int userId;
+                var user5 = usersDao.QueryUsers().Where(x=>x.Name == "user5").FirstOrDefault();
+                if(user5 == null)
+                    userId = CreateUser("user5", usersDao);
+                else
+                    userId=user5.Id;
+
+                int footballInterestId = GetInterestId(UserDetailsTypes.InterestFootball, detailsDao);
+                int basketballInterestId = GetInterestId(UserDetailsTypes.InterestBasketball, detailsDao);
+                int chessInterestId = GetInterestId(UserDetailsTypes.InterestChess, detailsDao);
+
+                var usersService = new UsersService.UserService(null);
+                var searchService = new UsersFinderService.UserFinderService();
+
+                var userDetailsDto = new UserDetailsDto()
+                {
+                    Width = 160,
+                    Heigth = 90,
+                    Tattos = 2,
+                    Interests = new int[] {chessInterestId},
+                };
+
+                usersService.UpdateUserDetails(userId, userDetailsDto);
+
+                var searchDto = new SearchQueryDto()
+                {
+                    Name = "user5",
+                    InterestIds = new int[] {chessInterestId},
+                    WidthFrom = 120,
+                    WidthTo = 170,
+                };
+
+
+
+                var findResult = searchService.FindUsers(searchDto);
+                Assert.True(findResult.First() == userId);
+                
+                searchDto.WidthTo = 159;
+                findResult = searchService.FindUsers(searchDto);
+                Assert.True(findResult.Length == 0);
+
+                searchDto.WidthTo = null;
+                searchDto.InterestIds = new int[0];
+                searchDto.Name = string.Empty;
+                findResult = searchService.FindUsers(searchDto);
+                Assert.True(findResult.Contains(userId));
+                
+                searchDto = new SearchQueryDto()
+                {
+                    Name = "user5",
+                    InterestIds = new int[] {footballInterestId},
+                };
+                findResult = searchService.FindUsers(searchDto);
+                Assert.True(findResult.Length == 0);
+
+                userDetailsDto = new UserDetailsDto();
+                userDetailsDto.Interests = new int[] {footballInterestId, basketballInterestId};
+                usersService.UpdateUserDetails(userId, userDetailsDto);
+                findResult = searchService.FindUsers(searchDto);
+                Assert.True(findResult.Contains(userId));
+            }
+        }
+
+
+
+        [Fact]
         public void TestUsersInterestQuery()
         {
             int footballInterestId;
@@ -30,9 +104,9 @@ namespace BusinessServices.Tests
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
-                footballInterestId = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypes.InterestFootball.ToLower()).First().Id;
-                basketballInterestId = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypes.InterestBasketball.ToLower()).First().Id;
-                chessInterestId = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypes.InterestChess.ToLower()).First().Id;
+                footballInterestId = GetInterestId(UserDetailsTypes.InterestFootball, dao);
+                basketballInterestId =GetInterestId(UserDetailsTypes.InterestBasketball, dao);
+                chessInterestId = GetInterestId(UserDetailsTypes.InterestChess, dao);
             }
 
             var footballInterestQuery = new SearchQueryDto()
@@ -232,6 +306,16 @@ namespace BusinessServices.Tests
                     dao.AddItemValue(itemValue);
                 }
             }
+        }
+
+        private int GetInterestId(string interest, DetailsDictionaryDao detailsDao)
+        =>  detailsDao.QueryDictionary().Where(x => x.Name.ToLower() == interest.ToLower()).First().Id;
+
+        private int CreateUser(string userName, UsersDao dao)
+        {
+            var user = new User(userName,userName,'f', System.DateTime.Now.AddYears(-50));
+            dao.Insert(user);
+            return user.Id;
         }
     }
 }
