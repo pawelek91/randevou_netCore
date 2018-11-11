@@ -9,7 +9,7 @@ using RandevouData.Users.Details;
 using Xunit;
 namespace BusinessServices.Tests
 {
-    public class UsersDetailsTest
+    public class UsersDetailsTest : BasicTest
     {
         public UsersDetailsTest()
         {
@@ -17,7 +17,9 @@ namespace BusinessServices.Tests
             {
                 var dao = new UsersDao(dbc);
                 UsersTest.FillUsersInDb(dao);
-                GenerateUsersDetails(dao);
+                var users = GenerateUsersDetails(dao);
+                FlushUsersInteres();
+                AddDictionaryValues(users);
             }
         }
 
@@ -40,8 +42,8 @@ namespace BusinessServices.Tests
                 int basketballInterestId = GetInterestId(UserDetailsTypes.InterestBasketball, detailsDao);
                 int chessInterestId = GetInterestId(UserDetailsTypes.InterestChess, detailsDao);
 
-                var usersService = new UsersService.UserService(null);
-                var searchService = new UsersFinderService.UserFinderService();
+                var usersService = GetService<IUsersService>();
+                var searchService = GetService<IUserFinderService>();
 
                 var userDetailsDto = new UserDetailsDto()
                 {
@@ -92,8 +94,6 @@ namespace BusinessServices.Tests
             }
         }
 
-
-
         [Fact]
         public void TestUsersInterestQuery()
         {
@@ -134,7 +134,7 @@ namespace BusinessServices.Tests
                 InterestIds = new int[] { footballInterestId, basketballInterestId}
             }; //1
 
-            var service = new UsersFinderService.UserFinderService();
+            var service = GetService<IUserFinderService>();
 
 
             var c1 = service.FindUsers(footballAndChessInterestQuery);
@@ -156,37 +156,36 @@ namespace BusinessServices.Tests
             {
                 var dao = new UsersDao(dbc);
 
-                var regionQuery = new UserFinderService().FindUsers(
+                var userFinderService = GetService<IUserFinderService>();
+                var regionQuery = userFinderService.FindUsers(
                     new SearchQueryDto()
-                    { Region = "Małopolskie" });
+                    { Region = "Małopolskie", Name = "user" });
 
-                var cityQuery= new UserFinderService().FindUsers(
+                var cityQuery= userFinderService.FindUsers(
                     new SearchQueryDto()
-                    { City = "Kraków" });
+                    { City = "Kraków", Name = "user" });
 
-              
-
-                var regionCityQuery = new UserFinderService().FindUsers(
+                var regionCityQuery = userFinderService.FindUsers(
                     new SearchQueryDto()
-                    { City = "Wieliczka", Region="Małopolskie" });
+                    { City = "Wieliczka", Region="Małopolskie", Name = "user" });
 
-                var heightQuery = new UserFinderService().FindUsers(
+                var heightQuery = userFinderService.FindUsers(
                     new SearchQueryDto()
-                    { HeightFrom =  65});
+                    { HeightFrom =  65, Name = "user" });
 
-                var heightQueryFromTo = new UserFinderService().FindUsers(
+                var heightQueryFromTo = userFinderService.FindUsers(
                     new SearchQueryDto()
-                    { HeightFrom = 65, HeightTo = 75 });
+                    { HeightFrom = 65, HeightTo = 75, Name = "user" });
 
-                var widthQuery = new UserFinderService().FindUsers(
+                var widthQuery = userFinderService.FindUsers(
                     new SearchQueryDto()
-                    { WidthFrom = 180, WidthTo= 195 });
+                    { WidthFrom = 180, WidthTo= 195, Name = "user" });
 
-                var tatooAnyQuery = new UserFinderService().FindUsers(
+                var tatooAnyQuery = userFinderService.FindUsers(
                     new SearchQueryDto()
-                    { Tatoos = true });
+                    { Tatoos = true, Name = "user" });
 
-                var nameLikeQuery = new UserFinderService().FindUsers(
+                var nameLikeQuery = userFinderService.FindUsers(
                    new SearchQueryDto()
                    { Name = "user" });
 
@@ -194,16 +193,16 @@ namespace BusinessServices.Tests
                 Assert.True(regionQuery.Count() == 2);
                 Assert.True(cityQuery.Count() == 1);
                 Assert.True(regionCityQuery.Count() == 1);
-                Assert.True(heightQuery.Count() == 3);
+                Assert.True(heightQuery.Count() == 4);
                 Assert.True(heightQueryFromTo.Count() == 2);
                 Assert.True(widthQuery.Count() == 3);
-                Assert.True(tatooAnyQuery.Count() == 2);
-                Assert.True(nameLikeQuery.Count() == 6);
+                Assert.True(tatooAnyQuery.Count() == 3);
+                Assert.True(nameLikeQuery.Count() == 7);
 
             }
         }
 
-        private void GenerateUsersDetails(UsersDao dao)
+        private User[] GenerateUsersDetails(UsersDao dao)
         {
             var user1 = dao.QueryUsers().Where(x=>x.Name == "user1").First();
             var user2 = dao.QueryUsers().Where(x=>x.Name == "user2").First();
@@ -239,7 +238,8 @@ namespace BusinessServices.Tests
             dao.Update(user3);
             dao.Update(user4);
 
-            AddDictionaryValues(user1, user2, user3, user4);
+            return new User[] { user1, user2, user3, user4 };
+            
         }
 
         private void AddDictionaryValues(params User[] users)
@@ -316,6 +316,29 @@ namespace BusinessServices.Tests
             var user = new User(userName,userName,'f', System.DateTime.Now.AddYears(-50));
             dao.Insert(user);
             return user.Id;
+        }
+
+        private void FlushUsersInteres()
+        {
+            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var usersDao = new UsersDao(dbc);
+
+                var udIds = usersDao.QueryUsers()
+                    .Where(x => x.Name.ToLower().Contains("user"))
+                    .Select(x => x.UserDetails.Id);
+
+                foreach(var udId in udIds)
+                {
+                    var values = dao.QueryDictionaryValues().Where(x => x.UserDetailsId == udId).ToArray();
+                    foreach(var value in values)
+                    {
+                        dao.DeleteItemValue(value);
+                    }
+
+                }
+            }
         }
     }
 }

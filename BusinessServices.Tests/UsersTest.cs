@@ -10,17 +10,12 @@ using System.Linq;
 
 namespace BusinessServices.Tests
 {
-    public class UsersTest
+    public class UsersTest : BasicTest
     {
-        IMapper mapper;
-        public UsersTest()
-        {
-        }
-
         [Fact]
         public void QueryBasicUsersDataTest()
-        { 
-            IUsersService service = new UsersService.UserService(mapper);
+        {
+            IUsersService service = GetService<IUsersService>();
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var dao = new UsersDao(dbc);
@@ -38,15 +33,15 @@ namespace BusinessServices.Tests
                 Assert.True(femalesCount >= 2);
                 Assert.True(bornAfter1980 >=4);
                 Assert.True(bornAfter1990 >= 2);
-                Assert.True(bornBefore1980 == 2);
-                Assert.True(bornBefore1990 == 4);
+                Assert.True(bornBefore1980 == 3);
+                Assert.True(bornBefore1990 == 5);
             }
         }
 
         [Fact]
         public void UsersAddedToDb()
         {
-            IUsersService service = new UsersService.UserService(mapper);
+            IUsersService service = GetService<IUsersService>();
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var dao = new UsersDao(dbc);
@@ -56,7 +51,7 @@ namespace BusinessServices.Tests
             }
         }
 
-        public static void FillUsersInDb(UsersDao dao)
+        internal static void FillUsersInDb(UsersDao dao)
         {
             var users = GenerateUsers();
             var userNamesInDb = dao.QueryUsers().Select(x => x.Name).ToArray();
