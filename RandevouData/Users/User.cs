@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RandevouData.Users
 {
@@ -19,6 +20,9 @@ namespace RandevouData.Users
 
         [Required]
         public DateTime BirthDate{get;set;}
+
+        //[NotMapped]
+        //public virtual List<UsersFriendship> UsersFriendships { get; set; }
 
         public User(string n, string dn, char g, DateTime bd)
         {

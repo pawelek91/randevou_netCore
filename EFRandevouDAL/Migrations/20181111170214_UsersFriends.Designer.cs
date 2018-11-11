@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFRandevouDAL.Migrations
 {
     [DbContext(typeof(RandevouDbContext))]
-    [Migration("20181107184235_messages")]
-    partial class messages
+    [Migration("20181111170214_UsersFriends")]
+    partial class UsersFriends
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -140,6 +140,25 @@ namespace EFRandevouDAL.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("RandevouData.Users.UsersFriendship", b =>
+                {
+                    b.Property<int>("User1Id");
+
+                    b.Property<int>("User2Id");
+
+                    b.Property<int>("Id");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<int>("RelationStatus");
+
+                    b.HasKey("User1Id", "User2Id");
+
+                    b.HasIndex("User2Id");
+
+                    b.ToTable("Friendships");
+                });
+
             modelBuilder.Entity("RandevouData.Messages.Message", b =>
                 {
                     b.HasOne("RandevouData.Users.User", "FromUser")
@@ -171,6 +190,19 @@ namespace EFRandevouDAL.Migrations
                     b.HasOne("RandevouData.Users.Details.UserDetails")
                         .WithMany("DetailsItemsValues")
                         .HasForeignKey("UserDetailsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("RandevouData.Users.UsersFriendship", b =>
+                {
+                    b.HasOne("RandevouData.Users.User", "User1")
+                        .WithMany()
+                        .HasForeignKey("User1Id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("RandevouData.Users.User", "User2")
+                        .WithMany()
+                        .HasForeignKey("User2Id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

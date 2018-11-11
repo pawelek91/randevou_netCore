@@ -28,16 +28,33 @@ namespace EFRandevouDAL
                 .WithOne(ud => ud.User)
                 .HasForeignKey<UserDetails>(ud => ud.UserId);
 
+
             modelBuilder.Entity<UserDetails>()
                 .HasOne<User>(x => x.User)
                 .WithOne(x => x.UserDetails)
                 .HasForeignKey<UserDetails>(x => x.UserId);
 
             modelBuilder.Entity<UsersDetailsItemsValues>()
-            .HasKey(table=> new {table.UserDetailsId, table.UserDetailsDictionaryItemId});
+            .HasKey(table => new { table.UserDetailsId, table.UserDetailsDictionaryItemId });
 
             modelBuilder
                 .ApplyConfiguration(new DictionaryDetailsDaoConfiguration());
+
+            modelBuilder.Entity<UsersFriendship>()
+                .HasKey(x => new { x.User1Id, x.User2Id });
+
+            modelBuilder.Entity<UsersFriendship>()
+                .HasOne(fs => fs.User1)
+                .WithMany()
+                .HasForeignKey(fs => fs.User1Id);
+
+            modelBuilder.Entity<UsersFriendship>()
+                .HasOne(fs => fs.User2)
+                .WithMany()
+                .HasForeignKey(fs => fs.User2Id);
+
+
+
         }
 
         public DbSet<User> Users { get; set; }
@@ -45,5 +62,6 @@ namespace EFRandevouDAL
         public DbSet<UserDetails> UsersDetails { get; set; }
         public DbSet<UserDetailsDictionaryItem> UserDetailsDictionary { get; set; }
         public DbSet<UsersDetailsItemsValues> UsersDetailsItemsValues{get;set;}
+        public DbSet<UsersFriendship> Friendships { get; set; }
     }
 }

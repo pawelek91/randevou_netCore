@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EFRandevouDAL.Migrations
 {
-    public partial class messages : Migration
+    public partial class UsersFriends : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,6 +39,33 @@ namespace EFRandevouDAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Friendships",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    User1Id = table.Column<int>(nullable: false),
+                    User2Id = table.Column<int>(nullable: false),
+                    RelationStatus = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Friendships", x => new { x.User1Id, x.User2Id });
+                    table.ForeignKey(
+                        name: "FK_Friendships_Users_User1Id",
+                        column: x => x.User1Id,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Friendships_Users_User2Id",
+                        column: x => x.User2Id,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,6 +189,11 @@ namespace EFRandevouDAL.Migrations
                 values: new object[] { 8, "Interests", "szachy", false, "Chess", "boolean" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Friendships_User2Id",
+                table: "Friendships",
+                column: "User2Id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_FromUserId",
                 table: "Messages",
                 column: "FromUserId");
@@ -180,6 +212,9 @@ namespace EFRandevouDAL.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Friendships");
+
             migrationBuilder.DropTable(
                 name: "Messages");
 
