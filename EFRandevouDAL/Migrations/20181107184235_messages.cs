@@ -3,26 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EFRandevouDAL.Migrations
 {
-    public partial class InitialValues : Migration
+    public partial class messages : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    SendDate = table.Column<DateTime>(nullable: false),
-                    ReadDate = table.Column<DateTime>(nullable: true),
-                    MessageContent = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "UserDetailsDictionary",
                 columns: table => new
@@ -55,6 +39,36 @@ namespace EFRandevouDAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    FromUserId = table.Column<int>(nullable: false),
+                    ToUserId = table.Column<int>(nullable: false),
+                    SendDate = table.Column<DateTime>(nullable: false),
+                    ReadDate = table.Column<DateTime>(nullable: true),
+                    MessageContent = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Users_FromUserId",
+                        column: x => x.FromUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Users_ToUserId",
+                        column: x => x.ToUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,51 +122,54 @@ namespace EFRandevouDAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Name", "Gender", "BirthDate", "IsDeleted" },
-                values: new object[] { 1, "User1", 'F', new System.DateTime(1999, 1, 1), false}
-                );
-
+                table: "UserDetailsDictionary",
+                columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
+                values: new object[] { 1, "EyesColor", "Brązowe", false, "Brown", "boolean" });
 
             migrationBuilder.InsertData(
                 table: "UserDetailsDictionary",
                 columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
-                values: new object[] { 1, "EyesColor", "Brązowe", false, "Brązowe", "boolean" });
+                values: new object[] { 2, "EyesColor", "Niebieskie", false, "Blue", "boolean" });
 
             migrationBuilder.InsertData(
                 table: "UserDetailsDictionary",
                 columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
-                values: new object[] { 2, "EyesColor", "Niebieskie", false, "Niebieskie", "boolean" });
+                values: new object[] { 3, "EyesColor", "zielone", false, "Green", "boolean" });
 
             migrationBuilder.InsertData(
                 table: "UserDetailsDictionary",
                 columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
-                values: new object[] { 3, "EyesColor", "zielone", false, "zielone", "boolean" });
+                values: new object[] { 4, "HairColor", "ciemne", false, "HairDark", "boolean" });
 
             migrationBuilder.InsertData(
                 table: "UserDetailsDictionary",
                 columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
-                values: new object[] { 4, "HairColor", "ciemne", false, "ciemne", "boolean" });
+                values: new object[] { 5, "HairColor", "jasne", false, "HairLight", "boolean" });
 
             migrationBuilder.InsertData(
                 table: "UserDetailsDictionary",
                 columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
-                values: new object[] { 5, "HairColor", "jasne", false, "jasne", "boolean" });
+                values: new object[] { 6, "Interests", "piłka nożna", false, "Football", "boolean" });
 
             migrationBuilder.InsertData(
                 table: "UserDetailsDictionary",
                 columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
-                values: new object[] { 6, "Interests", "piłka nożna", false, "football", "boolean" });
+                values: new object[] { 7, "Interests", "koszykówka", false, "Basketball", "boolean" });
 
             migrationBuilder.InsertData(
                 table: "UserDetailsDictionary",
                 columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
-                values: new object[] { 7, "Interests", "koszykówka", false, "koszykówka", "boolean" });
+                values: new object[] { 8, "Interests", "szachy", false, "Chess", "boolean" });
 
-            migrationBuilder.InsertData(
-                table: "UserDetailsDictionary",
-                columns: new[] { "Id", "DetailsType", "DisplayName", "IsDeleted", "Name", "ObjectType" },
-                values: new object[] { 8, "Interests", "szachy", false, "szachy", "boolean" });
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_FromUserId",
+                table: "Messages",
+                column: "FromUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ToUserId",
+                table: "Messages",
+                column: "ToUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsersDetails_UserId",

@@ -21,6 +21,8 @@ namespace EFRandevouDAL.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("FromUserId");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("MessageContent")
@@ -30,7 +32,13 @@ namespace EFRandevouDAL.Migrations
 
                     b.Property<DateTime>("SendDate");
 
+                    b.Property<int>("ToUserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("FromUserId");
+
+                    b.HasIndex("ToUserId");
 
                     b.ToTable("Messages");
                 });
@@ -83,14 +91,14 @@ namespace EFRandevouDAL.Migrations
                     b.ToTable("UserDetailsDictionary");
 
                     b.HasData(
-                        new { Id = 1, DetailsType = "EyesColor", DisplayName = "Brązowe", IsDeleted = false, Name = "Brązowe", ObjectType = "boolean" },
-                        new { Id = 2, DetailsType = "EyesColor", DisplayName = "Niebieskie", IsDeleted = false, Name = "Niebieskie", ObjectType = "boolean" },
-                        new { Id = 3, DetailsType = "EyesColor", DisplayName = "zielone", IsDeleted = false, Name = "zielone", ObjectType = "boolean" },
-                        new { Id = 4, DetailsType = "HairColor", DisplayName = "ciemne", IsDeleted = false, Name = "ciemne", ObjectType = "boolean" },
-                        new { Id = 5, DetailsType = "HairColor", DisplayName = "jasne", IsDeleted = false, Name = "jasne", ObjectType = "boolean" },
-                        new { Id = 6, DetailsType = "Interests", DisplayName = "piłka nożna", IsDeleted = false, Name = "football", ObjectType = "boolean" },
-                        new { Id = 7, DetailsType = "Interests", DisplayName = "koszykówka", IsDeleted = false, Name = "koszykówka", ObjectType = "boolean" },
-                        new { Id = 8, DetailsType = "Interests", DisplayName = "szachy", IsDeleted = false, Name = "szachy", ObjectType = "boolean" }
+                        new { Id = 1, DetailsType = "EyesColor", DisplayName = "Brązowe", IsDeleted = false, Name = "Brown", ObjectType = "boolean" },
+                        new { Id = 2, DetailsType = "EyesColor", DisplayName = "Niebieskie", IsDeleted = false, Name = "Blue", ObjectType = "boolean" },
+                        new { Id = 3, DetailsType = "EyesColor", DisplayName = "zielone", IsDeleted = false, Name = "Green", ObjectType = "boolean" },
+                        new { Id = 4, DetailsType = "HairColor", DisplayName = "ciemne", IsDeleted = false, Name = "HairDark", ObjectType = "boolean" },
+                        new { Id = 5, DetailsType = "HairColor", DisplayName = "jasne", IsDeleted = false, Name = "HairLight", ObjectType = "boolean" },
+                        new { Id = 6, DetailsType = "Interests", DisplayName = "piłka nożna", IsDeleted = false, Name = "Football", ObjectType = "boolean" },
+                        new { Id = 7, DetailsType = "Interests", DisplayName = "koszykówka", IsDeleted = false, Name = "Basketball", ObjectType = "boolean" },
+                        new { Id = 8, DetailsType = "Interests", DisplayName = "szachy", IsDeleted = false, Name = "Chess", ObjectType = "boolean" }
                     );
                 });
 
@@ -128,6 +136,19 @@ namespace EFRandevouDAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("RandevouData.Messages.Message", b =>
+                {
+                    b.HasOne("RandevouData.Users.User", "FromUser")
+                        .WithMany()
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("RandevouData.Users.User", "ToUser")
+                        .WithMany()
+                        .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("RandevouData.Users.Details.UserDetails", b =>

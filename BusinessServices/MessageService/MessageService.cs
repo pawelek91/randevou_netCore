@@ -81,6 +81,7 @@ namespace BusinessServices.MessageService
             {
                 var dao = new MessagesDao(dbc);
                 var message = dao.Get(id);
+
                 return mapper.Map<Message, MessageDto>(message);
             }
         }

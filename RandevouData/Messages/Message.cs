@@ -8,11 +8,9 @@ namespace RandevouData.Messages
    
     public class Message : BasicRandevouObject
     {
-        [NotMapped]
         [Required]
         public virtual User FromUser{get;set;}
 
-        [NotMapped]
         [Required]
         public virtual User ToUser{get;set;}
 
