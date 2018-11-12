@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RandevouData.Users.Details
 {
-    public static class UserDetailsTypes
+    public static class UserDetailsTypesConsts
     {
         public const string EyesColor = nameof(EyesColor);
         public const string HairColor = nameof(HairColor);

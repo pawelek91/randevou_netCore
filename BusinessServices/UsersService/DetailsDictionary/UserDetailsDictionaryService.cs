@@ -14,8 +14,8 @@ namespace BusinessServices.UsersService.DetailsDictionary
         IMapper mapper;
         private string[] _itemTypes = new string[]
         {
-            UserDetailsTypes.EyesColor,
-            UserDetailsTypes.Interests,
+            UserDetailsTypesConsts.EyesColor,
+            UserDetailsTypesConsts.Interests,
         };
 
         public UserDetailsDictionaryService(IMapper mapper)
@@ -44,7 +44,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
                     DetailsType = dto.ItemType,
                     DisplayName = (!string.IsNullOrEmpty(dto.DisplayName)) ? dto.DisplayName : dto.Name,
                     Name = dto.Name,
-                    ObjectType = dto.ItemType == UserDetailsTypes.Interests ? "boolean" : "text",
+                    ObjectType = dto.ItemType == UserDetailsTypesConsts.Interests ? "boolean" : "text",
                 };
                 var dao = new DetailsDictionaryDao(dbc);
                 var id = dao.Insert(entity);

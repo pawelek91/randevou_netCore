@@ -20,65 +20,65 @@ namespace BusinessServices.InitialValues
             {
                 new UserDetailsDictionaryItem()
                 {
-                    DetailsType = UserDetailsTypes.EyesColor,
+                    DetailsType = UserDetailsTypesConsts.EyesColor,
                     DisplayName = "Brązowe",
-                    Name =  UserDetailsTypes.EyesBrown,
+                    Name =  UserDetailsTypesConsts.EyesBrown,
                     ObjectType = "boolean",
                 },
 
                 new UserDetailsDictionaryItem()
                 {
-                    DetailsType = UserDetailsTypes.EyesColor,
+                    DetailsType = UserDetailsTypesConsts.EyesColor,
                     DisplayName = "Niebieskie",
-                    Name = UserDetailsTypes.EyesBlue,
+                    Name = UserDetailsTypesConsts.EyesBlue,
                     ObjectType = "boolean",
                 },
 
                 new UserDetailsDictionaryItem()
                 {
-                    DetailsType = UserDetailsTypes.EyesColor,
+                    DetailsType = UserDetailsTypesConsts.EyesColor,
                     DisplayName = "zielone",
-                    Name = UserDetailsTypes.EyesGreen,
+                    Name = UserDetailsTypesConsts.EyesGreen,
                     ObjectType = "boolean",
                 },
 
                 new UserDetailsDictionaryItem()
                 {
-                    DetailsType = UserDetailsTypes.HairColor,
+                    DetailsType = UserDetailsTypesConsts.HairColor,
                     DisplayName = "ciemne",
-                    Name =  UserDetailsTypes.HairColorDark,
+                    Name =  UserDetailsTypesConsts.HairColorDark,
                     ObjectType = "boolean",
                 },
 
                new UserDetailsDictionaryItem()
                 {
-                    DetailsType = UserDetailsTypes.HairColor,
+                    DetailsType = UserDetailsTypesConsts.HairColor,
                     DisplayName = "jasne",
-                    Name = UserDetailsTypes.HairColorLight,
+                    Name = UserDetailsTypesConsts.HairColorLight,
                     ObjectType = "boolean",
                 },
 
                 new UserDetailsDictionaryItem()
                 {
-                    DetailsType = UserDetailsTypes.Interests,
+                    DetailsType = UserDetailsTypesConsts.Interests,
                     DisplayName = "piłka nożna",
-                    Name = UserDetailsTypes.InterestFootball,
+                    Name = UserDetailsTypesConsts.InterestFootball,
                     ObjectType = "boolean",
                 },
 
                  new UserDetailsDictionaryItem()
                 {
-                    DetailsType = UserDetailsTypes.Interests,
-                    DisplayName = UserDetailsTypes.InterestBasketball,
+                    DetailsType = UserDetailsTypesConsts.Interests,
+                    DisplayName = UserDetailsTypesConsts.InterestBasketball,
                     Name = "koszykówka",
                     ObjectType = "boolean",
                 },
 
                 new UserDetailsDictionaryItem()
                 {
-                    DetailsType = UserDetailsTypes.Interests,
+                    DetailsType = UserDetailsTypesConsts.Interests,
                     DisplayName = "szachy",
-                    Name = UserDetailsTypes.InterestChess,
+                    Name = UserDetailsTypesConsts.InterestChess,
                     ObjectType = "boolean",
                 }
             };

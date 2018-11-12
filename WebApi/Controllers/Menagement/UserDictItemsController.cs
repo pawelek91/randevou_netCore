@@ -23,7 +23,7 @@ namespace WebApi.Controllers.Menagement
         public IActionResult GetInterests()
         {
             var service = GetService<IUserDetailsDictionaryService>();
-            var interests = service.GetItems(RandevouData.Users.Details.UserDetailsTypes.Interests);
+            var interests = service.GetItems(RandevouData.Users.Details.UserDetailsTypesConsts.Interests);
             return Ok(interests.ToArray());
         }
 

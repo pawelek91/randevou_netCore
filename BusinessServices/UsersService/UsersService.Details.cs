@@ -81,7 +81,7 @@ namespace BusinessServices.UsersService
             if(dto.EyesColor.HasValue)
             {
                 var eyesColorsIds = detailsDao.QueryDictionary().Where(x =>
-                x.DetailsType.Equals(UserDetailsTypes.EyesColor, StringComparison.CurrentCultureIgnoreCase)
+                x.DetailsType.Equals(UserDetailsTypesConsts.EyesColor, StringComparison.CurrentCultureIgnoreCase)
                 ).Select(x=>x.Id).ToArray();
 
 
@@ -107,7 +107,7 @@ namespace BusinessServices.UsersService
             if (dto.HairColor.HasValue)
             {
                 var hairColorsIds = detailsDao.QueryDictionary().Where(x =>
-                x.DetailsType.Equals(UserDetailsTypes.HairColor, StringComparison.CurrentCultureIgnoreCase)
+                x.DetailsType.Equals(UserDetailsTypesConsts.HairColor, StringComparison.CurrentCultureIgnoreCase)
                 ).Select(x => x.Id).ToArray();
 
 

@@ -17,7 +17,7 @@ namespace RandevouData.Users
 
         protected UsersFriendship() { }
 
-        public UsersFriendship(User user1, User user2)
+        public UsersFriendship(User user1, User user2, RelationStatus status)
         {
             if (user1 == null || user2==null)
                 throw new ArgumentException("User not exists");
@@ -30,7 +30,10 @@ namespace RandevouData.Users
             this.User1Id = user1.Id;
             this.User2Id = user2.Id;
 
-            RelationStatus = RelationStatus.Invited;
+            if (status != RelationStatus.Created && status != RelationStatus.Invited)
+                throw new ArgumentException(nameof(status));
+
+            RelationStatus = status;
         }
     }
 

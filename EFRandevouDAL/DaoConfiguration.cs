@@ -49,72 +49,72 @@ namespace EFRandevouDAL.DaoConfigurations
              new UserDetailsDictionaryItem()
                 {
                     Id = 1,
-                    DetailsType = UserDetailsTypes.EyesColor,
+                    DetailsType = UserDetailsTypesConsts.EyesColor,
                     DisplayName = "Brązowe",
-                    Name = UserDetailsTypes.EyesBrown,
+                    Name = UserDetailsTypesConsts.EyesBrown,
                     ObjectType = "boolean",
                 },
 
                 new UserDetailsDictionaryItem()
                 {
                     Id = 2,
-                    DetailsType = UserDetailsTypes.EyesColor,
+                    DetailsType = UserDetailsTypesConsts.EyesColor,
                     DisplayName = "Niebieskie",
-                    Name = UserDetailsTypes.EyesBlue,
+                    Name = UserDetailsTypesConsts.EyesBlue,
                     ObjectType = "boolean",
                 },
 
                 new UserDetailsDictionaryItem()
                 {
                     Id = 3,
-                    DetailsType = UserDetailsTypes.EyesColor,
+                    DetailsType = UserDetailsTypesConsts.EyesColor,
                     DisplayName = "zielone",
-                    Name = UserDetailsTypes.EyesGreen,
+                    Name = UserDetailsTypesConsts.EyesGreen,
                     ObjectType = "boolean",
                 },
 
                 new UserDetailsDictionaryItem()
                 {
                     Id = 4,
-                    DetailsType = UserDetailsTypes.HairColor,
+                    DetailsType = UserDetailsTypesConsts.HairColor,
                     DisplayName = "ciemne",
-                    Name = UserDetailsTypes.HairColorDark,
+                    Name = UserDetailsTypesConsts.HairColorDark,
                     ObjectType = "boolean",
                 },
 
                new UserDetailsDictionaryItem()
                {
                    Id = 5,
-                   DetailsType = UserDetailsTypes.HairColor,
+                   DetailsType = UserDetailsTypesConsts.HairColor,
                    DisplayName = "jasne",
-                   Name = UserDetailsTypes.HairColorLight,
+                   Name = UserDetailsTypesConsts.HairColorLight,
                    ObjectType = "boolean",
                },
 
                 new UserDetailsDictionaryItem()
                 {
                     Id = 6,
-                    DetailsType = UserDetailsTypes.Interests,
+                    DetailsType = UserDetailsTypesConsts.Interests,
                     DisplayName = "piłka nożna",
-                    Name = UserDetailsTypes.InterestFootball,
+                    Name = UserDetailsTypesConsts.InterestFootball,
                     ObjectType = "boolean",
                 },
 
                  new UserDetailsDictionaryItem()
                  {
                      Id = 7,
-                     DetailsType = UserDetailsTypes.Interests,
+                     DetailsType = UserDetailsTypesConsts.Interests,
                      DisplayName = "koszykówka",
-                     Name = UserDetailsTypes.InterestBasketball,
+                     Name = UserDetailsTypesConsts.InterestBasketball,
                      ObjectType = "boolean",
                  },
 
                 new UserDetailsDictionaryItem()
                 {
                     Id = 8,
-                    DetailsType = UserDetailsTypes.Interests,
+                    DetailsType = UserDetailsTypesConsts.Interests,
                     DisplayName = "szachy",
-                    Name =UserDetailsTypes.InterestChess,
+                    Name =UserDetailsTypesConsts.InterestChess,
                     ObjectType = "boolean",
                 }
         };

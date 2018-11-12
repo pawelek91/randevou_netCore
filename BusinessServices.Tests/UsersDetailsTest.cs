@@ -38,9 +38,9 @@ namespace BusinessServices.Tests
                 else
                     userId=user5.Id;
 
-                int footballInterestId = GetInterestId(UserDetailsTypes.InterestFootball, detailsDao);
-                int basketballInterestId = GetInterestId(UserDetailsTypes.InterestBasketball, detailsDao);
-                int chessInterestId = GetInterestId(UserDetailsTypes.InterestChess, detailsDao);
+                int footballInterestId = GetInterestId(UserDetailsTypesConsts.InterestFootball, detailsDao);
+                int basketballInterestId = GetInterestId(UserDetailsTypesConsts.InterestBasketball, detailsDao);
+                int chessInterestId = GetInterestId(UserDetailsTypesConsts.InterestChess, detailsDao);
 
                 var usersService = GetService<IUsersService>();
                 var searchService = GetService<IUserFinderService>();
@@ -104,9 +104,9 @@ namespace BusinessServices.Tests
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
-                footballInterestId = GetInterestId(UserDetailsTypes.InterestFootball, dao);
-                basketballInterestId =GetInterestId(UserDetailsTypes.InterestBasketball, dao);
-                chessInterestId = GetInterestId(UserDetailsTypes.InterestChess, dao);
+                footballInterestId = GetInterestId(UserDetailsTypesConsts.InterestFootball, dao);
+                basketballInterestId =GetInterestId(UserDetailsTypesConsts.InterestBasketball, dao);
+                chessInterestId = GetInterestId(UserDetailsTypesConsts.InterestChess, dao);
             }
 
             var footballInterestQuery = new SearchQueryDto()
@@ -252,9 +252,9 @@ namespace BusinessServices.Tests
                     return;
 
 
-                var footballInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypes.InterestFootball.ToLower()).First();
-                var basketballInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypes.InterestBasketball.ToLower()).First();
-                var chessInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypes.InterestChess.ToLower()).First();
+                var footballInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypesConsts.InterestFootball.ToLower()).First();
+                var basketballInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypesConsts.InterestBasketball.ToLower()).First();
+                var chessInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypesConsts.InterestChess.ToLower()).First();
 
                 var detailsValues = new UsersDetailsItemsValues[]
                 {
