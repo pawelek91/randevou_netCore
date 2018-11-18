@@ -38,7 +38,7 @@ namespace BusinessServices.FriendshipService
             { 
                 var dao = new FriendshipDao(dbc);
                 var usersOfQueriesIds = dao.QueryFriendships().Where(x => x.User1Id == userId && x.RelationStatus == RandevouData.Users.RelationStatus.Invited)
-                    .Select(x => x.User1Id)?.ToArray();
+                    .Select(x => x.User2Id)?.ToArray();
 
                 return usersOfQueriesIds;
             }
@@ -60,28 +60,37 @@ namespace BusinessServices.FriendshipService
                 if (toUser == null)
                     throw new ArgumentException(nameof(toUser));
 
-                var relationInivation = friendshipDao.QueryFriendships()
-                    .Where(x => x.User1Id == fromUserId && x.User2Id == toUserId
-                    && (x.RelationStatus == RelationStatus.Invited || x.RelationStatus == RelationStatus.Created)).FirstOrDefault();
+                var relationBetweenUsers = friendshipDao.QueryFriendships()
+                    .Where(x => x.User1Id == fromUserId && x.User2Id == toUserId || x.User2Id == fromUserId && x.User1Id == toUserId);
+                  
 
-                if (relationInivation != null)
+                if (relationBetweenUsers.Any())
                 {
-                    if(relationInivation.RelationStatus != RelationStatus.Deleted)
+
+                    if(relationBetweenUsers.Any(x=>x.RelationStatus != RelationStatus.Deleted))
                         throw new ArgumentException("ivntitation to friendship has been already sent by one of the user");
 
-                    //znow utworzyc 2 relacje?!
-                    relationInivation.RelationStatus = RelationStatus.Created;
+                    var firstRelation = relationBetweenUsers.Where(x => x.User1Id == fromUserId).Single();
+                    firstRelation.RelationStatus = RelationStatus.Created;
+
+                    var secondRelation = relationBetweenUsers.Where(x => x.User1Id == toUserId).Single();
+                    secondRelation.RelationStatus = RelationStatus.Invited;
+
+                    friendshipDao.Update(firstRelation);
+                    friendshipDao.Update(secondRelation);
+
                 }
 
-                if (RelationExists(friendshipDao, fromUserId, toUserId))
-                    throw new ArgumentException("relation between users already exists");
+                //if (RelationExists(friendshipDao, fromUserId, toUserId))
+                //    throw new ArgumentException("relation between users already exists");
+                else
+                { 
+                    var request = new UsersFriendship(fromUser, toUser, RelationStatus.Created);
+                    var request2 = new UsersFriendship(toUser, fromUser, RelationStatus.Invited);
 
-                var request = new UsersFriendship(fromUser, toUser, RelationStatus.Created);
-                var request2 = new UsersFriendship(toUser, fromUser, RelationStatus.Invited);
-
-                friendshipDao.Insert(request);
-                friendshipDao.Insert(request2);
-
+                    friendshipDao.Insert(request);
+                    friendshipDao.Insert(request2);
+                }
             }
         }
 
@@ -94,7 +103,7 @@ namespace BusinessServices.FriendshipService
                 if (!RelationExists(dao, fromUserId, toUserId))
                     throw new ArgumentOutOfRangeException(nameof(action));
 
-                if (action.ToLower() == FriendshipsConsts.Accept)
+                if (action.ToLower() == FriendshipsConsts.Accept.ToLower())
                 {
                     var relation = dao.QueryFriendships()
                         .Where(x => x.User2Id == fromUserId && x.User1Id == toUserId && x.RelationStatus == RelationStatus.Created)
@@ -118,7 +127,7 @@ namespace BusinessServices.FriendshipService
 
                 }
 
-                else if (action.ToLower() == FriendshipsConsts.Delete)
+                else if (action.ToLower() == FriendshipsConsts.Delete.ToLower())
                 {
                     var relations = dao.QueryFriendships()
                         .Where(x =>

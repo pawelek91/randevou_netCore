@@ -20,9 +20,8 @@ namespace BusinessServices.Tests
         {
             using (var dbc = new RandevouDbContext())
             {
+                
                 var usersDao = new UsersDao(dbc);
-                var friendsDao = new FriendshipDao(dbc);
-                FlushTestsFriendships(friendsDao);
                 UsersTest.FillUsersInDb(usersDao);
 
                 user1 = usersDao.QueryUsers().Where(x => x.Name == "user1").Single();
@@ -39,11 +38,12 @@ namespace BusinessServices.Tests
                 var usersDao = new UsersDao(dbc);
                 var service = GetService<IFriendshipService>();
 
+                FlushTestsFriendships();
+
                 service.SendFriendshipRequest(user1.Id, user2.Id);
                 service.SendFriendshipRequest(user3.Id, user2.Id);
 
-                Action duplicateRequest = () => { service.SendFriendshipRequest(user1.Id, user2.Id); };
-                Assert.Throws<ArgumentException>(duplicateRequest);
+                Assert.Throws<ArgumentException>(() => service.SendFriendshipRequest(user1.Id, user2.Id));
 
                 var requestsForUser2 = service.GetFriendshipRequests(user2.Id);
                 Assert.Contains(user1.Id, requestsForUser2);
@@ -55,18 +55,46 @@ namespace BusinessServices.Tests
                 requestsForUser2 = service.GetFriendshipRequests(user2.Id);
                 Assert.Empty(requestsForUser2);
 
+                FlushTestsFriendships();
+
+                service.SendFriendshipRequest(user1.Id, user2.Id);
+                service.SendFriendshipRequest(user1.Id, user3.Id);
+
+                service.UpdateFriendshipStatus(user2.Id, user1.Id, FriendshipsConsts.Accept);
+                service.UpdateFriendshipStatus(user3.Id, user1.Id, FriendshipsConsts.Accept);
+
+                var friends = service.GetFriends(user1.Id);
+                Assert.True(friends.Count() == 2);
+
+                service.UpdateFriendshipStatus(user3.Id, user1.Id, FriendshipsConsts.Delete);
+                friends = service.GetFriends(user1.Id);
+                Assert.True(friends.Count() == 1);
+
+                service.SendFriendshipRequest(user3.Id, user1.Id);
+                service.UpdateFriendshipStatus(user1.Id, user3.Id, FriendshipsConsts.Accept);
+                friends = service.GetFriends(user1.Id);
+                Assert.True(friends.Count() == 2);
+
+                Assert.Throws<ArgumentException>(() => service.SendFriendshipRequest(user2.Id, user1.Id));
             }
         }
 
-        private void FlushTestsFriendships(FriendshipDao dao)
-        {
-            var relations = dao.QueryFriendships().Where(x =>
-            x.User1.Name.Contains("user")
-            || x.User2.Name.Contains("user")).ToArray();
 
-            foreach(var rel in relations)
+
+        private void FlushTestsFriendships()
+        {
+            using (RandevouDbContext dbc = new RandevouDbContext())
             {
-                dao.Delete(rel);
+                FriendshipDao dao = new FriendshipDao(dbc);
+                var relations = dao.QueryFriendships().Where(x =>
+                x.User1.Name.Contains("user")
+                || x.User2.Name.Contains("user")).ToArray();
+
+                foreach (var rel in relations)
+                {
+                    dao.Delete(rel);
+
+                }
             }
         }
     }
