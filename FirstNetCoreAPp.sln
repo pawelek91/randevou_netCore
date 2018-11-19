@@ -10,9 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandevouData", "RandevouDat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFRandevouDAL", "EFRandevouDAL\EFRandevouDAL.csproj", "{5714C209-7E06-4459-922F-31D91206AA02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessServices.InitialValues.Startup", "BusinessServices.InitialValues.Startup\BusinessServices.InitialValues.Startup.csproj", "{71EE9135-AE32-4825-B00B-7143938CD45A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessServices.Tests", "BusinessServices.Tests\BusinessServices.Tests.csproj", "{122F2080-C71C-4675-9264-8E5EFF155B82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessServices.Tests", "BusinessServices.Tests\BusinessServices.Tests.csproj", "{122F2080-C71C-4675-9264-8E5EFF155B82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,10 +34,6 @@ Global
 		{5714C209-7E06-4459-922F-31D91206AA02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5714C209-7E06-4459-922F-31D91206AA02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5714C209-7E06-4459-922F-31D91206AA02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71EE9135-AE32-4825-B00B-7143938CD45A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71EE9135-AE32-4825-B00B-7143938CD45A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71EE9135-AE32-4825-B00B-7143938CD45A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71EE9135-AE32-4825-B00B-7143938CD45A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{122F2080-C71C-4675-9264-8E5EFF155B82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{122F2080-C71C-4675-9264-8E5EFF155B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{122F2080-C71C-4675-9264-8E5EFF155B82}.Release|Any CPU.ActiveCfg = Release|Any CPU

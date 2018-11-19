@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle" Version="5.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EFRandevouDAL\EFRandevouDAL.csproj" />
     <ProjectReference Include="..\RandevouData\RandevouData.csproj" />
   </ItemGroup>

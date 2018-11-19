@@ -6,12 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApi.Controllers
 {
-	public class BasicController:Controller
+	public abstract class BasicController:Controller
     {       
-		public BasicController()
-        {
-        }
-
 		protected T GetService<T>() where T: class
 		{
 			var service = BusinessServicesProvider.GetService<T>();

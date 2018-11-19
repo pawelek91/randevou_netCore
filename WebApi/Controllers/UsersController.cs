@@ -30,8 +30,9 @@ namespace WebApi.Controllers
             return Ok(user);
         }
 
+        [Route("/new")]
         [HttpPost]
-        public IActionResult Post([FromBody]UserDto userDto)
+        public IActionResult PostNewUser([FromBody]UserDto userDto)
         {
             if (userDto == null)
                 return BadRequest(nameof(userDto));
@@ -42,8 +43,10 @@ namespace WebApi.Controllers
         }
 
         [Route("{id:int}/Details")]
-        [HttpPost("{id:int}")]
-        public IActionResult Post([FromQuery] int id, [FromBody]UserDetailsDto detailsDto)
+        [HttpPost]
+        //        [HttpPost("{id:int}")]
+
+        public IActionResult PostUserDetails([FromQuery]int id, [FromBody]UserDetailsDto detailsDto)
         {
             IUsersService usersService = GetService<IUsersService>();
             if (id == 0)

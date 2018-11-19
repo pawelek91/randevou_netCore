@@ -10,6 +10,7 @@ namespace WebApi.Controllers
     [Route("api/[controller]")]
     public class UserFinderController : BasicController
     {
+        [HttpPost]
         public IActionResult FindUsers([FromBody]SearchQueryDto queryDto)
         {
             if (queryDto == null)

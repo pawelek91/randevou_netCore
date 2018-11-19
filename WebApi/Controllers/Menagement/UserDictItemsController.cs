@@ -19,6 +19,7 @@ namespace WebApi.Controllers.Menagement
             return Ok(names.ToArray());
         }
 
+        [Route("Interest/")]
         [HttpGet]
         public IActionResult GetInterests()
         {
@@ -28,6 +29,7 @@ namespace WebApi.Controllers.Menagement
         }
 
         [Route("{typeName}/Items")]
+        [HttpGet]
         public IActionResult GetItems(string typeName)
         {
             if (string.IsNullOrWhiteSpace(typeName))
@@ -38,6 +40,7 @@ namespace WebApi.Controllers.Menagement
             return Ok(result);
         }
 
+        [Route("Items/")]
         [HttpPost]
         public IActionResult PostItem([FromBody] DictionaryItemDto dto)
         {
@@ -49,7 +52,7 @@ namespace WebApi.Controllers.Menagement
             return Ok(result);
         }
 
-        [Route("items/{id:int}/enable")]
+        [Route("Items/{id:int}/Enable")]
         [HttpPost]
         public IActionResult EnableItem(int id)
         {
@@ -58,7 +61,7 @@ namespace WebApi.Controllers.Menagement
             return Ok();
         }
 
-        [Route("items/{id:int}/disable")]
+        [Route("Items/{id:int}/Disable")]
         [HttpPost]
         public IActionResult DisableItem(int id)
         {
@@ -66,9 +69,9 @@ namespace WebApi.Controllers.Menagement
             service.DisableItem(id);
             return Ok();
         }
-
+        [Route("Items/{id:int}/")]
         [HttpPatch]
-        public IActionResult UpdateItem([FromBody] DictionaryItemDto dto)
+        public IActionResult UpdateItem(int id, [FromBody] DictionaryItemDto dto)
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
