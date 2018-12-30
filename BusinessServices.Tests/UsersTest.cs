@@ -7,11 +7,17 @@ using Xunit;
 using AutoMapper;
 using EFRandevouDAL.Users;
 using System.Linq;
+using BusinessServices.Tests.Helper;
 
 namespace BusinessServices.Tests
 {
     public class UsersTest : BasicTest
     {
+        private readonly UsersGeneratorHelper usersGeneratorHelper;
+        public UsersTest()
+        {
+            usersGeneratorHelper = new UsersGeneratorHelper();
+        }
         [Fact]
         public void QueryBasicUsersDataTest()
         {
@@ -19,7 +25,7 @@ namespace BusinessServices.Tests
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var dao = new UsersDao(dbc);
-                FillUsersInDb(dao);
+                usersGeneratorHelper.FillUsersInDb(dao);
 
                 var malesCount = dao.QueryUsers().Where(x => x.Gender == 'm' || x.Gender == 'M').Count();
                 var femalesCount = dao.QueryUsers().Where(x => x.Gender == 'm' || x.Gender == 'M').Count();
@@ -45,36 +51,13 @@ namespace BusinessServices.Tests
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var dao = new UsersDao(dbc);
-                FillUsersInDb(dao);
+                usersGeneratorHelper.FillUsersInDb(dao);
                 var usersCount = dao.QueryUsers().Count();
                 Assert.True(usersCount >= 6);
             }
         }
 
-        internal static void FillUsersInDb(UsersDao dao)
-        {
-            var users = GenerateUsers();
-            var userNamesInDb = dao.QueryUsers().Select(x => x.Name).ToArray();
-
-            var usersToAdd = users.Where(x => !userNamesInDb.Contains(x.Name));
-            foreach (var newUser in usersToAdd)
-            {
-                dao.Insert(newUser);
-            }
-        }
-        
-
-        private static User[] GenerateUsers()
-        {
-            var user1 = new User("user1", string.Empty, 'M', new DateTime(1991, 12, 12));
-            var user2 = new User("user2", string.Empty, 'F', new DateTime(1998, 12, 12));
-            var user3 = new User("user3", string.Empty, 'M', new DateTime(1980, 12, 12));
-
-            var user4 = new User("user4", string.Empty, 'M', new DateTime(1970, 12, 12));
-            var user5 = new User("user4", string.Empty, 'F', new DateTime(1973, 12, 12));
-            var user6 = new User("user4", string.Empty, 'M', new DateTime(1989, 12, 12));
-            return new User[] { user1, user2, user3, user4, user5, user6 };
-        }
+       
        
     }
 }

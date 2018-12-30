@@ -22,7 +22,19 @@ namespace WebApi.Controllers
             return Ok(users);
         }
 
+
+        [HttpGet]
+        [Route("{id}/UserDetails")]
+        [ProducesResponseType(typeof(UserDetailsDto), 200)]
+        public IActionResult GetUserWithDetials(int id)
+        {
+            IUsersService usersService = GetService<IUsersService>();
+            var user = usersService.GetUserWithDetails(id);
+            return Ok(user);
+        }
+
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(UserDto), 200)]
         public IActionResult Get(int id)
         {
             IUsersService usersService = GetService<IUsersService>();
@@ -30,7 +42,7 @@ namespace WebApi.Controllers
             return Ok(user);
         }
 
-        [Route("/new")]
+        
         [HttpPost]
         public IActionResult PostNewUser([FromBody]UserDto userDto)
         {
@@ -44,8 +56,6 @@ namespace WebApi.Controllers
 
         [Route("{id:int}/Details")]
         [HttpPost]
-        //        [HttpPost("{id:int}")]
-
         public IActionResult PostUserDetails([FromQuery]int id, [FromBody]UserDetailsDto detailsDto)
         {
             IUsersService usersService = GetService<IUsersService>();

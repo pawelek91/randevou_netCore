@@ -1,5 +1,7 @@
-﻿using EFRandevouDAL;
+﻿using BusinessServices.UsersService.DetailsDictionary;
+using EFRandevouDAL;
 using EFRandevouDAL.Users;
+using RandevouData.Users;
 using RandevouData.Users.Details;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,20 @@ namespace BusinessServices.UsersService
 {
     public partial class UserService 
     {
+        public UserDetailsDto GetUserWithDetails(int id)
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new UsersDao(dbc);
+                var user = dao.GetUserWithDetails(id);
+                var userDto = mapper.Map<User, UserDetailsDto>(user);
+                var dictionaryService = BusinessServicesProvider.GetService<IUserDetailsDictionaryService>();
+
+                return userDto;
+            }
+        }
+
+
         public void UpdateUserDetails(int userId, UserDetailsDto dto)
         {
             using (var dbc = new RandevouDbContext())
@@ -48,6 +64,7 @@ namespace BusinessServices.UsersService
 
         private void UpdateDetailsDictionaryItems(UserDetails details, UserDetailsDto dto, DetailsDictionaryDao detailsDao)
         {
+            var detailsDictionaryService = BusinessServicesProvider.GetService<IUserDetailsDictionaryService>();
             if(dto.Interests.Any())
             { 
 
@@ -80,23 +97,34 @@ namespace BusinessServices.UsersService
             
             if(dto.EyesColor.HasValue)
             {
-                var eyesColorsIds = detailsDao.QueryDictionary().Where(x =>
-                x.DetailsType.Equals(UserDetailsTypesConsts.EyesColor, StringComparison.CurrentCultureIgnoreCase)
-                ).Select(x=>x.Id).ToArray();
+               var userEyesColorId =  detailsDictionaryService.GetUserEyesColor(details.Id);
+
+               if (userEyesColorId.HasValue)
+               {
+                    var userEyesColorEntity = detailsDictionaryService.GetDictionaryValue(userEyesColorId.Value);
+
+                    if (userEyesColorEntity?.UserDetailsDictionaryItemId!= null && userEyesColorEntity.UserDetailsDictionaryItemId != dto.EyesColor.Value)
+                        detailsDao.DeleteItemValue(userEyesColorEntity);
+               }
+
+                //var eyesColorsIds = detailsDao.QueryDictionary().Where(x =>
+                //x.DetailsType.Equals(UserDetailsTypesConsts.EyesColor, StringComparison.CurrentCultureIgnoreCase)
+                //).Select(x => x.Id).ToArray();
 
 
-                var userEyesColor = detailsDao.QueryDictionaryValues()
-                    .Where(x => eyesColorsIds.Contains(x.UserDetailsDictionaryItemId)
-                    && x.UserDetailsId == dto.UserId)
-                    .FirstOrDefault();
+                //var userEyesColor2 = detailsDao.QueryDictionaryValues()
+                //    .Where(x => eyesColorsIds.Contains(x.UserDetailsDictionaryItemId)
+                //    && x.UserDetailsId == dto.UserId)
+                //    .FirstOrDefault();
 
-                if (userEyesColor?.UserDetailsDictionaryItemId != dto.EyesColor.Value)
-                    detailsDao.DeleteItemValue(userEyesColor);
+
+                //if (userEyesColor?.UserDetailsDictionaryItemId != dto.EyesColor.Value)
+                //    detailsDao.DeleteItemValue(userEyesColor);
 
                 var eyesColorEntity = new UsersDetailsItemsValues()
                 {
                     UserDetailsDictionaryItemId = dto.EyesColor.Value,
-                    UserDetailsId = dto.UserId,
+                    UserDetailsId = details.Id,
                     Value = true,
                 };
 
@@ -111,22 +139,22 @@ namespace BusinessServices.UsersService
                 ).Select(x => x.Id).ToArray();
 
 
-                var userEyesColor = detailsDao.QueryDictionaryValues()
+                var userHairColor = detailsDao.QueryDictionaryValues()
                     .Where(x => hairColorsIds.Contains(x.UserDetailsDictionaryItemId)
                     && x.UserDetailsId == dto.UserId)
                     .FirstOrDefault();
 
-                if (userEyesColor?.UserDetailsDictionaryItemId != dto.HairColor.Value)
-                    detailsDao.DeleteItemValue(userEyesColor);
+                if (userHairColor?.UserDetailsDictionaryItemId != null && userHairColor.UserDetailsDictionaryItemId != dto.HairColor.Value)
+                    detailsDao.DeleteItemValue(userHairColor);
 
-                var eyesColorEntity = new UsersDetailsItemsValues()
+                var hairColorEntity = new UsersDetailsItemsValues()
                 {
                     UserDetailsDictionaryItemId = dto.HairColor.Value,
-                    UserDetailsId = dto.UserId,
+                    UserDetailsId = details.Id,
                     Value = true,
                 };
 
-                detailsDao.AddItemValue(eyesColorEntity);
+                detailsDao.AddItemValue(hairColorEntity);
             }
         }
         }

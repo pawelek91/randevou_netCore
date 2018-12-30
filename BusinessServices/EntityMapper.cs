@@ -6,6 +6,7 @@ using System;
 using RandevouData.Messages;
 using RandevouData.Users.Details;
 using BusinessServices.UsersService.DetailsDictionary;
+using BusinessServices.UsersService;
 
 namespace BusinessServices
 {
@@ -37,6 +38,12 @@ namespace BusinessServices
             configuration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<User, UserDto>();
+                cfg.CreateMap<User, UserDetailsDto>()
+                .ForMember(dto => dto.City, user => user.MapFrom(x => x.UserDetails.City))
+                .ForMember(dto => dto.Heigth, user => user.MapFrom(x => x.UserDetails.Heigth))
+                .ForMember(dto => dto.Region, user => user.MapFrom(x => x.UserDetails.Region))
+                .ForMember(dto => dto.Width, user => user.MapFrom(x => x.UserDetails.Width))
+                .ForMember(dto => dto.Tattos, user => user.MapFrom(x => x.UserDetails.Tattos));
 
                 cfg.CreateMap<Message, MessageDto>()
                 .ForMember(dto => dto.SenderId, mess => mess.MapFrom(x => x.FromUser.Id))

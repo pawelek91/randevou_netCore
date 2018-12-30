@@ -161,14 +161,17 @@ namespace BusinessServices.UsersFinderService
             if (dto.EyesColor.HasValue)
             {
                 query = query.Where(x => x.UserDetailsDictionaryItemId == dto.EyesColor && x.Value);
+                var q1 = query.ToArray(); //dorobić filtereIds dla zapytań poniżej
             }
 
             if(dto.HairColor.HasValue)
             {
                 query = query.Where(x => x.UserDetailsDictionaryItemId == dto.HairColor && x.Value);
+                var query2 = dao.QueryDictionaryValues().Where(x => x.UserDetailsDictionaryItemId == dto.HairColor && x.Value);
+                var q2 = query2.ToArray();
             }
 
-           
+            var qqq = query.Expression.ToString();
 
             var userDetailsIds = query.Select(x => x.UserDetailsId).ToArray();
 

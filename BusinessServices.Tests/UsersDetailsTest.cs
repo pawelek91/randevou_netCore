@@ -1,7 +1,9 @@
 using System.Linq;
 using AutoMapper;
+using BusinessServices.Tests.Helper;
 using BusinessServices.UsersFinderService;
 using BusinessServices.UsersService;
+using BusinessServices.UsersService.DetailsDictionary;
 using EFRandevouDAL.Users;
 using Microsoft.EntityFrameworkCore;
 using RandevouData.Users;
@@ -11,32 +13,36 @@ namespace BusinessServices.Tests
 {
     public class UsersDetailsTest : BasicTest
     {
+        private readonly UsersGeneratorHelper usersGeneratorHelper;
+        private readonly DictionaryHelper dictionaryHelper;
         public UsersDetailsTest()
         {
+            usersGeneratorHelper = new UsersGeneratorHelper();
+            dictionaryHelper = new DictionaryHelper(GetService<IUserDetailsDictionaryService>());
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var dao = new UsersDao(dbc);
-                UsersTest.FillUsersInDb(dao);
-                var users = GenerateUsersDetails(dao);
-                FlushUsersInteres();
-                AddDictionaryValues(users);
+                usersGeneratorHelper.FillUsersInDb(dao);
+                var users = usersGeneratorHelper.GenerateUsersDetails(dao);
+                FlushUsersDetails();
+                dictionaryHelper.AddUsersDictionaryValues(users);
             }
         }
 
         [Fact]
         public void TestUsersDetailsUpdate()
         {
-            using(var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var usersDao = new UsersDao(dbc);
                 var detailsDao = new DetailsDictionaryDao(dbc);
-                
+
                 int userId;
-                var user5 = usersDao.QueryUsers().Where(x=>x.Name == "user5").FirstOrDefault();
-                if(user5 == null)
+                var user5 = usersDao.QueryUsers().Where(x => x.Name == "user5").FirstOrDefault();
+                if (user5 == null)
                     userId = CreateUser("user5", usersDao);
                 else
-                    userId=user5.Id;
+                    userId = user5.Id;
 
                 int footballInterestId = GetInterestId(UserDetailsTypesConsts.InterestFootball, detailsDao);
                 int basketballInterestId = GetInterestId(UserDetailsTypesConsts.InterestBasketball, detailsDao);
@@ -50,7 +56,9 @@ namespace BusinessServices.Tests
                     Width = 160,
                     Heigth = 90,
                     Tattos = 2,
-                    Interests = new int[] {chessInterestId},
+                    Interests = new int[] { chessInterestId },
+                    HairColor = dictionaryHelper.DarkHairColorId,
+                    EyesColor = dictionaryHelper.BrowEyesColorId,
                 };
 
                 usersService.UpdateUserDetails(userId, userDetailsDto);
@@ -58,16 +66,24 @@ namespace BusinessServices.Tests
                 var searchDto = new SearchQueryDto()
                 {
                     Name = "user5",
-                    InterestIds = new int[] {chessInterestId},
+                    InterestIds = new int[] { chessInterestId },
                     WidthFrom = 120,
                     WidthTo = 170,
                 };
 
-
+                var search2Dto = new SearchQueryDto()
+                {
+                    HairColor = dictionaryHelper.DarkHairColorId,
+                    EyesColor = dictionaryHelper.BrowEyesColorId,
+                };
 
                 var findResult = searchService.FindUsers(searchDto);
                 Assert.True(findResult.First() == userId);
-                
+
+                var findResult2 = searchService.FindUsers(search2Dto);
+                Assert.True(findResult2.Contains(userId));
+
+
                 searchDto.WidthTo = 159;
                 findResult = searchService.FindUsers(searchDto);
                 Assert.True(findResult.Length == 0);
@@ -75,24 +91,69 @@ namespace BusinessServices.Tests
                 searchDto.WidthTo = null;
                 searchDto.InterestIds = new int[0];
                 searchDto.Name = string.Empty;
+
                 findResult = searchService.FindUsers(searchDto);
                 Assert.True(findResult.Contains(userId));
-                
+
                 searchDto = new SearchQueryDto()
                 {
                     Name = "user5",
-                    InterestIds = new int[] {footballInterestId},
+                    InterestIds = new int[] { footballInterestId },
                 };
                 findResult = searchService.FindUsers(searchDto);
                 Assert.True(findResult.Length == 0);
 
                 userDetailsDto = new UserDetailsDto();
-                userDetailsDto.Interests = new int[] {footballInterestId, basketballInterestId};
+                userDetailsDto.HairColor = dictionaryHelper.LightHairColorId;
+
+                userDetailsDto.Interests = new int[] { footballInterestId, basketballInterestId };
                 usersService.UpdateUserDetails(userId, userDetailsDto);
                 findResult = searchService.FindUsers(searchDto);
                 Assert.True(findResult.Contains(userId));
+
+                findResult2 = searchService.FindUsers(search2Dto);
+                Assert.False(findResult.Contains(userId));
             }
         }
+
+        [Fact]
+        public void TestUsersHairAndEyesColorsQuery()
+        {
+            var lightHairColorUsersQuery = new SearchQueryDto()
+            {
+                HairColor = dictionaryHelper.LightHairColorId,
+            };
+
+            var darkHairColorUsersQuery = new SearchQueryDto()
+            {
+                HairColor = dictionaryHelper.DarkHairColorId,
+            };
+
+            var brownEyedUsersQuery = new SearchQueryDto()
+            {
+                EyesColor = dictionaryHelper.BrowEyesColorId,
+            };
+
+            var blueEyedUsersQuery = new SearchQueryDto()
+            {
+                EyesColor = dictionaryHelper.BlueEyesColorId,
+            };
+
+            var greenEyedUsersQuery = new SearchQueryDto()
+            {
+                EyesColor = dictionaryHelper.GreenEyesColorId,
+            };
+
+            var service = GetService<IUserFinderService>();
+
+            Assert.True(service.FindUsers(lightHairColorUsersQuery).Count() == 2);
+            Assert.True(service.FindUsers(darkHairColorUsersQuery).Count() == 1);
+            Assert.True(service.FindUsers(brownEyedUsersQuery).Count() == 2);
+            Assert.True(service.FindUsers(blueEyedUsersQuery).Count() == 1);
+            Assert.True(service.FindUsers(greenEyedUsersQuery).Count() == 0);
+
+        }
+
 
         [Fact]
         public void TestUsersInterestQuery()
@@ -135,11 +196,6 @@ namespace BusinessServices.Tests
             }; //1
 
             var service = GetService<IUserFinderService>();
-
-
-            var c1 = service.FindUsers(footballAndChessInterestQuery);
-            var c2 = service.FindUsers(footballAndbasketballInterestQuery);
-
 
             Assert.True(service.FindUsers(footballInterestQuery).Count() == 3);
             Assert.True(service.FindUsers(basketballInterestQuery).Count() == 1);
@@ -202,112 +258,6 @@ namespace BusinessServices.Tests
             }
         }
 
-        private User[] GenerateUsersDetails(UsersDao dao)
-        {
-            var user1 = dao.QueryUsers().Where(x=>x.Name == "user1").First();
-            var user2 = dao.QueryUsers().Where(x=>x.Name == "user2").First();
-            var user3 = dao.QueryUsers().Where(x=>x.Name == "user3").First();
-            var user4 = dao.QueryUsers().Where(x=>x.Name == "user4").First();
-
-            user1.UserDetails.City = "Warszawa";
-            user1.UserDetails.Region = "Mazowieckie";
-            user1.UserDetails.Tattos = 2;
-            user1.UserDetails.Heigth = 60;
-            user1.UserDetails.Width = 180;
-
-            user2.UserDetails.City = "Warszawa";
-            user2.UserDetails.Region = "Mazowieckie";
-            user2.UserDetails.Tattos = 0;
-            user2.UserDetails.Heigth = 70;
-            user2.UserDetails.Width = 170;
-
-            user3.UserDetails.City = "Wieliczka";
-            user3.UserDetails.Region = "Małopolskie";
-            user3.UserDetails.Tattos = 0;
-            user3.UserDetails.Heigth = 90;
-            user3.UserDetails.Width = 190;
-
-            user4.UserDetails.City = "Kraków";
-            user4.UserDetails.Region = "Małopolskie";
-            user4.UserDetails.Tattos = 1;
-            user4.UserDetails.Heigth = 65;
-            user4.UserDetails.Width = 180;
-
-            dao.Update(user1);
-            dao.Update(user2);
-            dao.Update(user3);
-            dao.Update(user4);
-
-            return new User[] { user1, user2, user3, user4 };
-            
-        }
-
-        private void AddDictionaryValues(params User[] users)
-        {
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
-            {
-                var dao = new DetailsDictionaryDao(dbc);
-
-                if (dao.QueryDictionaryValues().Count() > 3)
-                    return;
-
-
-                var footballInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypesConsts.InterestFootball.ToLower()).First();
-                var basketballInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypesConsts.InterestBasketball.ToLower()).First();
-                var chessInterest = dao.QueryDictionary().Where(x => x.Name.ToLower() == UserDetailsTypesConsts.InterestChess.ToLower()).First();
-
-                var detailsValues = new UsersDetailsItemsValues[]
-                {
-                   new UsersDetailsItemsValues()
-                   {
-                        UserDetailsDictionaryItemId = footballInterest.Id,
-                        UserDetailsId = users[0].UserDetails.Id,
-                        Value = true,
-                   },
-
-                   new UsersDetailsItemsValues()
-                   {
-                        UserDetailsDictionaryItemId = basketballInterest.Id,
-                        UserDetailsId = users[0].UserDetails.Id,
-                        Value = true,
-                   },
-
-                   new UsersDetailsItemsValues()
-                   {
-                        UserDetailsDictionaryItemId = footballInterest.Id,
-                        UserDetailsId = users[1].UserDetails.Id,
-                        Value = true,
-                   },
-
-                   new UsersDetailsItemsValues()
-                   {
-                        UserDetailsDictionaryItemId = chessInterest.Id,
-                        UserDetailsId = users[1].UserDetails.Id,
-                        Value = true,
-                   },
-
-                   new UsersDetailsItemsValues()
-                   {
-                        UserDetailsDictionaryItemId = footballInterest.Id,
-                        UserDetailsId = users[2].UserDetails.Id,
-                        Value = true,
-                   },
-
-                   new UsersDetailsItemsValues()
-                   {
-                        UserDetailsDictionaryItemId = chessInterest.Id,
-                        UserDetailsId = users[3].UserDetails.Id,
-                        Value = true,
-                   },
-                };
-
-                foreach(var itemValue in detailsValues)
-                {
-                    dao.AddItemValue(itemValue);
-                }
-            }
-        }
-
         private int GetInterestId(string interest, DetailsDictionaryDao detailsDao)
         =>  detailsDao.QueryDictionary().Where(x => x.Name.ToLower() == interest.ToLower()).First().Id;
 
@@ -318,7 +268,8 @@ namespace BusinessServices.Tests
             return user.Id;
         }
 
-        private void FlushUsersInteres()
+
+        private void FlushUsersDetails()
         {
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {

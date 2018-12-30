@@ -7,6 +7,7 @@ using EFRandevouDAL;
 using EFRandevouDAL.Users;
 using RandevouData.Users;
 using AutoMapper.QueryableExtensions;
+using BusinessServices.UsersService.DetailsDictionary;
 
 namespace BusinessServices.UsersService
 {
@@ -29,6 +30,7 @@ namespace BusinessServices.UsersService
                 return userDto;
             }
         }
+
 
         public IEnumerable<UserDto> QueryUsers()
         {

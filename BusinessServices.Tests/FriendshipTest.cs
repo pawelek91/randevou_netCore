@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BusinessServices.FriendshipService;
+using BusinessServices.Tests.Helper;
 using EFRandevouDAL;
 using EFRandevouDAL.Users;
 using RandevouData.Users;
@@ -15,14 +16,15 @@ namespace BusinessServices.Tests
         private readonly User user1;
         private readonly User user2;
         private readonly User user3;
-
+        private readonly UsersGeneratorHelper usersGeneratorHelper;
         public FriendshipTest()
         {
+            usersGeneratorHelper = new UsersGeneratorHelper();
             using (var dbc = new RandevouDbContext())
             {
                 
                 var usersDao = new UsersDao(dbc);
-                UsersTest.FillUsersInDb(usersDao);
+                usersGeneratorHelper.FillUsersInDb(usersDao);
 
                 user1 = usersDao.QueryUsers().Where(x => x.Name == "user1").Single();
                 user2 = usersDao.QueryUsers().Where(x => x.Name == "user2").Single();

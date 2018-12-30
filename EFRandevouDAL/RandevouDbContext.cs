@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using RandevouData.Messages;
 using RandevouData.Users;
 using RandevouData.Users.Details;
+//using RandevouData.Authentications;
 
 namespace EFRandevouDAL
 {
@@ -63,5 +64,7 @@ namespace EFRandevouDAL
         public DbSet<UserDetailsDictionaryItem> UserDetailsDictionary { get; set; }
         public DbSet<UsersDetailsItemsValues> UsersDetailsItemsValues{get;set;}
         public DbSet<UsersFriendship> Friendships { get; set; }
+        //public DbSet<Login> Login { get; set; }
+        //public DbSet<Authentication> Authentication { get; set; }
     }
 }

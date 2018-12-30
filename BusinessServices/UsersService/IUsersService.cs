@@ -12,7 +12,8 @@ namespace BusinessServices.UsersService
 		void Delete(int id);
 		void Update(UserDto userDto);
 		UserDto GetUser(int id);
-		IEnumerable<UserDto> QueryUsers();
+        UserDetailsDto GetUserWithDetails(int id);
+        IEnumerable<UserDto> QueryUsers();
         void UpdateUserDetails(int userId, UserDetailsDto dto);
     }
 }

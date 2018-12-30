@@ -14,6 +14,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
         IMapper mapper;
         private string[] _itemTypes = new string[]
         {
+            UserDetailsTypesConsts.HairColor,
             UserDetailsTypesConsts.EyesColor,
             UserDetailsTypesConsts.Interests,
         };
@@ -31,6 +32,15 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public string[] GetTypesNames() => _itemTypes;
 
+        public UsersDetailsItemsValues GetDictionaryValue(int id)
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var item = dao.GetValue(id);
+                return item;
+            }
+        }
         public int AddItem(DictionaryItemDto dto)
         {
             ValidateItemType(dto.ItemType);
@@ -108,7 +118,86 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
                 dao.Update(entity);
             }
+        }
 
+        public int? GetUserEyesColor(int userDetailsId)
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var eyesColorsIds = GetEyesColorsIds();
+                int? result = dao.QueryDictionaryValues().Where(x =>
+                x.UserDetailsId == userDetailsId && eyesColorsIds.Contains(x.UserDetailsDictionaryItemId))
+                .FirstOrDefault()?.UserDetailsDictionaryItemId;
+                return result;
+            }
+        }
+
+        protected int? GetUserHairColor(int userDetailsId)
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var haorColorsIds = GetHairColorsIds();
+                int? result = dao.QueryDictionaryValues().Where(x =>
+                x.UserDetailsId == userDetailsId && haorColorsIds.Contains(x.UserDetailsDictionaryItemId))
+                .FirstOrDefault()?.UserDetailsDictionaryItemId;
+                return result;
+            }
+        }
+
+        public int[] GetEyesColorsIds()
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var result = dao.QueryDictionary().Where(x =>
+                x.DetailsType.Equals(UserDetailsTypesConsts.EyesColor, StringComparison.CurrentCultureIgnoreCase)
+                ).Select(x => x.Id).ToArray();
+                return result;
+            }
+        }
+
+        public int[] GetHairColorsIds()
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var result = dao.QueryDictionary().Where(x =>
+                x.DetailsType.Equals(UserDetailsTypesConsts.HairColor, StringComparison.CurrentCultureIgnoreCase)
+                ).Select(x => x.Id).ToArray();
+                return result;
+            }
+        }
+
+        public int GetEyesColorItemId(string color)
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var colorId = dao.QueryDictionary().FirstOrDefault(x =>
+                x.DetailsType.Equals(UserDetailsTypesConsts.EyesColor, StringComparison.CurrentCultureIgnoreCase)
+                && x.Name.Equals(color, StringComparison.CurrentCultureIgnoreCase)
+                )?.Id;
+                if (colorId == null)
+                    throw new ArgumentOutOfRangeException(nameof(color));
+                return colorId.Value;
+            }
+        }
+
+        public int GetHairColorItemId(string color)
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var colorId = dao.QueryDictionary().FirstOrDefault(x =>
+                x.DetailsType.Equals(UserDetailsTypesConsts.HairColor, StringComparison.CurrentCultureIgnoreCase)
+                && x.Name.Equals(color, StringComparison.CurrentCultureIgnoreCase)
+                )?.Id;
+                if (colorId == null)
+                    throw new ArgumentOutOfRangeException(nameof(color));
+                return colorId.Value;
+            }
         }
     }
 }

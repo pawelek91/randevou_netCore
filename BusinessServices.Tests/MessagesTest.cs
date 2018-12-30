@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BusinessServices.MessageService;
+using BusinessServices.Tests.Helper;
 using EFRandevouDAL.Messages;
 using EFRandevouDAL.Users;
 using RandevouData.Messages;
@@ -15,15 +16,16 @@ namespace BusinessServices.Tests
     {
         private User _user1;
         private User _user2;
-
+        private readonly UsersGeneratorHelper usersGeneratorHelper;
         public MessagesTest()
         {
+            this.usersGeneratorHelper = new UsersGeneratorHelper();
             using (var dbc = new EFRandevouDAL.RandevouDbContext())
             {
                 var usersDao = new UsersDao(dbc);
 
                 if (usersDao.QueryUsers().Where(x => x.Name == "user1" || x.Name == "user2").Count() != 2)
-                    UsersTest.FillUsersInDb(usersDao);
+                    usersGeneratorHelper.FillUsersInDb(usersDao);
             }
         }
 
@@ -48,7 +50,6 @@ namespace BusinessServices.Tests
                 var responseId = messagesDao.Insert(response);
 
                 var service = GetService<IMessagesService>();
-                //new MessageService.MessagesService(null);
 
                 var messageFromDb = service.GetMessage(messageId);
                 var responseMessageFromDb = service.GetMessage(responseId);

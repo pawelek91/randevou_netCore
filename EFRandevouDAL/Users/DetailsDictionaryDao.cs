@@ -22,6 +22,11 @@ namespace EFRandevouDAL.Users
             return dbc.UsersDetailsItemsValues.AsQueryable();
         }
 
+        public UsersDetailsItemsValues GetValue(int id)
+        {
+            return dbc.UsersDetailsItemsValues.Find(id);
+        }
+
 
         public void DeleteItemValue(UsersDetailsItemsValues entity)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using RandevouData.Users.Details;
 
 namespace BusinessServices.UsersService.DetailsDictionary
 {
@@ -12,5 +13,9 @@ namespace BusinessServices.UsersService.DetailsDictionary
         void EnableItem(int itemId);
         DictionaryItemDto[] GetItems(string typeName);
         string[] GetTypesNames();
+        int? GetUserEyesColor(int userDetailsId);
+        UsersDetailsItemsValues GetDictionaryValue(int id);
+        int GetEyesColorItemId(string color);
+        int GetHairColorItemId(string color);
     }
 }
