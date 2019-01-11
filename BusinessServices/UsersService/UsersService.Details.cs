@@ -21,6 +21,8 @@ namespace BusinessServices.UsersService
                 var userDto = mapper.Map<User, UserDetailsDto>(user);
                 var dictionaryService = BusinessServicesProvider.GetService<IUserDetailsDictionaryService>();
 
+                userDto.EyesColor = dictionaryService.GetUserEyesColor(user.UserDetails.Id);
+                userDto.HairColor = dictionaryService.GetUserHairColor(user.UserDetails.Id);
                 return userDto;
             }
         }
@@ -65,13 +67,30 @@ namespace BusinessServices.UsersService
         private void UpdateDetailsDictionaryItems(UserDetails details, UserDetailsDto dto, DetailsDictionaryDao detailsDao)
         {
             var detailsDictionaryService = BusinessServicesProvider.GetService<IUserDetailsDictionaryService>();
-            if(dto.Interests.Any())
-            { 
 
+            if (dto.Interests?.Count() == 0)
+            {
                 var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId).ToArray();
+                foreach (var interestId in existingDetails)
+                {
+                    var interestEntity = detailsDao.QueryDictionaryValues()
+                        .Where(x => x.UserDetailsDictionaryItemId == interestId && x.UserDetailsId == details.Id)
+                        .SingleOrDefault();
 
-                var detailsToDelete = existingDetails.Where(x => !dto.Interests.Contains(x));
-                var detailsToAdd = dto.Interests.Where(x => !existingDetails.Any(y => y == x));
+                    if (interestEntity != null)
+                        detailsDao.DeleteItemValue(interestEntity);
+                }
+            }
+            else if (dto.Interests?.Count()>0)
+            {
+
+                var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId);
+                var interestsIds = detailsDictionaryService.GetInterestsIds();
+                var userInteresIds = interestsIds.Where(x => existingDetails.Contains(x));
+
+
+                var detailsToDelete = userInteresIds.Where(x => !dto.Interests.Contains(x));
+                var detailsToAdd = dto.Interests.Where(x => !userInteresIds.Any(y => y == x));
 
                 foreach (var interestId in detailsToAdd)
                 {
@@ -107,20 +126,6 @@ namespace BusinessServices.UsersService
                         detailsDao.DeleteItemValue(userEyesColorEntity);
                }
 
-                //var eyesColorsIds = detailsDao.QueryDictionary().Where(x =>
-                //x.DetailsType.Equals(UserDetailsTypesConsts.EyesColor, StringComparison.CurrentCultureIgnoreCase)
-                //).Select(x => x.Id).ToArray();
-
-
-                //var userEyesColor2 = detailsDao.QueryDictionaryValues()
-                //    .Where(x => eyesColorsIds.Contains(x.UserDetailsDictionaryItemId)
-                //    && x.UserDetailsId == dto.UserId)
-                //    .FirstOrDefault();
-
-
-                //if (userEyesColor?.UserDetailsDictionaryItemId != dto.EyesColor.Value)
-                //    detailsDao.DeleteItemValue(userEyesColor);
-
                 var eyesColorEntity = new UsersDetailsItemsValues()
                 {
                     UserDetailsDictionaryItemId = dto.EyesColor.Value,
@@ -141,7 +146,7 @@ namespace BusinessServices.UsersService
 
                 var userHairColor = detailsDao.QueryDictionaryValues()
                     .Where(x => hairColorsIds.Contains(x.UserDetailsDictionaryItemId)
-                    && x.UserDetailsId == dto.UserId)
+                    && x.UserDetailsId == dto.UserId && x.Value)
                     .FirstOrDefault();
 
                 if (userHairColor?.UserDetailsDictionaryItemId != null && userHairColor.UserDetailsDictionaryItemId != dto.HairColor.Value)

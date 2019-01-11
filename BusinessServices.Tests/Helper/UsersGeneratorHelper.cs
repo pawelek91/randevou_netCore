@@ -25,6 +25,11 @@ namespace BusinessServices.Tests.Helper
         public void FillUsersInDb(UsersDao dao)
         {
             var users = GenerateUsers();
+            var usersToDelete = dao.QueryUsers().Where(x => x.Name.Contains("NowyUserek")).ToArray();
+
+            foreach (var u in usersToDelete)
+                dao.Delete(u);
+
             var userNamesInDb = dao.QueryUsers().Select(x => x.Name).ToArray();
 
             var usersToAdd = users.Where(x => !userNamesInDb.Contains(x.Name));

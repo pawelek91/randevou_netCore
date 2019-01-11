@@ -42,5 +42,11 @@ namespace EFRandevouDAL.Users
            return dbc.Users.Include(x => x.UserDetails.DetailsItemsValues).FirstOrDefault(x => x.Id == id);
         }
 
+        public override void Delete(User entity)
+        {
+            entity.IsDeleted = true;
+            dbc.SaveChanges();
+        }
+
     }
 }

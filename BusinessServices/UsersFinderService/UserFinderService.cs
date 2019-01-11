@@ -38,11 +38,12 @@ namespace BusinessServices.UsersFinderService
                     detailsIds = QueryAdditionalValues(null, dto, usersDao, userDetialsDao);
                 }
 
-                var usersIds = usersDao.QueryUserDetails()
-                    .Where(x => detailsIds.Contains(x.Id))
-                    .Select(x => x.UserId).ToArray();
+                var usersIds = usersDao.QueryUserDetails();
 
-                return usersIds;
+                if (detailsIds != null)
+                    usersIds = usersIds.Where(x => detailsIds.Contains(x.Id));
+
+                return usersIds.Select(x => x.UserId).ToArray(); 
             }
         }
 
@@ -97,16 +98,12 @@ namespace BusinessServices.UsersFinderService
             if (!String.IsNullOrEmpty(dto.Region))
             {
                 usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.ToLower() == dto.Region.ToLower());
-               // usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.IndexOf(dto.Region, StringComparison.OrdinalIgnoreCase) >=0);
-                //usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.Contains(dto.Region));
                 queryChanged = true;
             }
 
             if (!String.IsNullOrEmpty(dto.City))
             {
                 usersDetailsQuery = usersDetailsQuery.Where(x => x.City.ToLower() == dto.City.ToLower());
-                //usersDetailsQuery = usersDetailsQuery.Where(x => x.City.IndexOf(dto.City, StringComparison.OrdinalIgnoreCase) >= 0);
-                //usersDetailsQuery = usersDetailsQuery.Where(x => x.Region.Contains(dto.City));
                 queryChanged = true;
             }
 
@@ -135,63 +132,89 @@ namespace BusinessServices.UsersFinderService
             }
 
 
-            int[] filteredIds = null;
+            List<int>  filteredIds = null;
 
             if (queryChanged)
             {
-                filteredIds = usersDetailsQuery.Select(x => x.Id).ToArray();
+                filteredIds = usersDetailsQuery.Select(x => x.Id).ToList();
             }
                 
 
-            return QueryDictionaryValues(filteredIds,dto, dao);
+            return QueryDictionaryValues(filteredIds,dto, dao).ToArray();
         }
 
-        private int[] QueryDictionaryValues(int[] filteredIds, SearchQueryDto dto, DetailsDictionaryDao dao)
+        private IEnumerable<int> QueryDictionaryValues(IEnumerable<int> filteredIds, SearchQueryDto dto, DetailsDictionaryDao dao)
         {
+            if (filteredIds?.Count() == 0)
+                return filteredIds;
+
             if (!(dto.EyesColor.HasValue || dto.HairColor.HasValue || dto.InterestIds?.Count() > 0))
                 return filteredIds;
 
+            bool queryChanged = false;
             var query = dao.QueryDictionaryValues();
         
             if (filteredIds != null)
             {
                 query = query.Where(x => filteredIds.Contains(x.UserDetailsId));
+                queryChanged = true;
             }
 
             if (dto.EyesColor.HasValue)
             {
                 query = query.Where(x => x.UserDetailsDictionaryItemId == dto.EyesColor && x.Value);
-                var q1 = query.ToArray(); //dorobić filtereIds dla zapytań poniżej
+                filteredIds = query.Select(x => x.UserDetailsId).ToList();
+                queryChanged = true;
             }
 
             if(dto.HairColor.HasValue)
             {
-                query = query.Where(x => x.UserDetailsDictionaryItemId == dto.HairColor && x.Value);
-                var query2 = dao.QueryDictionaryValues().Where(x => x.UserDetailsDictionaryItemId == dto.HairColor && x.Value);
-                var q2 = query2.ToArray();
+                if(queryChanged)
+                {
+                    if (!filteredIds.Any())
+                        return new int[0];
+
+                    query = dao.QueryDictionaryValues().Where(x => 
+                    filteredIds.Contains(x.UserDetailsId) && x.Value && x.UserDetailsDictionaryItemId == dto.HairColor );
+                }
+                else
+                { 
+                    query = query.Where(x => x.UserDetailsDictionaryItemId == dto.HairColor && x.Value);
+                    queryChanged = true;
+                }
+                
+                filteredIds = query.Select(x => x.UserDetailsId).ToArray();
+                if (filteredIds != null && !filteredIds.Any())
+                    return new int[0];
             }
-
-            var qqq = query.Expression.ToString();
-
-            var userDetailsIds = query.Select(x => x.UserDetailsId).ToArray();
 
             if (dto.InterestIds?.Length > 0)
             {
-                int[] typedUsersIds;
+                int[] typedUsersIds = null;
 
-                var interestQuery = dao.QueryDictionaryValues()
-                    .Where(x => userDetailsIds.Contains(x.UserDetailsId))
-                    .GroupBy(x => x.UserDetailsId)
-                    .Select(x => new { userId = x.Key, interest = x.Select(y => y.UserDetailsDictionaryItemId) });
+                IQueryable<UsersDetailsItemsValues> interestQuery = null;
 
-                typedUsersIds = interestQuery.Where(x =>
-                                !dto.InterestIds.Except(x.interest).Any())
-                                .Select(x => x.userId).ToArray();
+                if (queryChanged)
+                {
+                    interestQuery = dao.QueryDictionaryValues()
+                        .Where(x => filteredIds.Contains(x.UserDetailsId));
+                }
+                else
+                {
+                    interestQuery = dao.QueryDictionaryValues();
+                }
 
+
+                var result = interestQuery.GroupBy(x => x.UserDetailsId)
+                        .Select(x => new { userId = x.Key, interest = x.Select(y => y.UserDetailsDictionaryItemId) });
+
+                typedUsersIds = result.Where(x =>
+                                !(dto.InterestIds.Except(x.interest).Any())
+                                ).Select(x => x.userId).ToArray();
 
                 return typedUsersIds;
             }
-            return userDetailsIds;
+            return filteredIds;
         }
     }
 }

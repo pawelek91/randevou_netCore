@@ -108,11 +108,13 @@ namespace BusinessServices.Tests
 
                 userDetailsDto.Interests = new int[] { footballInterestId, basketballInterestId };
                 usersService.UpdateUserDetails(userId, userDetailsDto);
+
+
                 findResult = searchService.FindUsers(searchDto);
                 Assert.True(findResult.Contains(userId));
 
                 findResult2 = searchService.FindUsers(search2Dto);
-                Assert.False(findResult.Contains(userId));
+                Assert.False(findResult2.Contains(userId));
             }
         }
 

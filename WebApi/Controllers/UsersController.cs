@@ -24,7 +24,7 @@ namespace WebApi.Controllers
 
 
         [HttpGet]
-        [Route("{id}/UserDetails")]
+        [Route("{id}/Details")]
         [ProducesResponseType(typeof(UserDetailsDto), 200)]
         public IActionResult GetUserWithDetials(int id)
         {
@@ -39,6 +39,9 @@ namespace WebApi.Controllers
         {
             IUsersService usersService = GetService<IUsersService>();
             var user = usersService.GetUser(id);
+            if (user == null)
+                return NoContent();
+
             return Ok(user);
         }
 
@@ -54,13 +57,16 @@ namespace WebApi.Controllers
             return Created("api/users/", id.ToString());
         }
 
-        [Route("{id:int}/Details")]
-        [HttpPost]
-        public IActionResult PostUserDetails([FromQuery]int id, [FromBody]UserDetailsDto detailsDto)
+        [Route("{id}/Details")]
+        [HttpPatch]
+        public IActionResult PatchUserDetails([FromHeader]int id, [FromBody]UserDetailsDto detailsDto)
         {
             IUsersService usersService = GetService<IUsersService>();
             if (id == 0)
-                id = detailsDto.UserId;
+                throw new ArgumentNullException(nameof(id));
+
+            if (detailsDto.UserId == 0)
+                detailsDto.UserId = id;
 
             usersService.UpdateUserDetails(id, detailsDto);
             return Ok();

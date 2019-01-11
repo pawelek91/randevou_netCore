@@ -28,19 +28,19 @@ namespace BusinessServices.Tests
                 usersGeneratorHelper.FillUsersInDb(dao);
 
                 var malesCount = dao.QueryUsers().Where(x => x.Gender == 'm' || x.Gender == 'M').Count();
-                var femalesCount = dao.QueryUsers().Where(x => x.Gender == 'm' || x.Gender == 'M').Count();
+                var femalesCount = dao.QueryUsers().Where(x => x.Gender == 'f' || x.Gender == 'F').Count();
 
-                var bornAfter1990 = dao.QueryUsers().Where(x => x.BirthDate >= new DateTime(1990,1,1)).Count();
-                var bornBefore1990 = dao.QueryUsers().Where(x => x.BirthDate <= new DateTime(1990,1,1)).Count();
-                var bornAfter1980 = dao.QueryUsers().Where(x => x.BirthDate >= new DateTime(1980,1,1)).Count();
-                var bornBefore1980 = dao.QueryUsers().Where(x => x.BirthDate <= new DateTime(1980,1,1)).Count();
+                var bornAfter1990 = dao.QueryUsers().Where(x => x.BirthDate >= new DateTime(1990,1,1) && !x.IsDeleted).Count();
+                var bornBefore1990 = dao.QueryUsers().Where(x => x.BirthDate <= new DateTime(1990,1,1) && !x.IsDeleted).Count();
+                var bornAfter1980 = dao.QueryUsers().Where(x => x.BirthDate >= new DateTime(1980,1,1) && !x.IsDeleted).Count();
+                var bornBefore1980 = dao.QueryUsers().Where(x => x.BirthDate <= new DateTime(1980,1,1) && !x.IsDeleted).Count();
 
                 Assert.True(malesCount >= 4);
                 Assert.True(femalesCount >= 2);
                 Assert.True(bornAfter1980 >=4);
                 Assert.True(bornAfter1990 >= 2);
                 Assert.True(bornBefore1980 == 3);
-                Assert.True(bornBefore1990 == 5);
+                Assert.True(bornBefore1990 >= 5);
             }
         }
 

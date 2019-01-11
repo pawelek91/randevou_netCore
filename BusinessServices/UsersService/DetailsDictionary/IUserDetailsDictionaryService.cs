@@ -14,8 +14,10 @@ namespace BusinessServices.UsersService.DetailsDictionary
         DictionaryItemDto[] GetItems(string typeName);
         string[] GetTypesNames();
         int? GetUserEyesColor(int userDetailsId);
+        int? GetUserHairColor(int userDetailsId);
         UsersDetailsItemsValues GetDictionaryValue(int id);
         int GetEyesColorItemId(string color);
         int GetHairColorItemId(string color);
+        int[] GetInterestsIds();
     }
 }

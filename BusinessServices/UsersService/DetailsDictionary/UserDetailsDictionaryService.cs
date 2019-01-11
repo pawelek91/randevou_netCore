@@ -133,7 +133,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
             }
         }
 
-        protected int? GetUserHairColor(int userDetailsId)
+        public int? GetUserHairColor(int userDetailsId)
         {
             using (var dbc = new RandevouDbContext())
             {
@@ -165,6 +165,18 @@ namespace BusinessServices.UsersService.DetailsDictionary
                 var dao = new DetailsDictionaryDao(dbc);
                 var result = dao.QueryDictionary().Where(x =>
                 x.DetailsType.Equals(UserDetailsTypesConsts.HairColor, StringComparison.CurrentCultureIgnoreCase)
+                ).Select(x => x.Id).ToArray();
+                return result;
+            }
+        }
+
+        public int[] GetInterestsIds()
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var result = dao.QueryDictionary().Where(x =>
+                x.DetailsType.Equals(UserDetailsTypesConsts.Interests, StringComparison.CurrentCultureIgnoreCase)
                 ).Select(x => x.Id).ToArray();
                 return result;
             }
