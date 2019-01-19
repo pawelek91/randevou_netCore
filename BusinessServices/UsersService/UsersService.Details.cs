@@ -83,7 +83,13 @@ namespace BusinessServices.UsersService
             }
             else if (dto.Interests?.Count()>0)
             {
+                if(dto.UserId == default(int))
+                {
+                    if (details.User == null)
+                        throw new ArgumentNullException(nameof(dto.UserId));
 
+                    dto.UserId = details.User.Id;
+                }
                 var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId);
                 var interestsIds = detailsDictionaryService.GetInterestsIds();
                 var userInteresIds = interestsIds.Where(x => existingDetails.Contains(x));
