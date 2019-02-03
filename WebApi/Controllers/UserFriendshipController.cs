@@ -36,13 +36,14 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
+        [ProducesResponseType(typeof(string[]),200)]
         [HttpPost("PossibleRequestsActions")]
         public IActionResult GetPossibleRequestActions()
         {
             return Ok(possibleActions);
         }
 
-        [HttpPost("/Invitation")]
+        [HttpPut("Invitation")]
         public IActionResult SendFriendshipInvitation([FromBody] FriendshipsDto.FriendshipSendRequestDto dto)
         {
             if (dto == null)
@@ -59,7 +60,8 @@ namespace WebApi.Controllers
 
             return Ok();
         }
-        [HttpPut("/FriendshipStatusAction")]
+
+        [HttpPut("FriendshipStatusAction")]
         public IActionResult UpdateFriendshipStatus([FromBody] FriendshipsDto.UpdateFriendshipStatusDto dto)
         {
             if (dto == null)

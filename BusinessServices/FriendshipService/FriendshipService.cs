@@ -90,7 +90,7 @@ namespace BusinessServices.FriendshipService
 
                     friendshipDao.Insert(request);
                     friendshipDao.Insert(request2);
-                }
+                }         
             }
         }
 
