@@ -11,8 +11,9 @@ namespace WebApi.Controllers
     [Route("api/[controller]")]
     public class MessagesController : BasicController
     {
+        [ProducesResponseType(typeof(List<MessageDto>),200)]
         [Route(ApiConsts.Conversation)]
-        [HttpPost]
+        [HttpPost(ApiConsts.Conversation)]
         public IActionResult GetConversation([FromBody] RequestMessagesDto dto)
         {
             IMessagesService messagesService = GetService<IMessagesService>();
@@ -20,8 +21,8 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        
-        [Route("{userId:int}/"+ApiConsts.Speakers)]
+        [ProducesResponseType(typeof(int[]), 200)]
+        [Route("{userId}/"+ApiConsts.Speakers)]
         [HttpGet]
         public IActionResult GetSpeakers(int userId)
         {
@@ -37,7 +38,7 @@ namespace WebApi.Controllers
         //    var result = messagesService.GetMessage(messageId);
         //    return Ok(result);
         //}
-
+        [ProducesResponseType(typeof(int),201)]
         [HttpPost]
         public IActionResult PostMessage([FromBody] MessageBasicDto dto)
         {
@@ -45,9 +46,8 @@ namespace WebApi.Controllers
             var messageId = messagesService.SendMessage(dto.SenderId, dto.ReceiverId, dto.Content);
             return Created("api/messages/",messageId);
         }
-
-        [Route("{userId:int}/"+ApiConsts.Conversation)]
-        [HttpGet]
+        [ProducesResponseType(typeof(List<LastMessagesFromConversationsDto>),200)]
+        [HttpGet(ApiConsts.Conversation + "/{userId}")]
         public IActionResult GetConvesationsLastMessages(int userId)
         {
             IMessagesService messagesService = GetService<IMessagesService>();
