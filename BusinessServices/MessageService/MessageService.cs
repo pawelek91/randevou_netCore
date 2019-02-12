@@ -120,14 +120,6 @@ namespace BusinessServices.MessageService
                 var usersData = userDao.QueryUsers().Where(x => speakersIds.Contains(x.Id))
                     .ToDictionary(x => x.Id, y => y.Name);
 
-                //foreach (var id in speakersIds)
-                //{
-                //    var user = userDao.Get(id);
-                //    if (user == null)
-                //        throw new ArgumentException(string.Format("User ({0}) doesn't exist", id));
-
-                //}
-
                 var messagesDao = new MessagesDao(dbc);
 
                 foreach(var id in speakersIds)
@@ -159,6 +151,32 @@ namespace BusinessServices.MessageService
 
         }
 
+        public void MarkMessageRead(int messageId, int ownerId)
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new MessagesDao(dbc);
+                var messageToMark = dao.QueryMessages().Where(x => x.Id == messageId && x.ToUser.Id == ownerId).FirstOrDefault();
+                if (messageToMark == null)
+                    throw new ArgumentOutOfRangeException(nameof(messageId));
 
+                messageToMark.ReadDate = DateTime.Now;
+                dao.Update(messageToMark);
+            }
+        }
+
+        public void MarkMessageUnread(int messageId, int ownerId)
+        {
+            using (var dbc = new RandevouDbContext())
+            {
+                var dao = new MessagesDao(dbc);
+                var messageToMark = dao.QueryMessages().Where(x => x.Id == messageId && x.ToUser.Id == ownerId).FirstOrDefault();
+                if (messageToMark == null)
+                    throw new ArgumentOutOfRangeException(nameof(messageId));
+
+                messageToMark.ReadDate = null;
+                dao.Update(messageToMark);
+            }
+        }
     }
 }

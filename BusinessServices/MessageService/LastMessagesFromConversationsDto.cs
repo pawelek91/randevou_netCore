@@ -10,6 +10,7 @@ namespace BusinessServices.MessageService
     /// </summary>
     public class LastMessagesFromConversationsDto
     {
+        public int MessageId{get;set;}
         public int SpeakerId { get; set; }
         public string SpeakerName { get; set; }
         public bool IsRead { get; set; }

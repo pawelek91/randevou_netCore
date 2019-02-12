@@ -28,6 +28,7 @@ namespace WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Randevou API", Version = "v1" });
+                c.ResolveConflictingActions(apiDescriptions=> apiDescriptions.First());
             });
         }
 

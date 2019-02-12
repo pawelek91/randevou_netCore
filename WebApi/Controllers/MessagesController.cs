@@ -12,7 +12,6 @@ namespace WebApi.Controllers
     public class MessagesController : BasicController
     {
         [ProducesResponseType(typeof(List<MessageDto>),200)]
-        [Route(ApiConsts.Conversation)]
         [HttpPost(ApiConsts.Conversation)]
         public IActionResult GetConversation([FromBody] RequestMessagesDto dto)
         {
@@ -38,6 +37,8 @@ namespace WebApi.Controllers
         //    var result = messagesService.GetMessage(messageId);
         //    return Ok(result);
         //}
+
+
         [ProducesResponseType(typeof(int),201)]
         [HttpPost]
         public IActionResult PostMessage([FromBody] MessageBasicDto dto)
@@ -46,13 +47,36 @@ namespace WebApi.Controllers
             var messageId = messagesService.SendMessage(dto.SenderId, dto.ReceiverId, dto.Content);
             return Created("api/messages/",messageId);
         }
-        [ProducesResponseType(typeof(List<LastMessagesFromConversationsDto>),200)]
-        [HttpGet(ApiConsts.Conversation + "/{userId}")]
-        public IActionResult GetConvesationsLastMessages(int userId)
+
+         [ProducesResponseType(typeof(List<LastMessagesFromConversationsDto>),200)]
+         [HttpGet(  ApiConsts.Conversation + "/{userId}")]
+         public IActionResult GetConvesationsLastMessages(int userId)
+         {
+             IMessagesService messagesService = GetService<IMessagesService>();
+             var result = messagesService.GetConversationsLastMessages(userId);
+             return Ok(result);
+         }
+
+        [HttpPut(ApiConsts.MarkRead)]
+        public IActionResult MarkAsRead([FromBody] MessageMarkDto dto)
         {
             IMessagesService messagesService = GetService<IMessagesService>();
-            var result = messagesService.GetConversationsLastMessages(userId);
-            return Ok(result);
+            if (dto == null || dto.OwnerId == default(int) || dto.MessageId == default(int))
+                return BadRequest("Wrong dto");
+
+            messagesService.MarkMessageRead(dto.MessageId, dto.OwnerId);
+            return Ok();
+        }
+
+        [HttpPut(ApiConsts.MarkUnread)]
+        public IActionResult MarkAsUnread([FromBody] MessageMarkDto dto)
+        {
+            IMessagesService messagesService = GetService<IMessagesService>();
+            if (dto == null || dto.OwnerId == default(int) || dto.MessageId == default(int))
+                return BadRequest("Wrong dto");
+
+            messagesService.MarkMessageUnread(dto.MessageId, dto.OwnerId);
+            return Ok();
         }
     }
 }

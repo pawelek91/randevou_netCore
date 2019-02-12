@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="Class1.cs" />
+    <Compile Remove="MessageService\MessagesConsts.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EFRandevouDAL\EFRandevouDAL.csproj" />

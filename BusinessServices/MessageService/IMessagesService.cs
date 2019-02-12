@@ -10,5 +10,7 @@ namespace BusinessServices.MessageService
         IEnumerable<MessageDto> GetConversationBetweenUsers(int user1Id, int user2Id);
         IEnumerable<int> GetUserConversationsSpeakers(int userId);
         IEnumerable<LastMessagesFromConversationsDto> GetConversationsLastMessages(int userId);
+        void MarkMessageRead(int messageId, int ownerId);
+        void MarkMessageUnread(int messageId, int ownerId);
     }
 }

@@ -10,5 +10,7 @@ namespace WebApi.Controllers
         public const string Message = nameof(Message);
         public const string Conversation = nameof(Conversation);
         public const string Speakers = nameof(Speakers);
+        public const string MarkRead = nameof(MarkRead);
+        public const string MarkUnread = nameof(MarkUnread);
     }
 }
