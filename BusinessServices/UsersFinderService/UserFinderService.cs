@@ -140,7 +140,7 @@ namespace BusinessServices.UsersFinderService
             }
                 
 
-            return QueryDictionaryValues(filteredIds,dto, dao).ToArray();
+            return QueryDictionaryValues(filteredIds,dto, dao)?.ToArray();
         }
 
         private IEnumerable<int> QueryDictionaryValues(IEnumerable<int> filteredIds, SearchQueryDto dto, DetailsDictionaryDao dao)
