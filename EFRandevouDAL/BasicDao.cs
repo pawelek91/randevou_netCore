@@ -8,8 +8,8 @@ namespace EFRandevouDAL
 {
     public abstract class BasicDao<TEntity> where TEntity : BasicRandevouObject
     {
-        protected RandevouDbContext dbc;
-        public BasicDao(RandevouDbContext dbc) { this.dbc = dbc; }
+        protected RandevouBusinessDbContext dbc;
+        public BasicDao(RandevouBusinessDbContext dbc) { this.dbc = dbc; }
         
         public virtual int Insert(TEntity entity)
         {

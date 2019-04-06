@@ -43,7 +43,7 @@ namespace BusinessServices.Tests.Helper
 
         public void AddUsersDictionaryValues(User[] users)
         {
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
 

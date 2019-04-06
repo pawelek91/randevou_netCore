@@ -7,21 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using RandevouData.Messages;
 using RandevouData.Users;
 using RandevouData.Users.Details;
-//using RandevouData.Authentications;
 
 namespace EFRandevouDAL
 {
-    public class RandevouDbContext : DbContext
+    public class RandevouBusinessDbContext : RandveouDbContext
     {
         
-        private const string _dbName = "Randevou.db";
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-			var filesPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-			var dbPath = Path.Combine(filesPath, "..","..","..","..",_dbName);
-            optionsBuilder.UseSqlite("Data Source=" + dbPath); 
-        }
-
+     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -53,9 +45,6 @@ namespace EFRandevouDAL
                 .HasOne(fs => fs.User2)
                 .WithMany()
                 .HasForeignKey(fs => fs.User2Id);
-
-
-
         }
 
         public DbSet<User> Users { get; set; }
@@ -64,7 +53,5 @@ namespace EFRandevouDAL
         public DbSet<UserDetailsDictionaryItem> UserDetailsDictionary { get; set; }
         public DbSet<UsersDetailsItemsValues> UsersDetailsItemsValues{get;set;}
         public DbSet<UsersFriendship> Friendships { get; set; }
-        //public DbSet<Login> Login { get; set; }
-        //public DbSet<Authentication> Authentication { get; set; }
     }
 }

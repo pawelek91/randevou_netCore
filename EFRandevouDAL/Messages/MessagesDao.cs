@@ -9,7 +9,7 @@ namespace EFRandevouDAL.Messages
 {
     public class MessagesDao : BasicDao<Message>
     {
-        public MessagesDao(RandevouDbContext dbc) : base(dbc)
+        public MessagesDao(RandevouBusinessDbContext dbc) : base(dbc)
         {
 
         }

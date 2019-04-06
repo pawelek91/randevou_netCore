@@ -13,23 +13,11 @@ namespace EFRandevouDAL.DaoConfigurations
         private User[] generateUsers()
         {
             var u1 = new User("user1", string.Empty, 'M', new DateTime(1990, 12, 12)) { Id = 1 };
-            //var u2 = new User("user2", string.Empty, 'F', new DateTime(1998, 12, 12)) { Id = 2 };
-            //var u3 = new User("user3", string.Empty, 'M', new DateTime(1980, 12, 12)) { Id = 3 };
 
             return new User[] { u1 };
         }
-        //private User[] _initialData = new User[]
-        //    {
-        //        new User("user1", string.Empty, 'M', new DateTime(1990, 12, 12)) { Id = 1, UserDetails = new UserDetails(this) },
-        //        new User("user2", string.Empty, 'F', new DateTime(1998, 12, 12)){ Id = 2 },
-        //        new User("user3", string.Empty, 'M', new DateTime(1980, 12, 12)){ Id = 3 }
-        //    };
-
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            // builder.HasData(generateUsers());
-            // builder.OwnsOne(e => e.UserDetails).HasData(
-            //     new UserDetails() { UserId = 1 });
         }
     }
 

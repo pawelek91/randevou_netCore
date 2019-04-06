@@ -14,7 +14,7 @@ namespace BusinessServices.UsersService
     {
         public UserDetailsDto GetUserWithDetails(int id)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var user = dao.GetUserWithDetails(id);
@@ -30,7 +30,7 @@ namespace BusinessServices.UsersService
 
         public void UpdateUserDetails(int userId, UserDetailsDto dto)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var detailsDao = new DetailsDictionaryDao(dbc);

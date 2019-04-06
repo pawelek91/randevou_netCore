@@ -10,7 +10,7 @@ namespace EFRandevouDAL.Users
 {
     public class UsersDao : BasicDao<User>
     {
-        public UsersDao(RandevouDbContext context) : base(context) { }
+        public UsersDao(RandevouBusinessDbContext context) : base(context) { }
 
         /// <summary>
         /// WRONG! use search patterns...

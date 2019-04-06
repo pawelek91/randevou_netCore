@@ -20,7 +20,7 @@ namespace BusinessServices.MessageService
         }
         public int SendMessage(int senderId, int receiverId, string content)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             { 
                 var dao = new MessagesDao(dbc);
                 var usersDao = new UsersDao(dbc);
@@ -37,7 +37,7 @@ namespace BusinessServices.MessageService
 
         public IEnumerable<MessageDto> GetConversationBetweenUsers(int user1Id, int user2Id)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new MessagesDao(dbc);
 
@@ -77,7 +77,7 @@ namespace BusinessServices.MessageService
 
         public MessageDto GetMessage(int id)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new MessagesDao(dbc);
                 var message = dao.Get(id);
@@ -88,7 +88,7 @@ namespace BusinessServices.MessageService
 
         public IEnumerable<int> GetUserConversationsSpeakers(int userId)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new MessagesDao(dbc);
                 var speakersIds = dao.QueryMessages()
@@ -113,7 +113,7 @@ namespace BusinessServices.MessageService
         {
             var result = new List<LastMessagesFromConversationsDto>();
             var speakersIds = GetUserConversationsSpeakers(userId);
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var userDao = new UsersDao(dbc);
 
@@ -153,7 +153,7 @@ namespace BusinessServices.MessageService
 
         public void MarkMessageRead(int messageId, int ownerId)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new MessagesDao(dbc);
                 var messageToMark = dao.QueryMessages().Where(x => x.Id == messageId && x.ToUser.Id == ownerId).FirstOrDefault();
@@ -167,7 +167,7 @@ namespace BusinessServices.MessageService
 
         public void MarkMessageUnread(int messageId, int ownerId)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new MessagesDao(dbc);
                 var messageToMark = dao.QueryMessages().Where(x => x.Id == messageId && x.ToUser.Id == ownerId).FirstOrDefault();

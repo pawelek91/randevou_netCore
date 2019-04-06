@@ -34,7 +34,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public UsersDetailsItemsValues GetDictionaryValue(int id)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var item = dao.GetValue(id);
@@ -47,7 +47,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
             if (string.IsNullOrWhiteSpace(dto.Name))
                 throw new ArgumentNullException(nameof(dto.Name));
 
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var entity = new UserDetailsDictionaryItem()
                 {
@@ -64,7 +64,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public void DisableItem(int itemId)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var entity = dao.Get(itemId);
@@ -75,7 +75,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public void EnableItem(int itemId)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var entity = dao.Get(itemId);
@@ -88,7 +88,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
         {
             ValidateItemType(typeName);
 
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var details = dao.QueryDictionary().Where(x => x.DetailsType.Equals(typeName, StringComparison.CurrentCultureIgnoreCase) && !x.IsDeleted).ToArray();
@@ -105,7 +105,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
             if (!string.IsNullOrWhiteSpace(dto.ItemType) || !string.IsNullOrWhiteSpace(dto.ObjectType))
                 throw new ArgumentException("Nie można zmienić typu elementu");
 
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var entity = dao.Get(dto.Id.Value);
@@ -122,7 +122,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public int? GetUserEyesColor(int userDetailsId)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var eyesColorsIds = GetEyesColorsIds();
@@ -135,7 +135,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public int? GetUserHairColor(int userDetailsId)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var haorColorsIds = GetHairColorsIds();
@@ -148,7 +148,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public int[] GetEyesColorsIds()
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var result = dao.QueryDictionary().Where(x =>
@@ -160,7 +160,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public int[] GetHairColorsIds()
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var result = dao.QueryDictionary().Where(x =>
@@ -172,7 +172,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public int[] GetInterestsIds()
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var result = dao.QueryDictionary().Where(x =>
@@ -184,7 +184,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public int GetEyesColorItemId(string color)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var colorId = dao.QueryDictionary().FirstOrDefault(x =>
@@ -199,7 +199,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
 
         public int GetHairColorItemId(string color)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var colorId = dao.QueryDictionary().FirstOrDefault(x =>

@@ -8,7 +8,7 @@ namespace EFRandevouDAL.Users
 {
     public class DetailsDictionaryDao : BasicDao<UserDetailsDictionaryItem>
     {
-        public DetailsDictionaryDao(RandevouDbContext dbc) : base(dbc)
+        public DetailsDictionaryDao(RandevouBusinessDbContext dbc) : base(dbc)
         {
         }
 

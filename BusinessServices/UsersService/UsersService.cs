@@ -22,7 +22,7 @@ namespace BusinessServices.UsersService
         }
         public UserDto GetUser(int id)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var entity = dao.Get(id);
@@ -38,7 +38,7 @@ namespace BusinessServices.UsersService
 
         public IEnumerable<UserDto> QueryUsers()
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var users = dao.QueryUsers().ToArray();
@@ -63,7 +63,7 @@ namespace BusinessServices.UsersService
             if(!userDto.BirthDate.HasValue)
                 throw new ArgumentNullException(nameof(userDto.BirthDate));
 
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var user = new User(userDto.Name, userDto.DisplayName, userDto.Gender.Value, userDto.BirthDate.Value);
@@ -74,7 +74,7 @@ namespace BusinessServices.UsersService
 
         public void Delete(int id)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var user = dao.Get(id);
@@ -92,7 +92,7 @@ namespace BusinessServices.UsersService
             if (!(id.HasValue))
                 throw new ArgumentNullException(nameof(userDto.Id));
 
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 var user = dao.Get(id.Value);

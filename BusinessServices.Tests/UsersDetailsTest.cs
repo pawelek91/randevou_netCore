@@ -19,7 +19,7 @@ namespace BusinessServices.Tests
         {
             usersGeneratorHelper = new UsersGeneratorHelper();
             dictionaryHelper = new DictionaryHelper(GetService<IUserDetailsDictionaryService>());
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 usersGeneratorHelper.FillUsersInDb(dao);
@@ -32,7 +32,7 @@ namespace BusinessServices.Tests
         [Fact]
         public void TestUsersDetailsUpdate()
         {
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var usersDao = new UsersDao(dbc);
                 var detailsDao = new DetailsDictionaryDao(dbc);
@@ -164,7 +164,7 @@ namespace BusinessServices.Tests
             int basketballInterestId;
             int chessInterestId;
 
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 footballInterestId = GetInterestId(UserDetailsTypesConsts.InterestFootball, dao);
@@ -210,7 +210,7 @@ namespace BusinessServices.Tests
         [Fact]
         public void TestQueryUserDetails()
         {
-            using(var dbc = new EFRandevouDAL.RandevouDbContext())
+            using(var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
 
@@ -273,7 +273,7 @@ namespace BusinessServices.Tests
 
         private void FlushUsersDetails()
         {
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new DetailsDictionaryDao(dbc);
                 var usersDao = new UsersDao(dbc);

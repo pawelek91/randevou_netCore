@@ -1,3 +1,4 @@
+using RandevouData.Authentication;
 using RandevouData.Messages;
 using RandevouData.Users.Details;
 using System;
@@ -20,9 +21,6 @@ namespace RandevouData.Users
 
         [Required]
         public DateTime BirthDate{get;set;}
-
-        //[NotMapped]
-        //public virtual List<UsersFriendship> UsersFriendships { get; set; }
 
         public User(string n, string dn, char g, DateTime bd)
         {

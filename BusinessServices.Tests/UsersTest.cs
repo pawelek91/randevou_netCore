@@ -22,7 +22,7 @@ namespace BusinessServices.Tests
         public void QueryBasicUsersDataTest()
         {
             IUsersService service = GetService<IUsersService>();
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 usersGeneratorHelper.FillUsersInDb(dao);
@@ -48,7 +48,7 @@ namespace BusinessServices.Tests
         public void UsersAddedToDb()
         {
             IUsersService service = GetService<IUsersService>();
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
                 usersGeneratorHelper.FillUsersInDb(dao);

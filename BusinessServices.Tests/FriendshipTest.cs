@@ -20,7 +20,7 @@ namespace BusinessServices.Tests
         public FriendshipTest()
         {
             usersGeneratorHelper = new UsersGeneratorHelper();
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 
                 var usersDao = new UsersDao(dbc);
@@ -35,7 +35,7 @@ namespace BusinessServices.Tests
         [Fact]
         public void TestRelations()
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var usersDao = new UsersDao(dbc);
                 var service = GetService<IFriendshipService>();
@@ -85,7 +85,7 @@ namespace BusinessServices.Tests
 
         private void FlushTestsFriendships()
         {
-            using (RandevouDbContext dbc = new RandevouDbContext())
+            using (RandevouBusinessDbContext dbc = new RandevouBusinessDbContext())
             {
                 FriendshipDao dao = new FriendshipDao(dbc);
                 var relations = dao.QueryFriendships().Where(x =>

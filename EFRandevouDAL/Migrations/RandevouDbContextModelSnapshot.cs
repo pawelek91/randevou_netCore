@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFRandevouDAL.Migrations
 {
-    [DbContext(typeof(RandevouDbContext))]
+    [DbContext(typeof(RandevouBusinessDbContext))]
     partial class RandevouDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

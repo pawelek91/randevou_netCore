@@ -8,7 +8,7 @@ namespace EFRandevouDAL.Users
 {
     public class FriendshipDao : BasicDao<UsersFriendship>
     {
-        public FriendshipDao(RandevouDbContext dbc) : base(dbc) { }
+        public FriendshipDao(RandevouBusinessDbContext dbc) : base(dbc) { }
 
         public override void Delete(UsersFriendship entity)
         {

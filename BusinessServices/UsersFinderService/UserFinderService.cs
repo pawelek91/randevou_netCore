@@ -13,7 +13,7 @@ namespace BusinessServices.UsersFinderService
     {
         public int[] FindUsers(SearchQueryDto dto)
         {
-            using (var dbc = new RandevouDbContext())
+            using (var dbc = new RandevouBusinessDbContext())
             {
                 var usersDao = new UsersDao(dbc);
                 var userDetialsDao = new DetailsDictionaryDao(dbc);

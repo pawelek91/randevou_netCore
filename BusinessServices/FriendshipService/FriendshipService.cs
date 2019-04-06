@@ -11,7 +11,7 @@ namespace BusinessServices.FriendshipService
     {
         public int[] GetFriends(int userId)
         {
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new FriendshipDao(dbc);
 
@@ -34,7 +34,7 @@ namespace BusinessServices.FriendshipService
 
         public int[] GetFriendshipRequests(int userId)
         {
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             { 
                 var dao = new FriendshipDao(dbc);
                 var usersOfQueriesIds = dao.QueryFriendships().Where(x => x.User1Id == userId && x.RelationStatus == RandevouData.Users.RelationStatus.Invited)
@@ -46,7 +46,7 @@ namespace BusinessServices.FriendshipService
 
         public void SendFriendshipRequest(int fromUserId, int toUserId)
         {
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var usersDao = new UsersDao(dbc);
                 var friendshipDao = new FriendshipDao(dbc);
@@ -97,7 +97,7 @@ namespace BusinessServices.FriendshipService
 
         public void UpdateFriendshipStatus(int fromUserId, int toUserId, string action)
         {
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var dao = new FriendshipDao(dbc);
                 if (!RelationExists(dao, fromUserId, toUserId))

@@ -20,7 +20,7 @@ namespace BusinessServices.Tests
         public MessagesTest()
         {
             this.usersGeneratorHelper = new UsersGeneratorHelper();
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var usersDao = new UsersDao(dbc);
 
@@ -33,7 +33,7 @@ namespace BusinessServices.Tests
         public void TestMessaging()
         {
 
-            using (var dbc = new EFRandevouDAL.RandevouDbContext())
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
             {
                 var messagesDao = new MessagesDao(dbc);
                 var usersDao = new UsersDao(dbc);

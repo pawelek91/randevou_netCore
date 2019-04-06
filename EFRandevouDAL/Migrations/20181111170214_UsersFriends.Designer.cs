@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFRandevouDAL.Migrations
 {
-    [DbContext(typeof(RandevouDbContext))]
+    [DbContext(typeof(RandevouBusinessDbContext))]
     [Migration("20181111170214_UsersFriends")]
     partial class UsersFriends
     {
