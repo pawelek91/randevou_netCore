@@ -9,7 +9,6 @@ namespace EFRandevouDAL
 {
     public class RandevouAuthDbContext : RandveouDbContext
     {
-        public DbSet<Login> Logins { get; set; }
         public DbSet<UserLogin> UserLogins { get; set; }
     }
 }

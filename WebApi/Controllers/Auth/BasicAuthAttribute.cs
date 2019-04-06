@@ -20,9 +20,6 @@ namespace WebApi.Controllers.Auth
             {
                 actionContext.Response.Redirect("unathorized");
             }
-
-            
-            
         }
     }
 }

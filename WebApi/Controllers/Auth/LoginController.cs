@@ -16,16 +16,12 @@ namespace WebApi.Controllers.Auth
         {
             var loginService = GetService<IAuthenticationService>();
             var userService = GetService<IUsersService>();
-
-            var userId = userService.QueryUsers().Where(x => x.Name.Equals(username, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault()?.Id;
-            if (userId == null)
-                return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
-
-            var key = loginService.LoginUser(userId.Value, password);
+            var key = loginService.LoginUser(username, password);
             if(string.IsNullOrEmpty(key))
                 return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
 
-            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted) { Content = new StringContent(key) };
+            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted)
+            { Content = new StringContent(key) };
         }
 
         [HttpPost("Register")]
