@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApi.Controllers.Menagement
 {
     [Route("api/[controller]")]
-    public class UserDictItemsController : BasicController
+    public class UserDictItemsController : BasicBusinessController
     {
         [Route("ItemsTypes")]
         [HttpGet]

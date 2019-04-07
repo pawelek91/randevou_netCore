@@ -7,18 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessServices.MessageService;
 using WebApi.Controllers.Auth;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace WebApi.Controllers
 {
     [BasicAuth]
     [Route("api/[controller]")]
-    public class UsersController : BasicController
+    public class UsersController : BasicBusinessController
     {
-        // GET: api/values
-
-
-      
         [HttpGet]
         public IActionResult Get()
         {
@@ -67,8 +61,10 @@ namespace WebApi.Controllers
         public IActionResult PatchUserDetails([FromHeader]int id, [FromBody]UserDetailsDto detailsDto)
         {
             IUsersService usersService = GetService<IUsersService>();
-            if (id == 0)
-                throw new ArgumentNullException(nameof(id));
+            if (id == 0 || id != LoggedUserId)
+                return BadRequest(nameof(id));
+
+            
 
             if (detailsDto.UserId == 0)
                 detailsDto.UserId = id;
@@ -83,6 +79,9 @@ namespace WebApi.Controllers
             if (userDto == null || !userDto.Id.HasValue)
                 return BadRequest(nameof(userDto));
 
+            if (userDto.Id != LoggedUserId)
+                return Unauthorized();
+
             IUsersService usersService = GetService<IUsersService>();
             usersService.Update(userDto);
             return Ok();
@@ -92,6 +91,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            throw new NotImplementedException("Have to create some Admin role!");
             IUsersService usersService = GetService<IUsersService>();
             usersService.Delete(id);
             return NoContent();

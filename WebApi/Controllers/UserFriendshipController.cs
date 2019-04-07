@@ -10,7 +10,7 @@ using BusinessServices.FriendshipService;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class UserFriendshipController : BasicController
+    public class UserFriendshipController : BasicBusinessController
     {
         [ProducesResponseType(typeof(int[]),200)]
         [HttpGet("users/{id}/friends")]
@@ -31,6 +31,9 @@ namespace WebApi.Controllers
             if (id == default(int))
                 return BadRequest("ID");
 
+            if (id != LoggedUserId)
+                return Unauthorized();
+
             var service = GetService<IFriendshipService>();
             var result = service.GetFriendshipRequests(id);
             return Ok(result);
@@ -49,7 +52,7 @@ namespace WebApi.Controllers
             if (dto == null)
                 return BadRequest(nameof(dto));
 
-            if (dto.FromUserId == default(int))
+            if (dto.FromUserId == default(int) || dto.FromUserId != LoggedUserId)
                 return BadRequest("FromUserId");
 
             if (dto.ToUserId == default(int))
@@ -67,7 +70,7 @@ namespace WebApi.Controllers
             if (dto == null)
                 return BadRequest(nameof(dto));
 
-            if (dto.FromUserId == default(int))
+            if (dto.FromUserId == default(int) || dto.FromUserId != LoggedUserId)
                 return BadRequest("FromUserId");
 
             if (dto.ToUserId == default(int))

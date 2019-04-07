@@ -9,12 +9,14 @@ using WebApi.Controllers.RequestDto;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class MessagesController : BasicController
+    public class MessagesController : BasicBusinessController
     {
         [ProducesResponseType(typeof(List<MessageDto>),200)]
         [HttpPost(ApiConsts.Conversation)]
         public IActionResult GetConversation([FromBody] RequestMessagesDto dto)
         {
+            dto.FirstUserId = LoggedUserId.Value;
+
             IMessagesService messagesService = GetService<IMessagesService>();
             var result = messagesService.GetConversationBetweenUsers(dto.FirstUserId, dto.SecondUserId);
             return Ok(result);
@@ -25,6 +27,9 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetSpeakers(int userId)
         {
+            if (userId != LoggedUserId)
+                return Unauthorized();
+
             IMessagesService messagesService = GetService<IMessagesService>();
             var result = messagesService.GetUserConversationsSpeakers(userId);
             return Ok(result);
@@ -43,6 +48,9 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult PostMessage([FromBody] MessageBasicDto dto)
         {
+            if (dto.SenderId != LoggedUserId)
+                return Unauthorized();
+
             IMessagesService messagesService = GetService<IMessagesService>();
             var messageId = messagesService.SendMessage(dto.SenderId, dto.ReceiverId, dto.Content);
             return Created("api/messages/",messageId);
@@ -52,7 +60,10 @@ namespace WebApi.Controllers
          [HttpGet(  ApiConsts.Conversation + "/{userId}")]
          public IActionResult GetConvesationsLastMessages(int userId)
          {
-             IMessagesService messagesService = GetService<IMessagesService>();
+            if (userId != LoggedUserId)
+                return Unauthorized();
+
+            IMessagesService messagesService = GetService<IMessagesService>();
              var result = messagesService.GetConversationsLastMessages(userId);
              return Ok(result);
          }
@@ -60,6 +71,9 @@ namespace WebApi.Controllers
         [HttpPut(ApiConsts.MarkRead)]
         public IActionResult MarkAsRead([FromBody] MessageMarkDto dto)
         {
+            if (dto.OwnerId != LoggedUserId)
+                return Unauthorized();
+
             IMessagesService messagesService = GetService<IMessagesService>();
             if (dto == null || dto.OwnerId == default(int) || dto.MessageId == default(int))
                 return BadRequest("Wrong dto");
@@ -71,6 +85,9 @@ namespace WebApi.Controllers
         [HttpPut(ApiConsts.MarkUnread)]
         public IActionResult MarkAsUnread([FromBody] MessageMarkDto dto)
         {
+            if (dto.OwnerId != LoggedUserId)
+                return Unauthorized();
+
             IMessagesService messagesService = GetService<IMessagesService>();
             if (dto == null || dto.OwnerId == default(int) || dto.MessageId == default(int))
                 return BadRequest("Wrong dto");

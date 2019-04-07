@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class UserFinderController : BasicController
+    public class UserFinderController : BasicBusinessController
     {
         [HttpPost]
         public IActionResult FindUsers([FromBody]SearchQueryDto queryDto)

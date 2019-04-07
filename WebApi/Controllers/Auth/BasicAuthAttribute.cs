@@ -16,7 +16,7 @@ namespace WebApi.Controllers.Auth
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var actionContext = context.HttpContext;
-            var authService = BasicController.GetService<IAuthenticationService>();
+            var authService = BasicBusinessController.GetService<IAuthenticationService>();
             var authKey = actionContext.Request.Headers["Authorization"].ToString();
 
             if (authKey == string.Empty || !authService.ApiKeyProperly(authKey))
