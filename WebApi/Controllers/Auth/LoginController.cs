@@ -9,26 +9,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.Auth
 {
+    [Route("api/[controller]")]
     public class LoginController : BasicController
     {
         [HttpPost("Login")]
-        public HttpResponseMessage PostLogin(string username, string password)
+        public IActionResult PostLogin([FromBody] LoginDto dto)
         {
             var loginService = GetService<IAuthenticationService>();
             var userService = GetService<IUsersService>();
-            var key = loginService.LoginUser(username, password);
+            var key = loginService.LoginUser(dto.UserName, dto.Password);
             if(string.IsNullOrEmpty(key))
-                return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+                return Unauthorized();
 
-            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted)
-            { Content = new StringContent(key) };
+            return Ok(key);
+
         }
 
         [HttpPost("Register")]
-        public IActionResult RegisterLogin(int userId, string password)
+        public IActionResult RegisterLogin([FromBody] RegisterDto dto)
         {
             var loginService = GetService<IAuthenticationService>();
-            loginService.RegisterUser(userId, password);
+            loginService.RegisterUser(dto.UserId, dto.Password);
             return Ok();
         }
     }

@@ -5,6 +5,7 @@ using AutoMapper;
 using BusinessServices.UsersService.DetailsDictionary;
 using BusinessServices.UsersFinderService;
 using BusinessServices.FriendshipService;
+using BusinessServices.AuthenticationService;
 
 public static class BusinessServicesProvider
 {
@@ -37,6 +38,7 @@ public static class BusinessServicesProvider
         .AddSingleton<IUserDetailsDictionaryService, UserDetailsDictionaryService>()
         .AddSingleton<IUserFinderService, UserFinderService>()
         .AddSingleton<IFriendshipService, FriendshipService>()
+        .AddSingleton<IAuthenticationService, AuthenticationService>()
         .AddScoped<IMapper>(c=>mapper)
 		.BuildServiceProvider();
     }

@@ -13,5 +13,7 @@ namespace BusinessServices.AuthenticationService
 
         //check if api key is properly
         bool ApiKeyProperly(string apiKey);
+
+        int GetUserIdFromKey(string key);
     }
 }

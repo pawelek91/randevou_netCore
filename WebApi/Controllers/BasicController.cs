@@ -4,6 +4,7 @@ using BusinessServices.MessageService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
+using BusinessServices.AuthenticationService;
 
 namespace WebApi.Controllers
 {
@@ -24,9 +25,7 @@ namespace WebApi.Controllers
             if (key.ToString() == null)
                 throw new ArgumentNullException("apiKey");
 
-            string decodedAuthenticationToken = Encoding.UTF8.GetString(
-                                                Convert.FromBase64String(key.ToString()));
-            return int.Parse(decodedAuthenticationToken.Split(':')[0]);
+            return GetService<IAuthenticationService>().GetUserIdFromKey(key);
         }
 
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using EFRandevouDAL;
+using EFRandevouDAL.Authentication;
 using RandevouData.Authentication;
 using RandevouData.Users;
 
@@ -12,17 +13,34 @@ namespace BusinessServices.AuthenticationService
 {
     internal class AuthenticationService : IAuthenticationService
     {
+        public int GetUserIdFromKey(string key)
+        {
+            string decodedAuthenticationToken = Encoding.UTF8.GetString(
+                                               Convert.FromBase64String(key.ToString()));
+            return int.Parse(decodedAuthenticationToken.Split(':')[0]);
+        }
         public bool ApiKeyProperly(string apiKey)
         {
-            var bytes = Convert.FromBase64String(apiKey);
+            byte[] bytes;
+            try
+            { 
+            bytes = Convert.FromBase64String(apiKey);
+            }
+            catch
+            {
+                return false;
+            }
             var decoded = Encoding.ASCII.GetString(bytes);
             var userPassPair = decoded.Split(new char[] { ':' }, 2);
             int.TryParse(userPassPair[0], out var id);
 
+            string passwd = HashPassword(userPassPair[1]);
+         
             using (var dbc = new RandevouAuthDbContext())
             {
-                var userLoginInfo = dbc.UserLogins.FirstOrDefault(x => x.UserId == id && x.Password == userPassPair[1])
-                ?? throw new System.Security.Authentication.AuthenticationException("Login Failed");
+                var userLoginInfo = dbc.UserLogins.FirstOrDefault(x => x.UserId == id && x.Password == passwd);
+                if (userLoginInfo == null)
+                    return false;
 
                 return true;
             }
@@ -33,9 +51,7 @@ namespace BusinessServices.AuthenticationService
             using (var dbc = new RandevouAuthDbContext())
             {
                 int userId;
-                var passBytes = Encoding.ASCII.GetBytes(password);
-                var sha1data = new SHA1CryptoServiceProvider().ComputeHash(passBytes);
-                string passwd = new ASCIIEncoding().GetString(sha1data);
+                string passwd = HashPassword(password);
 
                 userId = dbc.UserLogins.FirstOrDefault(x => x.Login == userName && x.Password == passwd)?.UserId
                     ??   throw new System.Security.Authentication.AuthenticationException("Login Failed");
@@ -53,19 +69,17 @@ namespace BusinessServices.AuthenticationService
             using (var dbc = new RandevouBusinessDbContext())
                 user = dbc.Users.FirstOrDefault(x => x.Id == userId) 
                     ?? throw new ArgumentException("Wrong id");
-            
 
-            string authInfo = userName + ":" + password;
-            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
 
-            var passBytes = Encoding.ASCII.GetBytes(password);
-            var sha1data = new SHA1CryptoServiceProvider().ComputeHash(passBytes);
+
+
+            string passwd = HashPassword(password);
 
             var userLogin = new UserLogin
             {
                 Login = user.Name,
                 IsActive = true,
-                Password = new ASCIIEncoding().GetString(sha1data),
+                Password = passwd,
                 UserId = user.Id,
             };
 
@@ -74,8 +88,17 @@ namespace BusinessServices.AuthenticationService
                 if (dbc.UserLogins.Any(x => x.UserId == userId || x.Login == user.Name))
                     throw new ArgumentException("User already exists");
 
-                dbc.UserLogins.Add(userLogin);
+                var dao = new UsersLoginsDao(dbc);
+                dao.AddUserLogin(userLogin);
             }
+        }
+
+        private string HashPassword(string passwd)
+        {
+            var passBytes = Encoding.ASCII.GetBytes(passwd);
+            var sha1data = new SHA1CryptoServiceProvider().ComputeHash(passBytes);
+            string result = new ASCIIEncoding().GetString(sha1data);
+            return result;
         }
     }
 }

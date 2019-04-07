@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
+using WebApi.Controllers.Auth;
 
 namespace WebApi
 {
@@ -30,6 +31,7 @@ namespace WebApi
                 c.SwaggerDoc("v1", new Info { Title = "Randevou API", Version = "v1" });
                 c.ResolveConflictingActions(apiDescriptions=> apiDescriptions.First());
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

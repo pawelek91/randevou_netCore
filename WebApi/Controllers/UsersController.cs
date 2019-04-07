@@ -5,15 +5,20 @@ using System.Threading.Tasks;
 using BusinessServices.UsersService;
 using Microsoft.AspNetCore.Mvc;
 using BusinessServices.MessageService;
+using WebApi.Controllers.Auth;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApi.Controllers
 {
+    [BasicAuth]
     [Route("api/[controller]")]
     public class UsersController : BasicController
     {
         // GET: api/values
+
+
+      
         [HttpGet]
         public IActionResult Get()
         {
