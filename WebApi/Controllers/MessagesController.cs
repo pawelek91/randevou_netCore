@@ -9,7 +9,7 @@ using WebApi.Controllers.RequestDto;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class MessagesController : BasicBusinessController
+    public class MessagesController : BasicBusinessAuthController
     {
         [ProducesResponseType(typeof(List<MessageDto>),200)]
         [HttpPost(ApiConsts.Conversation)]

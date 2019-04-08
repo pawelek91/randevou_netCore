@@ -10,7 +10,7 @@ using BusinessServices.FriendshipService;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class UserFriendshipController : BasicBusinessController
+    public class UserFriendshipController : BasicBusinessAuthController
     {
         [ProducesResponseType(typeof(int[]),200)]
         [HttpGet("users/{id}/friends")]

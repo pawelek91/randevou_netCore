@@ -13,13 +13,19 @@ namespace WebApi.Controllers.Auth
 {
     public class BasicAuthAttribute :Attribute, IAuthorizationFilter
     {
+    
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var actionContext = context.HttpContext;
-            var authService = BasicBusinessController.GetService<IAuthenticationService>();
+            var authService = BasicBusinessAuthController.GetService<IAuthenticationService>();
             var authKey = actionContext.Request.Headers["Authorization"].ToString();
 
-            if (authKey == string.Empty || !authService.ApiKeyProperly(authKey))
+            if (authKey != null && authKey.StartsWith("Basic"))
+            {
+                authKey= authKey.Substring("Basic ".Length).Trim();
+            }
+          
+            if (!authService.ApiKeyProperly(authKey))
             {
                 context.Result = new UnauthorizedResult();
             }

@@ -9,10 +9,11 @@ using WebApi.Controllers.Auth;
 
 namespace WebApi.Controllers
 {
-    [BasicAuth]
+
     [Route("api/[controller]")]
-    public class UsersController : BasicBusinessController
+    public class UsersController : BasicController
     {
+        [BasicAuth]
         [HttpGet]
         public IActionResult Get()
         {
@@ -21,7 +22,7 @@ namespace WebApi.Controllers
             return Ok(users);
         }
 
-
+        [BasicAuth]
         [HttpGet]
         [Route("{id}/Details")]
         [ProducesResponseType(typeof(UserDetailsDto), 200)]
@@ -32,6 +33,7 @@ namespace WebApi.Controllers
             return Ok(user);
         }
 
+        [BasicAuth]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserDto), 200)]
         public IActionResult Get(int id)
@@ -44,7 +46,6 @@ namespace WebApi.Controllers
             return Ok(user);
         }
 
-        
         [HttpPost]
         public IActionResult PostNewUser([FromBody]UserDto userDto)
         {
@@ -56,6 +57,7 @@ namespace WebApi.Controllers
             return Created("api/users/", id.ToString());
         }
 
+        [BasicAuth]
         [Route("{id}/Details")]
         [HttpPatch]
         public IActionResult PatchUserDetails([FromHeader]int id, [FromBody]UserDetailsDto detailsDto)
@@ -73,6 +75,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [BasicAuth]
         [HttpPatch]
         public IActionResult Patch([FromBody]UserDto userDto)
         {
@@ -88,10 +91,10 @@ namespace WebApi.Controllers
 
         }
 
+        [BasicAuth]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            throw new NotImplementedException("Have to create some Admin role!");
             IUsersService usersService = GetService<IUsersService>();
             usersService.Delete(id);
             return NoContent();
