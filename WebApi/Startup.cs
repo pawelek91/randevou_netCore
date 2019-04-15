@@ -46,6 +46,13 @@ namespace WebApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Randevou Api v1");
             });
+            //app.UseExceptionHandler(err =>
+            //{
+            //    err.Run(async context =>
+            //    {
+            //        context.Response.StatusCode = System.Net.HttpStatusCode.Conflict
+            //    })
+            //})
             app.UseMvc();
         }
     }

@@ -30,7 +30,7 @@ namespace WebApi.Controllers.Auth
         {
             var loginService = GetService<IAuthenticationService>();
             loginService.RegisterUser(dto.UserId, dto.Password);
-            return Ok();
+            return Ok(dto.UserId);
         }
     }
 }

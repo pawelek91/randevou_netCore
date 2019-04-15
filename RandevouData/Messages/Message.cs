@@ -29,7 +29,7 @@ namespace RandevouData.Messages
             this.ToUser = to;
             this.MessageContent = content;
             this.SendDate = DateTime.Now;
-            this.ReadDate = DateTime.Now;
+            this.ReadDate = null;
         }
 
     }

@@ -19,6 +19,9 @@ namespace WebApi.Controllers
             if (id == default(int))
                 return BadRequest("ID");
 
+            if (id != LoggedUserId)
+                return Unauthorized();
+
             var service = GetService<IFriendshipService>();
             var result = service.GetFriends(id);
             return Ok(result);

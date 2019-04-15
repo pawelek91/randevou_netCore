@@ -15,6 +15,10 @@ namespace BusinessServices.AuthenticationService
     {
         public int GetUserIdFromKey(string key)
         {
+            if(key.StartsWith("Basic"))
+            {
+                key = key.Remove(0, "basic".Length+1);
+            }
             string decodedAuthenticationToken = Encoding.UTF8.GetString(
                                                Convert.FromBase64String(key.ToString()));
             return int.Parse(decodedAuthenticationToken.Split(':')[0]);
