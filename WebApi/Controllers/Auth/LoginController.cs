@@ -32,5 +32,12 @@ namespace WebApi.Controllers.Auth
             loginService.RegisterUser(dto.UserId, dto.Password);
             return Ok(dto.UserId);
         }
+
+        [BasicAuth]
+        [HttpGet("Identity")]
+        public IActionResult GetIdentityFromLogin()
+        {
+            return Ok(LoggedUserId);
+        }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using WebApi.Controllers.Auth;
 
@@ -48,6 +49,11 @@ namespace WebApi.Controllers
             if(context.Exception is ArgumentOutOfRangeException)
             {
                 context.Result = new StatusCodeResult(409);
+                return;
+            }
+            else if (context.Exception is AuthenticationException)
+            {
+                context.Result = new UnauthorizedResult();
                 return;
             }
             else
