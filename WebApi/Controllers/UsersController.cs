@@ -23,6 +23,20 @@ namespace WebApi.Controllers
         }
 
         [BasicAuth]
+        [HttpPost]
+        [Route("List")]
+        public IActionResult GetMany([FromBody] int[] ids)
+        {
+            if(ids == null || !ids.Any())
+            {
+                return BadRequest();
+            }
+            IUsersService usersService = GetService<IUsersService>();
+            var users = usersService.QueryUsers(ids).ToArray();
+            return Ok(users);
+        }
+
+        [BasicAuth]
         [HttpGet]
         [Route("{id}/Details")]
         [ProducesResponseType(typeof(UserDetailsDto), 200)]

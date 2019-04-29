@@ -47,6 +47,17 @@ namespace BusinessServices.UsersService
             }
         }
 
+        public IEnumerable<UserDto> QueryUsers(int[] ids)
+        {
+            using (var dbc = new RandevouBusinessDbContext())
+            {
+                var dao = new UsersDao(dbc);
+                var users = dao.QueryUsers().Where(x=> ids.Any(y=> x.Id == y)).ToArray();
+                var dto = mapper.Map<User[], UserDto[]>(users);
+                return dto;
+            }
+        }
+
        
 
 		public int Add(UserDto userDto)
