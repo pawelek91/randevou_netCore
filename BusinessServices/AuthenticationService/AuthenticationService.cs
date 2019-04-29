@@ -25,24 +25,26 @@ namespace BusinessServices.AuthenticationService
         }
         public bool ApiKeyProperly(string apiKey)
         {
+            int identity;
+            string passwd = string.Empty;
             byte[] bytes;
             try
             { 
-            bytes = Convert.FromBase64String(apiKey);
+                bytes = Convert.FromBase64String(apiKey);
+           
+                var decoded = Encoding.ASCII.GetString(bytes);
+                var userPassPair = decoded.Split(new char[] { ':' }, 2);
+                int.TryParse(userPassPair[0], out identity);
+                passwd = HashPassword(userPassPair[1]);
             }
             catch
             {
                 return false;
             }
-            var decoded = Encoding.ASCII.GetString(bytes);
-            var userPassPair = decoded.Split(new char[] { ':' }, 2);
-            int.TryParse(userPassPair[0], out var id);
 
-            string passwd = HashPassword(userPassPair[1]);
-         
             using (var dbc = new RandevouAuthDbContext())
             {
-                var userLoginInfo = dbc.UserLogins.FirstOrDefault(x => x.UserId == id && x.Password == passwd);
+                var userLoginInfo = dbc.UserLogins.FirstOrDefault(x => x.UserId == identity && x.Password == passwd);
                 if (userLoginInfo == null)
                     return false;
 
@@ -99,9 +101,14 @@ namespace BusinessServices.AuthenticationService
 
         private string HashPassword(string passwd)
         {
-            var passBytes = Encoding.ASCII.GetBytes(passwd);
-            var sha1data = new SHA1CryptoServiceProvider().ComputeHash(passBytes);
-            string result = new ASCIIEncoding().GetString(sha1data);
+            string result = string.Empty;
+            try
+            { 
+                var passBytes = Encoding.ASCII.GetBytes(passwd);
+                var sha1data = new SHA1CryptoServiceProvider().ComputeHash(passBytes);
+                result = new ASCIIEncoding().GetString(sha1data);
+            }
+            catch { }
             return result;
         }
     }

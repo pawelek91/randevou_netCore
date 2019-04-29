@@ -22,7 +22,15 @@ namespace WebApi.Controllers.Auth
 
             if (authKey != null && authKey.StartsWith("Basic"))
             {
-                authKey= authKey.Substring("Basic ".Length).Trim();
+                try
+                {
+                    authKey = authKey.Substring("Basic ".Length).Trim();
+                }
+                catch
+                {
+                    context.Result = new UnauthorizedResult();
+                    return;
+                }
             }
           
             if (!authService.ApiKeyProperly(authKey))
