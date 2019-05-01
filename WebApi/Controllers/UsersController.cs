@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         [Route("List")]
         public IActionResult GetMany([FromBody] int[] ids)
         {
-            if(ids == null || !ids.Any())
+            if(ids == null)
             {
                 return BadRequest();
             }
