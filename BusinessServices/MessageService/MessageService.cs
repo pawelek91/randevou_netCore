@@ -63,8 +63,8 @@ namespace BusinessServices.MessageService
                         MessageId = x.Id,
                         ReceiverId = user1Id,
                         SenderId = user2Id,
-                        ReceiverName = x.FromUser.Name,
-                        SenderName = x.ToUser.Name,
+                        ReceiverName = x.ToUser.Name,
+                        SenderName = x.FromUser.Name,
                         SendDate = x.SendDate,
                         IsRead = x.ReadDate.HasValue,
                     }).ToArray();
