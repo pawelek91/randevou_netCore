@@ -10,8 +10,7 @@ namespace WebApi.Controllers.Menagement
     [Route("api/[controller]")]
     public class UserDictItemsController : BasicBusinessAuthController
     {
-        [Route("ItemsTypes")]
-        [HttpGet]
+    [HttpGet("ItemsTypes")]
         public IActionResult GetDictionaryItemsTypesNames()
         {
             var service = GetService<IUserDetailsDictionaryService>();
@@ -19,8 +18,8 @@ namespace WebApi.Controllers.Menagement
             return Ok(names.ToArray());
         }
 
-        [Route("Interest/")]
-        [HttpGet]
+        [ProducesResponseType(typeof(DictionaryItemDto[]),200)]
+        [HttpGet("Interest")]
         public IActionResult GetInterests()
         {
             var service = GetService<IUserDetailsDictionaryService>();
@@ -28,6 +27,25 @@ namespace WebApi.Controllers.Menagement
             return Ok(interests.ToArray());
         }
 
+        [ProducesResponseType(typeof(DictionaryItemDto[]), 200)]
+        [HttpGet("HairColors")]
+        public IActionResult GetHairColor()
+        {
+            var service = GetService<IUserDetailsDictionaryService>();
+            var interests = service.GetItems(RandevouData.Users.Details.UserDetailsTypesConsts.HairColor);
+            return Ok(interests.ToArray());
+        }
+
+        [ProducesResponseType(typeof(DictionaryItemDto[]), 200)]
+        [HttpGet("EyesColors")]
+        public IActionResult GetEyesColor()
+        {
+            var service = GetService<IUserDetailsDictionaryService>();
+            var interests = service.GetItems(RandevouData.Users.Details.UserDetailsTypesConsts.EyesColor);
+            return Ok(interests.ToArray());
+        }
+
+        [ProducesResponseType(typeof(DictionaryItemDto[]), 200)]
         [Route("{typeName}/Items")]
         [HttpGet]
         public IActionResult GetItems(string typeName)
@@ -40,8 +58,7 @@ namespace WebApi.Controllers.Menagement
             return Ok(result);
         }
 
-        [Route("Items/")]
-        [HttpPost]
+        [HttpPost("Items")]
         public IActionResult PostItem([FromBody] DictionaryItemDto dto)
         {
             if (dto == null)
