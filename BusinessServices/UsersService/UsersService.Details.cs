@@ -40,9 +40,11 @@ namespace BusinessServices.UsersService
                     throw new ArgumentOutOfRangeException(string.Format("Brak usera {0}", userId));
 
                 UpdateDetails(user.UserDetails, dto);
-                UpdateDetailsDictionaryItems(user.UserDetails, dto, detailsDao);
+                
                 dbc.SaveChanges();
             }
+
+            UpdateDetailsDictionaryItems(dto);
         }
 
         private void UpdateDetails(UserDetails details, UserDetailsDto dto)
@@ -64,108 +66,141 @@ namespace BusinessServices.UsersService
 
         }
 
-        private void UpdateDetailsDictionaryItems(UserDetails details, UserDetailsDto dto, DetailsDictionaryDao detailsDao)
+        private void UpdateDetailsDictionaryItems(UserDetailsDto dto)
         {
-            var detailsDictionaryService = BusinessServicesProvider.GetService<IUserDetailsDictionaryService>();
-
-            if (dto.Interests?.Count() == 0)
+            using (var dbc = new RandevouBusinessDbContext())
             {
-                var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId).ToArray();
-                foreach (var interestId in existingDetails)
+                var usersDao = new UsersDao(dbc);
+                var detailsDao = new DetailsDictionaryDao(dbc);
+                var details = usersDao.GetUserWithDetails(dto.UserId).UserDetails;
+
+                var detailsDictionaryService = BusinessServicesProvider.GetService<IUserDetailsDictionaryService>();
+
+                if (dto.Interests?.Count() == 0)
                 {
-                    var interestEntity = detailsDao.QueryDictionaryValues()
-                        .Where(x => x.UserDetailsDictionaryItemId == interestId && x.UserDetailsId == details.Id)
-                        .SingleOrDefault();
-
-                    if (interestEntity != null)
-                        detailsDao.DeleteItemValue(interestEntity);
-                }
-            }
-            else if (dto.Interests?.Count()>0)
-            {
-                if(dto.UserId == default(int))
-                {
-                    if (details.User == null)
-                        throw new ArgumentNullException(nameof(dto.UserId));
-
-                    dto.UserId = details.User.Id;
-                }
-                var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId);
-                var interestsIds = detailsDictionaryService.GetInterestsIds();
-                var userInteresIds = interestsIds.Where(x => existingDetails.Contains(x));
-
-
-                var detailsToDelete = userInteresIds.Where(x => !dto.Interests.Contains(x));
-                var detailsToAdd = dto.Interests.Where(x => !userInteresIds.Any(y => y == x));
-
-                foreach (var interestId in detailsToAdd)
-                {
-                    var entity = new UsersDetailsItemsValues()
+                    var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId).ToArray();
+                    foreach (var interestId in existingDetails)
                     {
-                        UserDetailsId = details.Id,
-                        UserDetailsDictionaryItemId = interestId,
-                        Value = true,
-                    };
-                    detailsDao.AddItemValue(entity);
+                        var interestEntity = detailsDao.QueryDictionaryValues()
+                            .Where(x => x.UserDetailsDictionaryItemId == interestId && x.UserDetailsId == details.Id)
+                            .SingleOrDefault();
+
+                        if (interestEntity != null)
+                            detailsDao.DeleteItemValue(interestEntity);
+                    }
                 }
-
-                foreach(var interestId in detailsToDelete)
+                else if (dto.Interests?.Count()>0)
                 {
-                    var interestEntity = detailsDao.QueryDictionaryValues()
-                        .Where(x => x.UserDetailsDictionaryItemId == interestId && x.UserDetailsId == details.Id)
-                        .SingleOrDefault();
+                    if(dto.UserId == default(int))
+                    {
+                        if (details.User == null)
+                            throw new ArgumentNullException(nameof(dto.UserId));
 
-                    if (interestEntity != null)
-                        detailsDao.DeleteItemValue(interestEntity);
+                        dto.UserId = details.User.Id;
+                    }
+                    var existingDetails = details.DetailsItemsValues.Select(x => x.UserDetailsDictionaryItemId);
+                    var interestsIds = detailsDictionaryService.GetInterestsIds();
+                    var userInteresIds = interestsIds.Where(x => existingDetails.Contains(x));
+
+
+                    var detailsToDelete = userInteresIds.Where(x => !dto.Interests.Contains(x));
+                    var detailsToAdd = dto.Interests.Where(x => !userInteresIds.Any(y => y == x));
+
+                    foreach (var interestId in detailsToAdd)
+                    {
+                        var entity = new UsersDetailsItemsValues()
+                        {
+                            UserDetailsId = details.Id,
+                            UserDetailsDictionaryItemId = interestId,
+                            Value = true,
+                        };
+                        detailsDao.AddItemValue(entity);
+                    }
+
+                    foreach(var interestId in detailsToDelete)
+                    {
+                        var interestEntity = detailsDao.QueryDictionaryValues()
+                            .Where(x => x.UserDetailsDictionaryItemId == interestId && x.UserDetailsId == details.Id)
+                            .SingleOrDefault();
+
+                        if (interestEntity != null)
+                            detailsDao.DeleteItemValue(interestEntity);
+                    }
                 }
+                dbc.SaveChanges();
             }
-            
-            if(dto.EyesColor.HasValue)
+
+            using (var dbc = new RandevouBusinessDbContext())
             {
-               var userEyesColorId =  detailsDictionaryService.GetUserEyesColor(details.Id);
-
-               if (userEyesColorId.HasValue)
-               {
-                    var userEyesColorEntity = detailsDictionaryService.GetDictionaryValue(userEyesColorId.Value);
-
-                    if (userEyesColorEntity?.UserDetailsDictionaryItemId!= null && userEyesColorEntity.UserDetailsDictionaryItemId != dto.EyesColor.Value)
-                        detailsDao.DeleteItemValue(userEyesColorEntity);
-               }
-
-                var eyesColorEntity = new UsersDetailsItemsValues()
+                var usersDao = new UsersDao(dbc);
+                var detailsDao = new DetailsDictionaryDao(dbc);
+                var details = usersDao.GetUserWithDetails(dto.UserId).UserDetails;
+                if (dto.EyesColor.HasValue)
                 {
-                    UserDetailsDictionaryItemId = dto.EyesColor.Value,
-                    UserDetailsId = details.Id,
-                    Value = true,
-                };
+                    var eyesColorsIds = detailsDao.QueryDictionary().Where(x =>
+                        x.DetailsType.Equals(UserDetailsTypesConsts.EyesColor, StringComparison.CurrentCultureIgnoreCase)
+                        ).Select(x => x.Id).ToArray();
 
-                detailsDao.AddItemValue(eyesColorEntity);
-            }
-
-            // wspolne dla hair-color i eyes-color
-            if (dto.HairColor.HasValue)
-            {
-                var hairColorsIds = detailsDao.QueryDictionary().Where(x =>
-                x.DetailsType.Equals(UserDetailsTypesConsts.HairColor, StringComparison.CurrentCultureIgnoreCase)
-                ).Select(x => x.Id).ToArray();
-
-
-                var userHairColor = detailsDao.QueryDictionaryValues()
-                    .Where(x => hairColorsIds.Contains(x.UserDetailsDictionaryItemId)
+                    var userEyesColor = detailsDao.QueryDictionaryValues()
+                    .Where(x => eyesColorsIds.Contains(x.UserDetailsDictionaryItemId)
                     && x.UserDetailsId == dto.UserId && x.Value)
                     .FirstOrDefault();
 
-                if (userHairColor?.UserDetailsDictionaryItemId != null && userHairColor.UserDetailsDictionaryItemId != dto.HairColor.Value)
-                    detailsDao.DeleteItemValue(userHairColor);
 
-                var hairColorEntity = new UsersDetailsItemsValues()
+                    
+                    if (userEyesColor?.UserDetailsDictionaryItemId != dto.EyesColor.Value)
+                    {
+
+                        if (userEyesColor?.UserDetailsDictionaryItemId != null && userEyesColor.UserDetailsDictionaryItemId != dto.EyesColor.Value)
+                            detailsDao.DeleteItemValue(userEyesColor);
+
+                        var eyesColorEntity = new UsersDetailsItemsValues()
+                        {
+                            UserDetailsDictionaryItemId = dto.EyesColor.Value,
+                            UserDetailsId = details.Id,
+                            Value = true,
+                        };
+
+                        detailsDao.AddItemValue(eyesColorEntity);
+                    }
+                }
+            }
+
+            using (var dbc = new RandevouBusinessDbContext())
+            {
+                var usersDao = new UsersDao(dbc);
+                var detailsDao = new DetailsDictionaryDao(dbc);
+                var details = usersDao.GetUserWithDetails(dto.UserId).UserDetails;
+                // wspolne dla hair-color i eyes-color
+                if (dto.HairColor.HasValue)
                 {
-                    UserDetailsDictionaryItemId = dto.HairColor.Value,
-                    UserDetailsId = details.Id,
-                    Value = true,
-                };
+                    var hairColorsIds = detailsDao.QueryDictionary().Where(x =>
+                    x.DetailsType.Equals(UserDetailsTypesConsts.HairColor, StringComparison.CurrentCultureIgnoreCase)
+                    ).Select(x => x.Id).ToArray();
 
-                detailsDao.AddItemValue(hairColorEntity);
+
+                    var userHairColor = detailsDao.QueryDictionaryValues()
+                        .Where(x => hairColorsIds.Contains(x.UserDetailsDictionaryItemId)
+                        && x.UserDetailsId == dto.UserId && x.Value)
+                        .FirstOrDefault();
+
+                    if (userHairColor?.UserDetailsDictionaryItemId != dto.HairColor.Value)
+                    { 
+
+                    if (userHairColor?.UserDetailsDictionaryItemId != null && userHairColor.UserDetailsDictionaryItemId != dto.HairColor.Value)
+                        detailsDao.DeleteItemValue(userHairColor);
+
+                        var hairColorEntity = new UsersDetailsItemsValues()
+                        {
+                            UserDetailsDictionaryItemId = dto.HairColor.Value,
+                            UserDetailsId = details.Id,
+                            Value = true,
+                        };
+
+                        detailsDao.AddItemValue(hairColorEntity);
+                    }
+
+                }
             }
         }
         }
