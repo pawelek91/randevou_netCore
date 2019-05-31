@@ -15,6 +15,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
         string[] GetTypesNames();
         int? GetUserEyesColor(int userDetailsId);
         int? GetUserHairColor(int userDetailsId);
+        int[] GetUsersInterests(int userDetailsId);
         UsersDetailsItemsValues GetDictionaryValue(int id);
         int GetEyesColorItemId(string color);
         int GetHairColorItemId(string color);

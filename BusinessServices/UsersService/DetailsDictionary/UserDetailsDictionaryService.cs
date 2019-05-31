@@ -146,6 +146,19 @@ namespace BusinessServices.UsersService.DetailsDictionary
             }
         }
 
+        public int[] GetUsersInterests(int userDetailsId)
+        {
+            using (var dbc = new RandevouBusinessDbContext())
+            {
+                var dao = new DetailsDictionaryDao(dbc);
+                var interestsIds = GetInterestsIds();
+                var result = dao.QueryDictionaryValues().Where(x =>
+                x.UserDetailsId == userDetailsId && interestsIds.Contains(x.UserDetailsDictionaryItemId))
+                .Select(x=>x.UserDetailsDictionaryItemId);
+                return result.ToArray();
+            }
+        }
+
         public int[] GetEyesColorsIds()
         {
             using (var dbc = new RandevouBusinessDbContext())
@@ -211,5 +224,7 @@ namespace BusinessServices.UsersService.DetailsDictionary
                 return colorId.Value;
             }
         }
+
+     
     }
 }

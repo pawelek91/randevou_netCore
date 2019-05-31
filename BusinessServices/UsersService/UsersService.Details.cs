@@ -23,6 +23,7 @@ namespace BusinessServices.UsersService
 
                 userDto.EyesColor = dictionaryService.GetUserEyesColor(user.UserDetails.Id);
                 userDto.HairColor = dictionaryService.GetUserHairColor(user.UserDetails.Id);
+                userDto.Interests = dictionaryService.GetUsersInterests(user.UserDetails.Id);
                 return userDto;
             }
         }
