@@ -46,7 +46,7 @@ namespace WebApi.Controllers
     {
         public override void OnException(ExceptionContext context)
         {
-            if(context.Exception is ArgumentOutOfRangeException)
+            if(context.Exception is ArgumentOutOfRangeException || context.Exception is ArgumentException)
             {
                 context.Result = new StatusCodeResult(409);
                 return;

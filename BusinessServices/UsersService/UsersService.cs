@@ -27,7 +27,7 @@ namespace BusinessServices.UsersService
                 var dao = new UsersDao(dbc);
                 var entity = dao.Get(id);
 
-                if (entity.IsDeleted)
+                if (entity is null || entity.IsDeleted)
                     return null;
 
                 var userDto = mapper.Map<User, UserDto>(entity);
