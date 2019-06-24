@@ -16,5 +16,7 @@ namespace BusinessServices.UsersService
         IEnumerable<UserDto> QueryUsers();
         IEnumerable<UserDto> QueryUsers(int[] ids);
         void UpdateUserDetails(int userId, UserDetailsDto dto);
+
+        void SetAvatar(int userId, System.IO.MemoryStream stream, string contentType);
     }
 }

@@ -6,6 +6,9 @@ using BusinessServices.UsersService;
 using Microsoft.AspNetCore.Mvc;
 using BusinessServices.MessageService;
 using WebApi.Controllers.Auth;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using WebApi.Common;
 
 namespace WebApi.Controllers
 {
@@ -36,7 +39,7 @@ namespace WebApi.Controllers
             return Ok(users);
         }
 
-        [BasicAuth]
+        //[BasicAuth]
         [HttpGet]
         [Route("{id}/Details")]
         [ProducesResponseType(typeof(UserDetailsDto), 200)]
@@ -113,5 +116,34 @@ namespace WebApi.Controllers
             usersService.Delete(id);
             return NoContent();
         }
+
+        /// <summary>
+        /// Set user avatar
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <param name="file">image</param>
+        /// <returns></returns>
+        [HttpPut("{id}/details/avatar")]
+        public async Task<IActionResult> Upload(int id, [FromForm]IFormFile file)
+        {
+
+            if (id != LoggedUserId)
+                return Unauthorized();
+
+            if (file == null || file.Length == 0 || !file.IsImage())
+                return BadRequest("file is empty or wrong file content");
+
+
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                var fileData = stream.ToArray();
+                IUsersService usersService = GetService<IUsersService>();
+                usersService.SetAvatar(id, stream, file.ContentType);
+            }
+            return Ok();
+            
+        }
+     
     }
 }

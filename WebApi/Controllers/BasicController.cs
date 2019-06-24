@@ -29,7 +29,7 @@ namespace WebApi.Controllers
                 if (string.IsNullOrWhiteSpace(key.ToString()))
                 {
                     if(string.IsNullOrWhiteSpace(key = HttpContext.Request.Headers["Authorization"]))
-                        throw new ArgumentNullException("apiKey");
+                        throw new AuthenticationException("apiKey");
                 }
 
                 return GetService<IAuthenticationService>().GetUserIdFromKey(key);

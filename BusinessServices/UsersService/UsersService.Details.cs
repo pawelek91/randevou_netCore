@@ -10,7 +10,7 @@ using System.Text;
 
 namespace BusinessServices.UsersService
 {
-    public partial class UserService 
+    public partial class UserService
     {
         public UserDetailsDto GetUserWithDetails(int id)
         {
@@ -19,6 +19,9 @@ namespace BusinessServices.UsersService
                 var dao = new UsersDao(dbc);
                 var user = dao.GetUserWithDetails(id);
                 var userDto = mapper.Map<User, UserDetailsDto>(user);
+                userDto.AvatarImage = user.UserDetails.AvatarImage;
+                userDto.AvatarContentType = user.UserDetails.AvatarContentType;
+
                 var dictionaryService = BusinessServicesProvider.GetService<IUserDetailsDictionaryService>();
 
                 userDto.EyesColor = dictionaryService.GetUserEyesColor(user.UserDetails.Id);
@@ -41,7 +44,7 @@ namespace BusinessServices.UsersService
                     throw new ArgumentOutOfRangeException(string.Format("Brak usera {0}", userId));
 
                 UpdateDetails(user.UserDetails, dto);
-                
+
                 dbc.SaveChanges();
             }
 
@@ -90,9 +93,9 @@ namespace BusinessServices.UsersService
                             detailsDao.DeleteItemValue(interestEntity);
                     }
                 }
-                else if (dto.Interests?.Count()>0)
+                else if (dto.Interests?.Count() > 0)
                 {
-                    if(dto.UserId == default(int))
+                    if (dto.UserId == default(int))
                     {
                         if (details.User == null)
                             throw new ArgumentNullException(nameof(dto.UserId));
@@ -118,7 +121,7 @@ namespace BusinessServices.UsersService
                         detailsDao.AddItemValue(entity);
                     }
 
-                    foreach(var interestId in detailsToDelete)
+                    foreach (var interestId in detailsToDelete)
                     {
                         var interestEntity = detailsDao.QueryDictionaryValues()
                             .Where(x => x.UserDetailsDictionaryItemId == interestId && x.UserDetailsId == details.Id)
@@ -148,7 +151,7 @@ namespace BusinessServices.UsersService
                     .FirstOrDefault();
 
 
-                    
+
                     if (userEyesColor?.UserDetailsDictionaryItemId != dto.EyesColor.Value)
                     {
 
@@ -186,10 +189,10 @@ namespace BusinessServices.UsersService
                         .FirstOrDefault();
 
                     if (userHairColor?.UserDetailsDictionaryItemId != dto.HairColor.Value)
-                    { 
+                    {
 
-                    if (userHairColor?.UserDetailsDictionaryItemId != null && userHairColor.UserDetailsDictionaryItemId != dto.HairColor.Value)
-                        detailsDao.DeleteItemValue(userHairColor);
+                        if (userHairColor?.UserDetailsDictionaryItemId != null && userHairColor.UserDetailsDictionaryItemId != dto.HairColor.Value)
+                            detailsDao.DeleteItemValue(userHairColor);
 
                         var hairColorEntity = new UsersDetailsItemsValues()
                         {
@@ -204,6 +207,26 @@ namespace BusinessServices.UsersService
                 }
             }
         }
+
+        public void SetAvatar(int userId, System.IO.MemoryStream stream, string contentType)
+        {
+
+            using (var dbc = new RandevouBusinessDbContext())
+            {
+                var dao = new UsersDao(dbc);
+                var detailsDao = new DetailsDictionaryDao(dbc);
+                var user = dao.GetUserWithDetails(userId);
+
+                if (user == null)
+                    throw new ArgumentOutOfRangeException(string.Format("Brak usera {0}", userId));
+
+                user.UserDetails.AvatarImage = stream.ToArray();
+                user.UserDetails.AvatarContentType = contentType;
+                dbc.SaveChanges();
+            }
         }
+
+
     }
+}
 

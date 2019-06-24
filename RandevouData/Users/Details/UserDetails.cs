@@ -24,6 +24,8 @@ namespace RandevouData.Users.Details
 
         public virtual User User { get; set; }
         public int UserId { get; set; }
+        public byte[] AvatarImage { get; set; }
+        public string AvatarContentType { get; set; }
 
         public virtual ICollection<UsersDetailsItemsValues> DetailsItemsValues{get;set;}
     }

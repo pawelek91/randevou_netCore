@@ -48,6 +48,10 @@ namespace EFRandevouDAL.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AvatarContentType");
+
+                    b.Property<byte[]>("AvatarImage");
+
                     b.Property<string>("City");
 
                     b.Property<int>("Heigth");
@@ -180,11 +184,6 @@ namespace EFRandevouDAL.Migrations
 
             modelBuilder.Entity("RandevouData.Users.Details.UsersDetailsItemsValues", b =>
                 {
-                    b.HasOne("RandevouData.Users.Details.UserDetailsDictionaryItem")
-                        .WithMany("DetailsItemsValues")
-                        .HasForeignKey("UserDetailsDictionaryItemId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("RandevouData.Users.Details.UserDetails")
                         .WithMany("DetailsItemsValues")
                         .HasForeignKey("UserDetailsId")

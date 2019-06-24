@@ -17,6 +17,10 @@ namespace BusinessServices.UsersService
         public int? EyesColor { get; set; }
         public int? HairColor { get; set; }
         public int[] Interests { get; set; }
+
+        public byte[] AvatarImage { get; set; }
+
+        public string AvatarContentType { get; set; }
         #endregion
     }
 }
