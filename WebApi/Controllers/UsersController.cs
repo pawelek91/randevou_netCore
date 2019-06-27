@@ -39,6 +39,20 @@ namespace WebApi.Controllers
             return Ok(users);
         }
 
+        [BasicAuth]
+        [HttpPost]
+        [Route("List/Avatars")]
+        public IActionResult GetAvatars([FromBody] int[] ids)
+        {
+            if (ids == null)
+            {
+                return BadRequest();
+            }
+            IUsersService usersService = GetService<IUsersService>();
+            var usersAvatars = usersService.GetUsersAvatars(ids);
+            return Ok(usersAvatars);
+        }
+
         //[BasicAuth]
         [HttpGet]
         [Route("{id}/Details")]

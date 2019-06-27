@@ -51,6 +51,22 @@ namespace BusinessServices.UsersService
             UpdateDetailsDictionaryItems(dto);
         }
 
+        public IEnumerable<UserAvatarDto> GetUsersAvatars(IEnumerable<int> userIds)
+        {
+            using (var dbc = new RandevouBusinessDbContext())
+            {
+                var dao = new UsersDao(dbc);
+                var result = dao.QueryUserDetails().Where(x => userIds.Distinct().Contains(x.UserId)).Select(x => new UserAvatarDto()
+                {
+                    UserId = x.UserId,
+                    AvatarContentBytes = x.AvatarImage,
+                    AvatarContentType = x.AvatarContentType,
+                });
+                return result.ToList();
+            }
+            
+        }
+
         private void UpdateDetails(UserDetails details, UserDetailsDto dto)
         {
             if (!String.IsNullOrEmpty(dto.City))
