@@ -23,12 +23,23 @@ namespace WebApi
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(config =>
-                config.Filters.Add(typeof(CustomExceptionFilterAttribute)));
+    
 
+            services.AddMvc(config =>
+            config.Filters.Add(typeof(CustomExceptionFilterAttribute)));
+
+            services.AddCors(options => {
+                options.AddPolicy(MyAllowSpecificOrigins, builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                }
+            );
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Randevou API", Version = "v1" });
@@ -56,6 +67,7 @@ namespace WebApi
             //        context.Response.StatusCode = System.Net.HttpStatusCode.Conflict
             //    })
             //})
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseMvc();
         }
     }
