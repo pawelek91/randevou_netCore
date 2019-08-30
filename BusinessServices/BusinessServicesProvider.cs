@@ -22,7 +22,7 @@ public static class BusinessServicesProvider
     }
     public static T GetService<T>()
     {
-        if(_serviceCollection == null && !_init)
+        if(_serviceCollection == null || !_init)
         {
             Init();
         }
