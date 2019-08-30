@@ -20,5 +20,6 @@ namespace BusinessServices.UsersService
         IEnumerable<UserAvatarDto> GetUsersAvatars(IEnumerable<int> userIds);
 
         void SetAvatar(int userId, System.IO.MemoryStream stream, string contentType);
+        void SetAvatar(int userId, string base64Content, string contentType);
     }
 }

@@ -67,15 +67,12 @@ namespace WebApi.Controllers
             IUsersService usersService = GetService<IUsersService>();
             var usersAvatars = usersService.GetUsersAvatars(ids)
                 .Where(x => x.AvatarContentBytes != null && x.AvatarContentBytes.Length > 0 && x.AvatarContentType?.Length > 0)
-                .Select(x => new
+                .Select(x => new AvatarDto
                 {
-                    id = x.UserId,
-                    img = 
-                    string.Format("data:{0};base64,{1}",
-                    x.AvatarContentType,
-                    Convert.ToBase64String(x.AvatarContentBytes, 0, x.AvatarContentBytes.Length))
+                    UserId = x.UserId,
+                    ContentType = x.AvatarContentType,
+                    Base64Content = Convert.ToBase64String(x.AvatarContentBytes, 0, x.AvatarContentBytes.Length),
                 });
-
             return Ok(usersAvatars);
         }
 
@@ -164,7 +161,7 @@ namespace WebApi.Controllers
         /// <param name="file">image</param>
         /// <returns></returns>
         [HttpPut("{id}/details/avatar")]
-        public async Task<IActionResult> Upload(int id, [FromForm]IFormFile file)
+        public async Task<IActionResult> UploadAvatar(int id, [FromForm]IFormFile file)
         {
 
             if (id != LoggedUserId)
@@ -184,6 +181,27 @@ namespace WebApi.Controllers
             return Ok();
             
         }
-     
+
+        /// <summary>
+        /// Set user avatar
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <param name="file">image</param>
+        /// <returns></returns>
+        [HttpPut("{id}/details/avatar/base64")]
+        public IActionResult UploadAvatar(int id, [FromBody] AvatarDto dto)
+        {
+            if (id != LoggedUserId)
+                return Unauthorized();
+
+            if(dto == null || string.IsNullOrWhiteSpace(dto.Base64Content) || string.IsNullOrWhiteSpace(dto.ContentType))
+                return BadRequest();
+
+            IUsersService usersService = GetService<IUsersService>();
+            usersService.SetAvatar(id, dto.Base64Content, dto.ContentType);
+            
+            return Ok();
+        }
+
     }
 }

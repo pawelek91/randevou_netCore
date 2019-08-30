@@ -242,6 +242,22 @@ namespace BusinessServices.UsersService
             }
         }
 
+        internal void SetAvatar(int userId, string base64Content, string contentType)
+        {
+            using (var dbc = new RandevouBusinessDbContext())
+            {
+                var dao = new UsersDao(dbc);
+                var user = dao.GetUserWithDetails(userId);
+
+                if (user == null)
+                    throw new ArgumentOutOfRangeException(string.Format("Brak usera {0}", userId));
+
+                user.UserDetails.AvatarImage = Convert.FromBase64String(base64Content);
+                user.UserDetails.AvatarContentType = contentType;
+                dbc.SaveChanges();
+            }
+        }
+
 
     }
 }
