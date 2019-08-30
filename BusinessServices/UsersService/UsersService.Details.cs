@@ -252,10 +252,25 @@ namespace BusinessServices.UsersService
                 if (user == null)
                     throw new ArgumentOutOfRangeException(string.Format("Brak usera {0}", userId));
 
+                base64Content= HandleBase64Content(base64Content);
                 user.UserDetails.AvatarImage = Convert.FromBase64String(base64Content);
                 user.UserDetails.AvatarContentType = contentType;
                 dbc.SaveChanges();
             }
+        }
+
+        private string HandleBase64Content(string content)
+        {
+            string contentBegin = new string(content.Take(30).ToArray());
+
+            var dirtyHeaderIndex = contentBegin.IndexOf("base64,");
+            if(dirtyHeaderIndex > -1)
+            {
+                int charsCount = dirtyHeaderIndex + "base64,".Count();
+                content = content.Substring(charsCount, content.Length - charsCount);
+            }
+
+            return content;
         }
 
 
