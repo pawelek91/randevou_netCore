@@ -77,6 +77,9 @@ namespace BusinessServices.UsersService
             using (var dbc = new RandevouBusinessDbContext())
             {
                 var dao = new UsersDao(dbc);
+                if(dao.QueryUsers().Any(x=>x.Name == userDto.Name))
+                    throw new ArgumentException("User already exists");
+
                 var user = new User(userDto.Name, userDto.DisplayName, userDto.Gender.Value, userDto.BirthDate.Value);
                 var id = dao.Insert(user);
                 return id;
