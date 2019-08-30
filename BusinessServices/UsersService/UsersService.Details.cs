@@ -242,7 +242,7 @@ namespace BusinessServices.UsersService
             }
         }
 
-        internal void SetAvatar(int userId, string base64Content, string contentType)
+        public void SetAvatar(int userId, string base64Content, string contentType)
         {
             using (var dbc = new RandevouBusinessDbContext())
             {
