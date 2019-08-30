@@ -11,17 +11,18 @@ public static class BusinessServicesProvider
 {
     private static ServiceCollection _serviceCollection;
     private static  ServiceProvider _serviceProvider;
-
+    private static bool _init = false;
 
     private static void Init()
     {
         _serviceCollection= new ServiceCollection();
         var mapper = BusinessServices.EntityMapper.Mapper;
         RegisterServices(mapper);
+        _init = true;
     }
     public static T GetService<T>()
     {
-        if(_serviceCollection == null)
+        if(_serviceCollection == null && !_init)
         {
             Init();
         }

@@ -49,7 +49,33 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             IUsersService usersService = GetService<IUsersService>();
-            var usersAvatars = usersService.GetUsersAvatars(ids);
+            var usersAvatars = usersService.GetUsersAvatars(ids)
+                .Where(x => x.AvatarContentBytes!= null && x.AvatarContentBytes.Length > 0 && x.AvatarContentType?.Length > 0);
+            
+            return Ok(usersAvatars);
+        }
+
+        [BasicAuth]
+        [HttpPost]
+        [Route("List/Avatars/base64img")]
+        public IActionResult GetAvatarsBase64([FromBody] int[] ids)
+        {
+            if (ids == null)
+            {
+                return BadRequest();
+            }
+            IUsersService usersService = GetService<IUsersService>();
+            var usersAvatars = usersService.GetUsersAvatars(ids)
+                .Where(x => x.AvatarContentBytes != null && x.AvatarContentBytes.Length > 0 && x.AvatarContentType?.Length > 0)
+                .Select(x => new
+                {
+                    id = x.UserId,
+                    img = 
+                    string.Format("data:{0};base64,{1}",
+                    x.AvatarContentType,
+                    Convert.ToBase64String(x.AvatarContentBytes, 0, x.AvatarContentBytes.Length))
+                });
+
             return Ok(usersAvatars);
         }
 
