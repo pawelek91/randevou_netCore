@@ -152,6 +152,19 @@ namespace BusinessServices.FriendshipService
             }
         }
 
+        public RelationStatus? RelationShipStatus(int user1Id, int user2Id)
+        {
+            using (var dbc = new EFRandevouDAL.RandevouBusinessDbContext())
+            {
+                var dao = new FriendshipDao(dbc);
+                var relation = dao.QueryFriendships().FirstOrDefault(x =>
+                 (x.User1Id == user1Id && x.User2Id == user2Id && x.RelationStatus != RelationStatus.Deleted)
+                 || (x.User1Id == user2Id && x.User2Id == user1Id && x.RelationStatus != RelationStatus.Deleted));
+
+                return relation?.RelationStatus;
+            }
+        }
+
         private bool RelationExists(FriendshipDao dao, int user1Id, int user2Id)
         {
             return dao.QueryFriendships().Any(x =>

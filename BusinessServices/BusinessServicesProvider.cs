@@ -13,33 +13,32 @@ public static class BusinessServicesProvider
     private static  ServiceProvider _serviceProvider;
     private static bool _init = false;
 
-    private static void Init()
-    {
-        _serviceCollection= new ServiceCollection();
-        var mapper = BusinessServices.EntityMapper.Mapper;
-        RegisterServices(mapper);
-        _init = true;
-    }
+
     public static T GetService<T>()
     {
         if(_serviceCollection == null || !_init)
         {
-            Init();
+            RegisterServices();
         }
 
         var service = BusinessServicesProvider._serviceProvider.GetService<T>();
         return service;
     }
 
-    private static void RegisterServices(IMapper mapper)
+    private static void RegisterServices()
     {
-		_serviceProvider = _serviceCollection
-		.AddSingleton<IUsersService, UserService>()
-		.AddSingleton<IMessagesService, MessagesService>()
-        .AddSingleton<IUserDetailsDictionaryService, UserDetailsDictionaryService>()
-        .AddSingleton<IUserFinderService, UserFinderService>()
-        .AddSingleton<IFriendshipService, FriendshipService>()
-        .AddSingleton<IAuthenticationService, AuthenticationService>()
+        _init = true;
+
+        _serviceCollection = new ServiceCollection();
+        var mapper = BusinessServices.EntityMapper.Mapper;
+
+        _serviceProvider = _serviceCollection
+		.AddScoped<IUsersService, UserService>()
+		.AddScoped<IMessagesService, MessagesService>()
+        .AddScoped<IUserDetailsDictionaryService, UserDetailsDictionaryService>()
+        .AddScoped<IUserFinderService, UserFinderService>()
+        .AddScoped<IFriendshipService, FriendshipService>()
+        .AddScoped<IAuthenticationService, AuthenticationService>()
         .AddScoped<IMapper>(c=>mapper)
 		.BuildServiceProvider();
     }

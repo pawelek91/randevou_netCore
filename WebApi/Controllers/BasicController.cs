@@ -12,7 +12,7 @@ namespace WebApi.Controllers
 {
     public abstract class BasicController : Controller
     {
-        internal static T GetService<T>() where T : class
+        internal static T GetService<T>()
         {
             var service = BusinessServicesProvider.GetService<T>();
             if (service == null)

@@ -6,6 +6,7 @@ using BusinessServices.UsersService;
 using Microsoft.AspNetCore.Mvc;
 using BusinessServices.MessageService;
 using BusinessServices.FriendshipService;
+using WebApi.Controllers.FriendshipsDto;
 
 namespace WebApi.Controllers
 {
@@ -25,6 +26,35 @@ namespace WebApi.Controllers
             var service = GetService<IFriendshipService>();
             var result = service.GetFriends(id);
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Status relacji
+        /// </summary>
+        /// <param name="id">Id zalogowanego</param>
+        /// <param name="user2Id">Id zapytanego</param>
+        /// <returns>None/Friends/Invited</returns>
+        [ProducesResponseType(typeof(string), 200)]
+        [HttpGet("users/{id}/RelationStatus/{user2Id}")]
+        public IActionResult GetUsersRealtionSattus(int id, int user2Id)
+        {
+            if (id == default(int))
+                return BadRequest("ID");
+
+            if (id != LoggedUserId)
+                return Unauthorized();
+
+            var service = GetService<IFriendshipService>();
+            var result = service.RelationShipStatus(id, user2Id);
+            string strResult = RelationShipStatusConst.None;
+
+            switch(result)
+            {
+                case RandevouData.Users.RelationStatus.Accepted: strResult = RelationShipStatusConst.Friends;break;
+                case RandevouData.Users.RelationStatus.Invited:
+                case RandevouData.Users.RelationStatus.Created: strResult = RelationShipStatusConst.Invited;break;
+            }
+            return Ok(strResult);
         }
 
         [ProducesResponseType(typeof(int[]), 200)]

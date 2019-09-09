@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RandevouData.Users;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,5 +11,9 @@ namespace BusinessServices.FriendshipService
         void UpdateFriendshipStatus(int fromUserId, int toUserId, string action);
         int[] GetFriends(int userId);
         int[] GetFriendshipRequests(int userId);
+
+        RelationStatus? RelationShipStatus(int user1Id, int user2Id);
     }
 }
+
+
