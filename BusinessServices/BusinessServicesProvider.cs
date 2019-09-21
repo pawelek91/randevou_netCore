@@ -9,39 +9,15 @@ using BusinessServices.AuthenticationService;
 
 public static class BusinessServicesProvider
 {
-    private static ServiceCollection _serviceCollection;
-    private static  ServiceProvider _serviceProvider;
-    private static bool _init = false;
-
+    private static ServiceProvider _serviceProvider = new ServiceCollection().AddScoped<IUsersService, UserService>()
+            .AddScoped<IMessagesService, MessagesService>()
+            .AddScoped<IUserDetailsDictionaryService, UserDetailsDictionaryService>()
+            .AddScoped<IUserFinderService, UserFinderService>()
+            .AddScoped<IFriendshipService, FriendshipService>()
+            .AddScoped<IAuthenticationService, AuthenticationService>()
+            .AddScoped<IMapper>(c => BusinessServices.EntityMapper.Mapper)
+            .BuildServiceProvider();
 
     public static T GetService<T>()
-    {
-        if(_serviceCollection == null || !_init)
-        {
-            RegisterServices();
-        }
-
-        var service = BusinessServicesProvider._serviceProvider.GetService<T>();
-        return service;
-    }
-
-    private static void RegisterServices()
-    {
-        _init = true;
-
-        _serviceCollection = new ServiceCollection();
-        var mapper = BusinessServices.EntityMapper.Mapper;
-
-        _serviceProvider = _serviceCollection
-		.AddScoped<IUsersService, UserService>()
-		.AddScoped<IMessagesService, MessagesService>()
-        .AddScoped<IUserDetailsDictionaryService, UserDetailsDictionaryService>()
-        .AddScoped<IUserFinderService, UserFinderService>()
-        .AddScoped<IFriendshipService, FriendshipService>()
-        .AddScoped<IAuthenticationService, AuthenticationService>()
-        .AddScoped<IMapper>(c=>mapper)
-		.BuildServiceProvider();
-    }
-        
-
+    =>_serviceProvider.GetService<T>();
 }
