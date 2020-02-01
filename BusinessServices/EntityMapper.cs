@@ -39,6 +39,7 @@ namespace BusinessServices
             {
                 cfg.CreateMap<User, UserDto>();
                 cfg.CreateMap<User, UserDetailsDto>()
+                .ForMember(dto=>dto.UserId, user=>user.MapFrom(x=>x.Id))
                 .ForMember(dto => dto.City, user => user.MapFrom(x => x.UserDetails.City))
                 .ForMember(dto => dto.Heigth, user => user.MapFrom(x => x.UserDetails.Heigth))
                 .ForMember(dto => dto.Region, user => user.MapFrom(x => x.UserDetails.Region))
