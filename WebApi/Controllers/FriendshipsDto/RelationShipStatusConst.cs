@@ -10,5 +10,6 @@ namespace WebApi.Controllers.FriendshipsDto
         public const string None = nameof(None);
         public const string Friends = nameof(Friends);
         public const string Invited = nameof(Invited);
+        public const string Created = nameof(Created);
     }
 }

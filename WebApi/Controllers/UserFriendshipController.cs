@@ -51,8 +51,8 @@ namespace WebApi.Controllers
             switch(result)
             {
                 case RandevouData.Users.RelationStatus.Accepted: strResult = RelationShipStatusConst.Friends;break;
-                case RandevouData.Users.RelationStatus.Invited:
-                case RandevouData.Users.RelationStatus.Created: strResult = RelationShipStatusConst.Invited;break;
+                case RandevouData.Users.RelationStatus.Invited: strResult = RelationShipStatusConst.Invited; break;
+                case RandevouData.Users.RelationStatus.Created: strResult = RelationShipStatusConst.Created;break;
             }
             return Ok(strResult);
         }
