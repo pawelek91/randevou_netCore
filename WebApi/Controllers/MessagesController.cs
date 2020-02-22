@@ -48,6 +48,9 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult PostMessage([FromBody] MessageBasicDto dto)
         {
+            if (dto == null)
+                return BadRequest();
+
             if (dto.SenderId != LoggedUserId)
                 return Unauthorized();
 
