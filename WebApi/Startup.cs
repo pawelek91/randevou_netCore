@@ -31,8 +31,11 @@ namespace WebApi
     
 
             services.AddMvc(config =>
-            config.Filters.Add(typeof(CustomExceptionFilterAttribute)));
-
+            {
+                config.Filters.Add(typeof(CustomExceptionFilterAttribute));
+                config.EnableEndpointRouting = false;
+            });
+            
             services.AddCors(options => {
                 options.AddPolicy(MyAllowSpecificOrigins, builder =>
                 {
@@ -40,33 +43,35 @@ namespace WebApi
                 }
             );
             });
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Randevou API", Version = "v1" });
-                c.ResolveConflictingActions(apiDescriptions=> apiDescriptions.First());
-            });
+            // services.AddSwaggerGen(c =>
+            // {
+            //     c.SwaggerDoc("v1", new Info { Title = "Randevou API", Version = "v1" });
+            //     c.ResolveConflictingActions(apiDescriptions=> apiDescriptions.First());
+            // });
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
+            // app.UseSwagger();
+            // app.UseSwaggerUI(c =>
+            // {
+            //     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Randevou Api v1");
+            // });
+            app.UseExceptionHandler(err =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Randevou Api v1");
+               err.Run(async context =>
+               {
+                   context.Response.StatusCode = 403;
+               });
             });
-            //app.UseExceptionHandler(err =>
-            //{
-            //    err.Run(async context =>
-            //    {
-            //        context.Response.StatusCode = System.Net.HttpStatusCode.Conflict
-            //    })
-            //})
+
+            //app.UseRouting();
             app.UseCors(MyAllowSpecificOrigins);
             app.UseMvc();
         }
