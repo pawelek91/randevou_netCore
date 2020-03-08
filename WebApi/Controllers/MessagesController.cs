@@ -12,8 +12,9 @@ namespace WebApi.Controllers
     public class MessagesController : BasicBusinessAuthController
     {
         [ProducesResponseType(typeof(List<MessageDto>),200)]
-        [HttpPost(ApiConsts.Conversation)]
-        public IActionResult GetConversation([FromBody] RequestMessagesDto dto)
+        [HttpPost]
+        [Route(ApiConsts.Conversation)]
+        public IActionResult ReadConversation([FromBody]RequestMessagesDto dto)
         {
             dto.FirstUserId = LoggedUserId.Value;
 

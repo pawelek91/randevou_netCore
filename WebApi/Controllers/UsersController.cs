@@ -113,8 +113,8 @@ namespace WebApi.Controllers
 
         [BasicAuth]
         [Route("{id}/Details")]
-        [HttpPatch]
-        public IActionResult PatchUserDetails([FromHeader]int id, [FromBody]UserDetailsDto detailsDto)
+        [HttpPatch("{id}/Details")]
+        public IActionResult PatchUserDetails(int id, [FromBody]UserDetailsDto detailsDto)
         {
             IUsersService usersService = GetService<IUsersService>();
             if (id == 0 || id != LoggedUserId)

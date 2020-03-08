@@ -9,7 +9,7 @@ namespace WebApi.Controllers.RequestDto
     {
         public int FirstUserId { get; set; }
         public int SecondUserId { get; set; }
-        public DateTime? FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
+        // public DateTime? FromDate { get; set; }
+        // public DateTime? ToDate { get; set; }
     }
 }
