@@ -12,7 +12,14 @@ namespace EFRandevouDAL
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var filesPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            var dbPath = Path.Combine(filesPath, "..", "..", "..", "..", _dbName);
+            string dbPath = string.Empty;
+
+            
+            #if DEBUG
+                dbPath = Path.Combine(filesPath, "..", "..", "..", "..", _dbName);
+            #else
+             dbPath = Path.Combine(filesPath, _dbName);
+            #endif
             optionsBuilder.UseSqlite("Data Source=" + dbPath);
         }
     }

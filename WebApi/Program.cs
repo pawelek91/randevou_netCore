@@ -20,7 +20,7 @@ namespace WebApi
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:7777/")
+                .UseUrls("http://0.0.0.0:7777/")
                 .Build();
     }
 }
